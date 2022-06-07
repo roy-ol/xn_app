@@ -9,7 +9,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
   $sDefHTML .= $sDefHTMLisi . $sDefHTMLtutup;
   die($sDefHTML); 
 }else{
-  $sDefHTMLisi = "forbidden : N0r GET N0r POST"; 
+  $sDefHTMLisi = "forbidden : NOr GET Nor POST"; 
   $sDefHTML .= $sDefHTMLisi . $sDefHTMLtutup;
   die($sDefHTML); 
 }

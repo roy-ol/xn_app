@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../app/init_class.php';
-
+ 
 $sql = " select * from hit_time limit 1";
 // $con = new cKoneksi();
 $con = new cSensor();

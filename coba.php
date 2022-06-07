@@ -1,12 +1,12 @@
 <?php
-$param = [];
-$param = ["tes"=>"satu"];
-$param += ["tes2"=>"dua"];
-print_r($param);
-var_dump($param);
 
-$demo_array = array('Jack' => '10');
-$demo_array['Michelle'] = '11'; // adding elements by pushing method
-$demo_array['Shawn'] = '12';
-echo "By Simple Method: <br>";
-print_r($demo_array);
+
+require_once __DIR__ . '/app/init_class.php';
+
+echo "<br>";
+echo "<br>";
+
+// date_default_timezone_set("Asia/Bangkok");
+echo date_default_timezone_get();
+echo "<br>";
+echo date('d-m-Y H:i:s');

@@ -73,8 +73,7 @@ class cSensor extends cKoneksi{
         $valAwal = $val0;
         $rawAkhir = $raw2;
         $valAkhir = $val2;
-      } elseif( $rawVal1 <= $raw1 ) { // di range 1
-        echo " range 1";
+      } elseif( $rawVal1 <= $raw1 ) { // di range 1 
         $rawAwal = $raw0;
         $valAwal = $val0;
         $rawAkhir = $raw1;
