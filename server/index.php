@@ -20,4 +20,3 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 $sDefHTMLisi .= $sDataDataPost; 
 $sDefHTML .= $sDefHTMLisi . $sDefHTMLtutup;
 echo $sDefHTML;
-
