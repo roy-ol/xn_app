@@ -20,20 +20,20 @@ class cKoneksi{
     return $r->rowCount(); 
   }
 
-  function ambilData($sQuery,$parameters=false){  // bila ada parameters array untuk execute
+  function ambilData($sQuery,$parameters=false,$fetch_method = PDO::FETCH_ASSOC){  // bila ada parameters array untuk execute
     $hasil = []; //ambil semua data / multirow array assoc
     $r = $this->pdo->prepare($sQuery);  
     ($parameters)?$r->execute($parameters):$r->execute();
-    while($row = $r->fetch(PDO::FETCH_ASSOC)){
+    while($row = $r->fetch($fetch_method)){
       $hasil = $row; 
     }
     return $hasil;
   }
    
-  function ambil1Row($sQuery,$parameters=false){  // parameters array bila diperlukan
+  function ambil1Row($sQuery,$parameters=false,$fetch_method = PDO::FETCH_ASSOC){  // parameters array bila diperlukan
     $r = $this->pdo->prepare($sQuery);  // hasilnya 1Row data langsung ambil  
     ($parameters)?$r->execute($parameters):$r->execute();
-    return $r->fetch(PDO::FETCH_ASSOC) ; //diambil data row pertama meskipun banyak data row terambil 
+    return $r->fetch($fetch_method) ; //diambil data row pertama meskipun banyak data row terambil 
   }
    
   function ambil1Data($sQuery,$parameters=false){  // query satu data param array bila diperlukan 

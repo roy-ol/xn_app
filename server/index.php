@@ -16,7 +16,17 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 
 // dari sini ada data post untuk diolah:
 // ==========================================
+require_once __DIR__ . '/../app/init_class.php';
 
-$sDefHTMLisi .= $sDataDataPost; 
-$sDefHTML .= $sDefHTMLisi . $sDefHTMLtutup;
-echo $sDefHTML;
+$data = json_decode($sDataDataPost);
+$myUser = new cUser();
+
+if(isset($data->regkey)){ // ada permintaan registrasi user dari android
+  $regkey = $data->regkey;
+  
+}
+
+(isset($data->kunci))?$kunci = $data->kunci:die("forbiden #5"); // tidak ada kunci = die
+
+
+(isset($data->fungsi))?$fungsi = $data->fungsi:$fungsi = false; 
