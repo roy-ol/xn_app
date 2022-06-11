@@ -25,6 +25,6 @@ if($rInsert) $status = "OK";
 
 
 $respons = ["s" => $status];  
-$respons["t"] = date('d-m-Y H:i:s');
+$respons["t"] = date('Y-m-d H:i:s');
 // $respons["v"] = $valMap;
 echo json_encode($respons) ;

@@ -34,6 +34,6 @@ echo "<hr>";
 
 
 $cSensor = new cSensor();  
-($cSensor->nodeByChip($chipID,$noSensor))?:die("forbiden #4");
+($cSensor->nodeByChip($chipID,$noSensor))?:die("forbidden #4");
 echo $cSensor->getID()."<br>cSensor - ";
 echo $cSensor->keterangan;

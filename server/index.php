@@ -19,14 +19,62 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 require_once __DIR__ . '/../app/init_class.php';
 
 $data = json_decode($sDataDataPost);
+(json_last_error() == JSON_ERROR_NONE)?:die('forbidden #1'); //cek format json apakah valid
 $myUser = new cUser();
+$userID = false;
 
 if(isset($data->regkey)){ // ada permintaan registrasi user dari android
   $regkey = $data->regkey;
-  
+  die("maaf permintaan registrasi user belum bisa");  
 }
 
-(isset($data->kunci))?$kunci = $data->kunci:die("forbiden #5"); // tidak ada kunci = die
+(isset($data->fungsi))?$fungsi = $data->fungsi:die("forbidden #5"); 
+if ($fungsi == "login") {if(login()) $myUser->dieJsonOK();} 
+if ($fungsi == "registerDroid") registerDroid(); 
+
+//== cek kunci .. apakah ada token_key valid atau ridak
+(isset($data->kunci))?$kunci = $data->kunci:$myUser->dieJsonGagal("forbidden #6'"); // tidak ada kunci = die 
+($myUser->loadUserByKey($data->kunci))?:$myUser->dieJsonGagal("forbidden #7"); 
 
 
-(isset($data->fungsi))?$fungsi = $data->fungsi:$fungsi = false; 
+switch ($fungsi) {
+  case 'getNama':
+    echo $myUser->fullname . " logged in";
+    break;  
+  case 'getData':
+    echo "case getData";
+    break;
+  default:
+    # code...
+    break;
+}
+
+
+//========================== fungsi fungsi ==========================
+//===================================================================
+
+function login(){
+  global $myUser,$data;
+  $userID = false;
+  if (isset($data->user) && isset($data->pass)) {
+    ($myUser->loadUser($data->user,$data->pass))?:$myUser->dieJsonGagal("user gagal");
+    ($userID = $myUser->isAktif())?:die("terblokir");  
+    return $userID;
+  }
+  $myUser->dieJsonGagal("no userpass");
+}
+
+function registerDroid(){
+  global $myUser;
+  $user_ID = login();  
+  $req = $myUser->regDroid($user_ID);
+
+  if($req){ 
+    $respons["status"] = "sukses";
+    $respons["token"] = $req;
+    $myUser->dieJsonOK($respons);
+  }else{
+    $myUser->dieJsonGagal("register android ");
+  } 
+
+}
