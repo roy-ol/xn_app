@@ -7,9 +7,8 @@ $myUser = new cUser();
 if($myUser->loadUser("admin","asdf")){
   echo $myUser->fullname()."  ";
   echo ($nil = $myUser->regDroid())?$nil:"kosong";
-}
+} 
 
- 
 echo "  ";
 $arr2 = ["token"=>"isi tambahan","token2"=>"nil dua","status"=>"sukses"];
 // $arr2 = ["token"=>"isi tambahan"];

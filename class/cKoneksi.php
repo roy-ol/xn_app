@@ -3,7 +3,7 @@ class cKoneksi{
   private $pdo;
 
   function __construct(){ 
-    require_once __DIR__ . "/../App/fsambungan.php";
+    require_once __DIR__ . "/../app/fsambungan.php";
     $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USER, PASS);   
 	} 
 
@@ -70,6 +70,8 @@ function dieJsonOK($param=[]){
   $respons["time"] = date('Y-m-d H:i:s'); 
   $arResp = array_merge($respons,$param); 
   $sJsonRespons = json_encode($arResp);
+  // echo $sJsonRespons;
+  // die();
   die($sJsonRespons);
 }
 

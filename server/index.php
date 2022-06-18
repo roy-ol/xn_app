@@ -25,7 +25,7 @@ $userID = false;
 
 if(isset($data->regkey)){ // ada permintaan registrasi user dari android
   $regkey = $data->regkey;
-  die("maaf permintaan registrasi user belum bisa");  
+  die("maaf permintaan registrasi user belum bisa ".$regkey);  
 }
 
 (isset($data->fungsi))?$fungsi = $data->fungsi:die("forbidden #5"); 
