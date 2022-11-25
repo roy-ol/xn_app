@@ -32,17 +32,19 @@ if(isset($data->regkey)){ // ada permintaan registrasi user dari android
 if ($fungsi == "login") {if(login()) $myUser->dieJsonOK();} 
 if ($fungsi == "registerDroid") registerDroid(); 
 
-//== cek kunci .. apakah ada token_key valid atau ridak
+//== cek kunci .. apakah ada token_key valid atau tidak
 (isset($data->kunci))?$kunci = $data->kunci:$myUser->dieJsonGagal("forbidden #6'"); // tidak ada kunci = die 
 ($myUser->loadUserByKey($data->kunci))?:$myUser->dieJsonGagal("forbidden #7"); 
 
 
 switch ($fungsi) {
   case 'getNama':
-    echo $myUser->fullname . " logged in";
+    $respons["fullname"] = $myUser->fullname();
+    $myUser->dieJsonOK($respons);
     break;  
   case 'getData':
-    echo "case getData";
+    $respons["data"] = "data data";
+    $myUser->dieJsonOK($respons);
     break;
   default:
     # code...
@@ -50,8 +52,8 @@ switch ($fungsi) {
 }
 
 
-//========================== fungsi fungsi ==========================
-//===================================================================
+//================================ fungsi fungsi ===================================
+//==================================================================================
 
 function login(){
   global $myUser,$data;
@@ -72,6 +74,7 @@ function registerDroid(){
   if($req){ 
     $respons["status"] = "sukses";
     $respons["token"] = $req;
+    $respons["fullname"] = $myUser->fullname();
     $myUser->dieJsonOK($respons);
   }else{
     $myUser->dieJsonGagal("register android ");

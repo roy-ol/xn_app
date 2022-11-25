@@ -15,7 +15,7 @@ class cKoneksi{
  
 
   function eksekusi($sQuery,$parameters=null){ //mengembalikan row affected
-    $r = $this->pdo->prepare($sQuery);    // parameters array bila diperlukan
+    $r = $this->pdo->prepare($sQuery);    // parameters array bila diperlukan 
     ($parameters)?$r->execute($parameters):$r->execute();
     return $r->rowCount(); 
   }
@@ -65,6 +65,7 @@ function dieJsonGagal($sKeterangan = "0"){
   $sJsonRespons = json_encode($respons);
   die($sJsonRespons);
 }
+
 function dieJsonOK($param=[]){  
   $respons = ["status" => "OK"];  
   $respons["time"] = date('Y-m-d H:i:s'); 
