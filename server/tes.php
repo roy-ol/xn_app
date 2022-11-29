@@ -1,39 +1,45 @@
 <?php
+  // $sTest = "ab";
+  $sTest = '{"c":"XN0123456","v1":244.99}';
+  echo $sTest ."\n"; 
+  $hasil = kript($sTest);
+  echo $hasil;
+  
+  echo "\n"; 
+  $hasil2 = dekript($hasil);
+  echo $hasil2;
 
-require_once __DIR__ . '/../app/init_class.php';
  
-$sql = " select * from hit_time limit 1";
-// $con = new cKoneksi();
-$con = new cSensor();
 
-$result = $con->ambil1Row($sql);
+  //============fungsi fungsi========== 
+ function dekript($sData){
+  $iPanjang = strlen($sData); 
+  $byteChr = 0;
+  $xor =  $iPanjang;//key awal xor 
+  $sHasil =""; 
+  for ($i=0; $i < $iPanjang; $i++) {  
+    $byteChr = ord($sData[$i]) - 33; 
+    $tmp0 = ($byteChr ^ $xor) ; 
+    $xor = $tmp0;  
+    $sTmp=chr($tmp0 + 33);
+    $sHasil .= $sTmp;  
+  } 
+  
+  return $sHasil;
+ } 
 
-// echo $result[0]." -- ".$result[1]." -- ".$result[2]." -- ".$result[3]." -- " . $result[4];
-echo "<br> didalam folder ". __DIR__." <br><hr>";
-echo $result["id"]." -- ".$result["waktu"]." -- ".$result["ip_remote"]." -- ".$result["kode"];
-echo "<br><hr>";
-
-// foreach ($result as $key => $value) {
-//   # code...
-// }
-// print_r($result); 
-$chipID = "XN0123456";
-$noSensor = 2;
-$sql = "select * from node where chip= :chipID and no_sensor = :noSensor";
-$param = ["chipID"=>$chipID,"noSensor" =>$noSensor];
-$hasil = $con->ambil1Row($sql,$param);
-
-// ($hasil)?:die('forbidden #2');
-echo "<br>jum arr " .count($hasil) . "<hr>";
-var_dump($hasil);
-echo "<hr>" ;
-echo $hasil["keterangan"];
-echo "<hr>" ;
-print_r($hasil);
-echo "<hr>";
-
-
-$cSensor = new cSensor();  
-($cSensor->nodeByChip($chipID,$noSensor))?:die("forbidden #4");
-echo $cSensor->getID()."<br>cSensor - ";
-echo $cSensor->keterangan;
+ function kript($sData){
+  $iPanjang = strlen($sData); 
+  $byteChr = 0;
+  $xor =  $iPanjang;//key awal xor 
+  $sHasil =""; 
+  for ($i=0; $i < $iPanjang; $i++) {  
+    $byteChr = ord($sData[$i]) - 33; 
+    $tmp0 = ($byteChr ^ $xor) + 33;  // pengaman biar tidak dapat null + 33 karakter keyboard UTF-8
+    $xor = $byteChr;  
+    $sTmp=chr($tmp0);
+    $sHasil .= $sTmp;     
+  }   
+  return $sHasil;
+ } 
+  
