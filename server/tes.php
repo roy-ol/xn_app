@@ -1,17 +1,83 @@
-<?php
-  // $sTest = "ab";
-  $sTest = '{"c":"XN0123456","v1":244.99}';
-  echo $sTest ."\n"; 
-  $hasil = kript($sTest);
-  echo $hasil;
+<?php 
   
-  echo "\n"; 
-  $hasil2 = dekript($hasil);
-  echo $hasil2;
+  // echo '<!DOCTYPE html> <html lang="en-US"><body>';
+  $sTest = '{ "K0" : "XN0123456","K2":244.99,"K3": 111213141516171819   }';
+  // $sTest = '{1.59}';
+  echo "\n".$sTest ."\n"; 
+  $hasil = xnkrip1($sTest);
+  
+  $dekripan = xndekrip1($hasil);
+  echo "\n asal = ".$sTest ."\n"; 
+  echo "\nkrip = $hasil\n" ; 
+  echo "\ndekrip = $dekripan";
 
- 
+  // echo '</body> </html>';
 
   //============fungsi fungsi========== 
+  
+ function xndekrip1($sData){  //
+  $sKunci= ' ":,.K0123456789'; //dekrip spasi dihilangkan..!
+  $iKunci =16; //=16 char -- spasi == null / dihilangkan
+  $iPanjang = strlen($sData);   
+  $sHasil =""; 
+  $iHit = 0 ;  
+  $binChar = 0;
+  $binChar1 = 0; //default bila tidak ada di map key.. karakter akan dihilangkan chr(0) = NUL
+  $binChar2 = 0; //default bila tidak ada di map key.. karakter akan dihilangkan chr(0) = NUL
+
+  for ($i=0; $i < $iPanjang; $i++) {  
+    $binChar = ord($sData[$i]) ; 
+    $bFaktor16 = 16;
+    if($binChar >= $bFaktor16){
+      $binChar2 = (int)($binChar / $bFaktor16); //LSB biner 4 digit sebelah kiri.. menjadi dekrip sebelah kanan dr binChar1
+      $binChar1 = $binChar - (16 * $binChar2); 
+      $sHasil .= $sKunci[$binChar1].$sKunci[$binChar2]; 
+    }else{
+      $sHasil .= $sKunci[$binChar];
+    }       
+  }   
+  $sHasil = "{ $sHasil }";
+  return $sHasil;    
+ }
+ 
+ function xnkrip1($sData){  //
+  $sKunci= ' ":,.K0123456789'; //dekrip spasi dihilangkan..!
+  $iKunci =16; //=16 char -- spasi == null / dihilangkan
+  $sData = str_replace("XN","",$sData); //buang karakter XN
+  $sData = str_replace(" ","",$sData); //buang karakter spasi
+  $iPanjang = strlen($sData);   
+  $sHasil =""; 
+  $iHit = 0 ; 
+  $iPanjang-- ; //panjang data tanpa penutup "}" 
+  $binChar = 0;
+  $binChar1 = 0; //default bila tidak ada di map key.. karakter akan dihilangkan chr(0) = NUL
+
+  for ($i=1; $i < $iPanjang; $i++) {  
+    for ($iK=0; $iK < $iKunci; $iK++) { 
+      if ($sData[$i] === $sKunci[$iK]) {
+        $binChar1 = decbin($iK); 
+        break 1;
+      }
+    }
+    if(bindec($binChar1) === 0) continue;
+    
+    $iHit++; 
+    if ($iHit === 1 ) {  // jadi LSB // ganjil sebelah kanan.. nantinya iHit2 sebelah kiri (MSB) 
+      $binChar = $binChar1; 
+      $binChar1 = 0;
+      if($i === $iPanjang -1) $sHasil .= chr(bindec($binChar)); 
+    } else {
+      $binChar += $binChar1 * decbin(16); // dikalikan 16(1 0000) menjadi MSB di sebelah kiri 
+      $sHasil .= chr(bindec($binChar)); 
+      $binChar ="";
+      $iHit = 0;
+    }      
+  }   
+  return $sHasil;    
+ }
+
+
+
  function dekript($sData){
   $iPanjang = strlen($sData); 
   $byteChr = 0;
@@ -42,4 +108,3 @@
   }   
   return $sHasil;
  } 
-  
