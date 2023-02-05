@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../app/init_class.php';
+// require_once __DIR__ . '/../app/init_class.php';
+
 class cSensor extends cKoneksi{
   public  $nodeID,
           $chipID,
@@ -13,7 +14,46 @@ class cSensor extends cKoneksi{
   } 
 
   
-  function logging($raw0, $val1,$waktuNode = false){  //false atau format ex. '2022-05-26 02:28:34'
+  function logging($raw0, $val1,$waktuNode = false, $id_loc = false ){  //false atau format ex. '2022-05-26 02:28:34'
+    if(!$this->statusSensor){ return false; } //keluar bila status false
+
+    //ada r0 dan v1 kosong atau ada nilaii v1
+    ($raw0 != null && $val1 == null )? $nilaiHasil = $this->value_map($raw0) : $nilaiHasil = $this->value_map($val1); 
+
+    $param = ["nodeID"=>$this->nodeID];  
+    $param += ["val1"=>$val1];  
+    $param += ["raw0"=>$raw0];  
+    $param["nilai"] = $nilaiHasil;
+
+    if($waktuNode){  
+      $dateTime = new DateTime($waktuNode); 
+      $timestamp = $dateTime->format('U');       
+      if($id_loc){
+        $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai, waktu_node,id_loc)
+          VALUES(:nodeID , :raw0, :val1, :nilai,  FROM_UNIXTIME(:waktu), :id_loc )" ; 
+        $param['waktu'] = $timestamp;
+        $param['id_loc'] = $id_loc;
+      }else{
+        $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai, waktu_node)
+          VALUES(:nodeID , :raw0, :val1, :nilai,  FROM_UNIXTIME(:waktu) )" ; 
+        $param['waktu'] = $timestamp;
+      }
+    }else{
+      if($id_loc){
+        $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai, id_loc)
+        VALUES(:nodeID , :raw0, :val1, :nilai, :id_loc)" ;
+        $param['id_loc'] = $id_loc;
+      }else{
+      $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai)
+        VALUES(:nodeID , :raw0, :val1, :nilai)" ;
+      }
+    }
+
+    $hasil = $this->eksekusi($q,$param);  
+    return $hasil;
+  }
+  
+  function logging0($raw0, $val1,$waktuNode = false){  //false atau format ex. '2022-05-26 02:28:34'
     if(!$this->statusSensor){ return false; } //keluar bila status false
 
     //ada r0 dan v1 kosong atau ada nilaii v1

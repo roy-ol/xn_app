@@ -1,10 +1,13 @@
 <?php  
+/* ======================================================
+apirelay untuk aktuator metro tandon 1
+ ========================================================*/
+
 // $waktu
 // $data = json_decode($sDataDataPost);
 // $chipID=$data->c;
 // $id_node = $dataNode['id'];
  
-
 // {"f": 2, "xtime": 18, "r0":1, "r1":1, "r2":1, "r3":1, "r4":1, "r5":1, "r6":1, "r7":1, "sleep":45}
 // $arrRespons['f']=0; //flag respons ke ESP tidak ada yang perlu dilakukan
 $responNone = '{"f":0}';  //flag respons ke ESP tidak ada yang perlu dilakukan

@@ -1,6 +1,6 @@
 <?php  
 //api awal untuk aplikasi relay drip system GH Metro
-include '../tmpapi/fsambungan.php';   
+include '../../app/fsambungan.php';   
 
 $con = mysqli_connect(HOST,USER,PASS,DB) or die('Unable to Connect'); 
 $con->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, TRUE);  // hasil mengikuti nativ... tidak digeneralisir string
@@ -31,6 +31,9 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
         break;
       case '∟':
         include_once 'apiRelayDrip1.php';
+        break;
+      case 'd2':  //dipanggil ESP url = http://online-farm.com/server/apig/d2 atau http://xnapp.online-farm.com/apig/d2 
+        include_once 'apiRelayDrip2.php';
         break;
       case 'f1':    //flag Status node
         include_once 'apiFlagNode1.php';
@@ -73,7 +76,8 @@ function logApi($sChip = '' ) {
 
 } 
 
-function logAktuator($chip='', $noRelay=1, $exetime = 0){ 
+
+function logAktuator($chip='', $noRelay=1, $exetime = 0){ //log aktuator 1 data terakhir
     global $con;
     $sql = "INSERT INTO log_aktuator(chip,no_relay,exetime) VALUES ('$chip', $noRelay, $exetime)
         ON DUPLICATE KEY UPDATE exetime =  $exetime, waktu=now()";
@@ -81,7 +85,7 @@ function logAktuator($chip='', $noRelay=1, $exetime = 0){
 }
  
 
-function logAktuator2($idNode, $relay=1, $exetime = 0){ 
+function logAktuator2($idNode, $relay=1, $exetime = 0){  //log aktuator 5 data terakhir
     global $con; 
     $rData=ambilData("SELECT count(id) jum, COALESCE(max(hit),0) max, COALESCE(min(hit),0) min 
         FROM `log_aktuator2` WHERE id_node= $idNode ");

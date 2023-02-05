@@ -40,7 +40,7 @@ if ($fungsi == "registerDroid") registerDroid();
 switch ($fungsi) {
   case 'getNama':
     $respons["fullname"] = $myUser->fullname();
-    $myUser->dieJsonOK($respons);
+    $myUser->dieJsonOK($respons); // class cUser extend ke cKoneksi menggunakan dieJsonOK dengan variable $respon sebagai merger tambahan param
     break;  
   case 'getData':
     $respons["data"] = "data data";
