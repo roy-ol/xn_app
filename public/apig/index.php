@@ -27,16 +27,19 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $kodeApiFile = $_GET['kode'];   
     switch ($kodeApiFile) {
       case 'd1':
-        include_once 'apiRelayDrip1.php';
+        include_once 'apiRelayDrip1.php'; //aktuator metro
         break;
       case '∟':
         include_once 'apiRelayDrip1.php';
         break;
-      case 'd2':  //dipanggil ESP url = http://online-farm.com/server/apig/d2 atau http://xnapp.online-farm.com/apig/d2 
+      case 'd2':  //dipanggil ESP url = http://online-farm.com/server/apig/d2 atau http://xn.online-farm.com/apig/d2 
         include_once 'apiRelayDrip2.php';
         break;
       case 'f1':    //flag Status node
         include_once 'apiFlagNode1.php';
+        break;
+      case 'f7':    //request url repo binary update
+        include_once 'apiRepoUpdate.php';
         break;
       
       default:

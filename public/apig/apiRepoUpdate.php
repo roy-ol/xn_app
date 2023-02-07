@@ -7,7 +7,7 @@ $flag=$data->f; //contoh data masuk request f1 {"c":"XN0123456","f":5}
  
 
 // $arrRespons['f']=0; //flag respons ke ESP tidak ada yang perlu dilakukan 
-$respons['f']="2"; //flag balik dr jawaban logging status flag
+$respons['f']="2"; //flag balik dr jawaban logging status flag 
 // 2=update sleep time
  
 $rData=ambilData("SELECT count(id) jum, COALESCE(max(hit),0) max ,COALESCE(min(hit),0) min 
