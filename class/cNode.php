@@ -1,23 +1,128 @@
 <?php
 // require_once __DIR__ . '/../app/init_class.php';
 
-class cSensor extends cKoneksi{
-  public  $nodeID,
-          $chipID,
-          $keterangan,
-          $tipeID,
-          $statusSensor = false,
-          $flag;
+class cNode extends cKoneksi{
+  public  $nodeID,$flag,$nama,$keterangan,$chipID,
+          $subNode,$chip,$kebunID,$tipeID,
+          $kelompok,  //id kelompok tipe chip 1=sensor, 2=aktuator, 3=mix, 4=server lokal / timer server
+          $statusNode = false ;
 
   function __construct(){      // dipanggil awal init klass
     parent::__construct();    //panggil __construct() kelas induk (cKoneksi)
   } 
 
+  /**
+   * $arResp = array_merge($respons,$param); 
+   */
+  function dieJsonGagal($param=[]){  
+    $respons = ["f" => 0];    // 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
+    $arResp = array_merge($respons,$param); 
+    $sJsonRespons = json_encode($arResp); 
+    die($sJsonRespons);
+  }
+
+  function dieJsonNone(){ // 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
+    $this->dieJsonOK(["f"=>0]);
+  }
+
+  function dieJsonNoneTime(){ // XNtime + 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
+    $this->dieJsonOK(["f"=>0],["t"=>date('Y-m-d H:i:s')]);
+  }
+
+  /**
+   * @brief XNtime + $arResp = array_merge($respons,$param); 
+   */
+  function dieJsonOkTime($param=[]){ // XNtime + $arResp = array_merge($respons,$param); 
+    $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses
+    $respons["t"] = date('Y-m-d H:i:s');  
+    $arResp = array_merge($respons,$param); 
+    $this->dieJsonOK($arResp); 
+  }
+
+  /**
+   * bikin respon json sukses + param tambahan array merge sebelum json_encode
+   * @param array $param ex. $respons["t"] = date('Y-m-d H:i:s'); 
+   */
+  function dieJsonOK($param=[],$perluCekUpdate = true){  
+    $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses 
+    $arResp = array_merge($respons,$param); 
+    if($perluCekUpdate && $this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
+    $sJsonRespons = json_encode($arResp); 
+    die($sJsonRespons);
+  }
+
+  /**
+   * @brief rutin mengecek apakah ada update firmware untuk langsung dieOkTime dengan status 7 jika update
+   */
+  function cekUpdate(){
+    $sSQL="SELECT * FROM binfirupd WHERE id_chip= $this->chipID AND flag=7 ";
+    $rHasil=$this->ambil1Row($sSQL);
+    // return ($rHasil >= 1)? $this->dieJsonOkTime( ["f" => 7] ) :  $rHasil;
+    return ($rHasil >= 1)? true : false ;
+  }
+
+
+  
+  private function konstrukNode($hasil){
+    $this->nodeID =$hasil['id'];
+    $this->flag =$hasil['flag'];
+    $this->nama =$hasil['nama'];
+    $this->keterangan =$hasil['keterangan'];
+    $this->chipID =$hasil['id_chip'];
+    $this->subNode =$hasil['sub_node'];
+    $this->chip =$hasil['chip'];
+    $this->kebunID =$hasil['id_kebun'];
+    $this->tipeID =$hasil['id_tipe'];
+    $this->kelompok =$hasil['kelompok'];  //id kelompok tipe chip 1=sensor, 2=aktuator, 3=mix, 4=server lokal / timer server    
+    ($this->flag == 0)?: $this->statusNode=true;      // flag = 0 node status deactive
+  }
+ 
+  /**
+   * ambil/load konstruk data node dari nodeID
+   * @param nodeID dari node 
+   */
+  function nodeByID($nodeID){ 
+    $this->statusNode=false; // awal check dari chip status default $this->getstatusNode
+    $sql = "SELECT n.id, n.flag,n.nama,n.keterangan, n.id_chip,n.sub_node,
+      c.chip, c.id_kebun,c.id_tipe, t.kelompok
+      FROM node n, chip c, tipe t
+      WHERE c.id=n.id_chip AND c.id_tipe=t.id
+      AND n.id= :nodeID ";
+    $param = ["chnodeID"=>$nodeID];
+    $hasil = $this->ambil1Row($sql,$param);
+    if($hasil){
+      $this->konstrukNode($hasil);
+      $this->statusNode=true;
+    }
+    return $this->statusNode;
+  }  
+
+  /**
+   * @brief awal 
+   * @roy-ol ambil/load data node dari kode chip dan subNode (noSensor)
+   * @param $chip = String kode chip XN*****
+   * @param $subNode = nomer sub node/sensor/relay
+   */
+  function nodeByChip($chip,$subNode=1){
+    $this->statusNode=false; // awal check dari chip status default $this->getstatusNode
+    $sql = "SELECT n.id, n.flag,n.nama,n.keterangan, n.id_chip,n.sub_node,
+      c.chip, c.id_kebun, c.id_tipe, t.kelompok
+      FROM node n, chip c, tipe t
+      WHERE n.id_chip=c.id AND c.id_tipe=t.id
+      AND n.sub_node= :subNode AND c.chip= :chip "; 
+    $param = ["chip"=>$chip,"subNode" =>$subNode];
+    $hasil = $this->ambil1Row($sql,$param);
+    if($hasil){
+      $this->konstrukNode($hasil);
+      $this->statusNode=true;
+    }
+    return $this->statusNode;
+  }
   
   function logging($raw0, $val1,$waktuNode = false, $id_loc = false ){  //false atau format ex. '2022-05-26 02:28:34'
-    if(!$this->statusSensor){ return false; } //keluar bila status false
+    if(!$this->statusNode){ return false; } //keluar bila status false
 
-    //ada r0 dan v1 kosong atau ada nilaii v1
+    //ada r0 dan v1 kosong atau ada nilaii v1 
     ($raw0 != null && $val1 == null )? $nilaiHasil = $this->value_map($raw0) : $nilaiHasil = $this->value_map($val1); 
 
     $param = ["nodeID"=>$this->nodeID];  
@@ -54,7 +159,7 @@ class cSensor extends cKoneksi{
   }
   
   function logging0($raw0, $val1,$waktuNode = false){  //false atau format ex. '2022-05-26 02:28:34'
-    if(!$this->statusSensor){ return false; } //keluar bila status false
+    if(!$this->statusNode){ return false; } //keluar bila status false
 
     //ada r0 dan v1 kosong atau ada nilaii v1
     ($raw0 != null && $val1 == null )? $nilaiHasil = $this->value_map($raw0) : $nilaiHasil = $this->value_map($val1); 
@@ -143,14 +248,14 @@ class cSensor extends cKoneksi{
  
     $val_hasil_map = $valAwal + ((($valAkhir - $valAwal) / ($rawAkhir - $rawAwal)) * ($rawVal1 - $rawAwal));
 
-    if($min != null && $max != null){ //ada nilai keduanya / tidak null
+    if($min != null && $max != null){ //ada batas minmax nilai keduanya / tidak null
       if( $min < $max ){ 
         if($val_hasil_map < $min) $val_hasil_map = $min;
         if($val_hasil_map > $max) $val_hasil_map = $max;        
       }elseif ( $min > $max ) { 
         if($val_hasil_map > $min) $val_hasil_map = $min;
         if($val_hasil_map < $max) $val_hasil_map = $max;  
-      } //nilai min = max batas akan diabaikan
+      } //nilai min = max atau null batas akan diabaikan
     }
 
     return $val_hasil_map;
@@ -231,43 +336,12 @@ class cSensor extends cKoneksi{
     return $val_hasil_map;
   }
 
-  function nodeByChip($chipID,$noSensor){
-    $this->statusSensor=false; // awal check dari chip status default $this->getStatusSensor
-    $sql = "select * from node where chip= :chipID and no_sensor = :noSensor";
-    $param = ["chipID"=>$chipID,"noSensor" =>$noSensor];
-    $hasil = $this->ambil1Row($sql,$param);
-    if($hasil){
-      $this->nodeID = $hasil['id'];
-      $this->chipID = $hasil['chip'];
-      $this->tipeID = $hasil['id_tipe'];
-      $this->flag = $hasil['flag'];
-      $this->keterangan = $hasil['keterangan'];
-      ($this->flag == 0)?: $this->statusSensor=true; 
-    }
-    return $this->statusSensor;
-  }
 
-  function nodeByID($nodeID){
-    $this->statusSensor=false; 
-    $sql = "select * from node where id=:nodeID";
-    $param = ["nodeID"=>$nodeID];
-    $hasil = $this->ambil1Row($sql,$param);
-    if($hasil){
-      $this->nodeID = $hasil['id'];
-      $this->chipID = $hasil['chip'];
-      $this->tipeID = $hasil['id_tipe'];
-      $this->flag = $hasil['flag'];
-      $this->keterangan = $hasil['keterangan'];
-      ($this->flag == 0)?: $this->statusSensor=true; 
-    }
-    return $this->statusSensor;
-  } 
-
-  public function getFlag(){ return $this->flag; }  
-  public function getID(){ return $this->nodeID; }  
-  public function getTipe(){ return $this->tipeID; }  
-  public function getKeterangan(){ return $this->keterangan; } 
-  public function getStatusSensor(){ return $this->statusSensor; }
+  // public function getFlag(){ return $this->flag; }  // dibutuhkan untuk ambil nilai bila variable bukan public
+  // public function getID(){ return $this->nodeID; }  
+  // public function getTipe(){ return $this->tipeID; }  
+  // public function getKeterangan(){ return $this->keterangan; } 
+  // public function getstatusNode(){ return $this->statusNode; }
 
 
 

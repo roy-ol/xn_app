@@ -1,3 +1,3 @@
 <?php  
-echo "folder repo";
+echo "server repo";
 ?>

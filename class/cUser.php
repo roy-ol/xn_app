@@ -1,4 +1,4 @@
-<?php
+<?php //user login untuk apilasi android / web
 require_once __DIR__ . '/../app/init_class.php';
 
 class cUser extends cKoneksi{

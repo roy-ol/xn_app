@@ -3,19 +3,21 @@
 apirelay untuk aktuator metro tandon 1
  ========================================================*/
 
+include_once '../apiUmum.php';   
 // $waktu
 // $data = json_decode($sDataDataPost);
 // $chipID=$data->c;
 // $id_node = $dataNode['id'];
+
  
 // {"f": 2, "xtime": 18, "r0":1, "r1":1, "r2":1, "r3":1, "r4":1, "r5":1, "r6":1, "r7":1, "sleep":45}
 // $arrRespons['f']=0; //flag respons ke ESP tidak ada yang perlu dilakukan
 $responNone = '{"f":0}';  //flag respons ke ESP tidak ada yang perlu dilakukan
 
-$arrData=ambilData("SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $id_node AND keterangan LIKE '%*xt1*%' UNION 
-    SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $id_node AND CURTIME() BETWEEN time0 AND time1 ");
+$arrData=$cNode->ambilData("SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $cNode->nodeID AND keterangan LIKE '%*xt1*%' UNION 
+    SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $cNode->nodeID AND CURTIME() BETWEEN time0 AND time1 ");
 if(!$arrData){
-  mysqli_close($con);
+  // mysqli_close($con);
   die($responNone);
 }
 $id  = $arrData['id']; 
@@ -39,7 +41,7 @@ $istoday = $arrData['today'];
 // $isXNormal=(strpos($keterangan, '*xt1*')?false:true); //bernilai false bila strpos menghasilkan 0
 $xt1=strpos($keterangan, '*xt1*');
 //==== bila log tanggal == tanggal hari ini dan repeater = 'N'  
-if ($repeater == 'N' && $istoday == 1 && $xt1 === false) keluar();
+if ($repeater == 'N' && $istoday == 1 && $xt1 === false) $cNode->dieJsonNone() ;//keluar();
 //===lanjut bila tanggal != CURDATE() atau repeater = Y  atau xt1=false / ada request xt1          
 if($xt1 !== false){ 
   $xtreset=strpos($keterangan, '*xt1*rst*');  //perintah untuk mereset tanggal agar tidak terkunci repeater Off 
@@ -59,7 +61,7 @@ if($xt1 !== false){
   $rupdsql = mysqli_query($con,"UPDATE node_role SET tanggal = CURDATE() WHERE id= $id "); //update tanggal berisi hari ini
 }
    
-logAktuator($chipID,$relay,$exetime);  
+// logAktuator($chipID,$relay,$exetime);  
 logAktuator2($id_node , $relay , $exetime);  
 
 $respons['f']=20; //flag ada respons untuk aktuator action 
@@ -84,15 +86,17 @@ switch ($relay) { //r0=A1 r1=A2 r3=A2
     break;  
   default:
     if($relay >= 20 && $relay < 84 ){
-      keluar(); // for next dec to binner relay
+      // keluar(); // for next dec to binner relay
+      $cNode->dieJsonNone();
     }else{ 
-      keluar();
+      // keluar();
+      $cNode->dieJsonNone();
     }
     // diluar kode
     break;
 }
    
-mysqli_close($con);
+// mysqli_close($con);
 die(json_encode($respons)); 
 
 function aktuatorOn($on1, $on2=0, $on3=0, $on4=0, $on5=0, $on6=0){ 
