@@ -43,10 +43,12 @@ class cNode extends cKoneksi{
    * bikin respon json sukses + param tambahan array merge sebelum json_encode
    * @param array $param ex. $respons["t"] = date('Y-m-d H:i:s'); 
    */
-  function dieJsonOK($param=[],$perluCekUpdate = true){  
+  function dieJsonOK($param=[],$perluCekUpdate = false){  
     $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses 
     $arResp = array_merge($respons,$param); 
-    if($perluCekUpdate && $this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
+    if($perluCekUpdate){
+      if($this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
+    }  
     $sJsonRespons = json_encode($arResp); 
     die($sJsonRespons);
   }

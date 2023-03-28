@@ -45,8 +45,8 @@ if(isset($_GET['kode'])){
  
 die("t o"); 
 
-//===fungsi fungsi====
-//===fungsi fungsi==== 
+//=============================fungsi fungsi==================================
+//=============================fungsi fungsi================================== 
  
 function logIncomingData($dataMasuk){  //log aktuator maksimal sejumlah record di tabel / 5 data terakhir 
   global $cNode; 

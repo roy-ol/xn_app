@@ -12,8 +12,8 @@ if(array_key_exists("b",$data)){
 
 $sSQL="SELECT * FROM binfirupd WHERE id_chip= $cNode->chipID AND flag=7 AND build > $iBuildVersion";
 $rHasil=$cNode->ambil1Row($sSQL);
-if(count($rHasil) > 0){
-  $respons["url_update"]="http://xn.online-farm.com/repo/" . $rHasil->file_repo . "bin";
+if($rHasil){
+  $respons["url_update"]="http://xn.online-farm.com/repo/" . $rHasil["file_repo"] . ".bin";
   $respons["f"]=8;
   $cNode->dieJsonOkTime($respons); 
 }else{  //bila versi sudah baru.. update flag 8 di tabel binfirupd
