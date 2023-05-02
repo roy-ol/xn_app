@@ -19,6 +19,13 @@ if($rHasil){
 }else{  //bila versi sudah baru.. update flag 8 di tabel binfirupd
   $sSQL="update binfirupd set flag=8 where id_chip=$cNode->chipID ";
   $cNode->eksekusi($sSQL);
+  if(array_key_exists("v",$data)){ // ada versi app
+    $versi = $data->v; 
+    $sSQL="update chip set build = $iBuildVersion, versi=$versi where id=$cNode->chipID ";   
+  }else{
+    $sSQL="update chip set build = $iBuildVersion where id=$cNode->chipID "; 
+  }
+  $cNode->eksekusi($sSQL);
   $cNode->dieJsonNone();
 }
  
