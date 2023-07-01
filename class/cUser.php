@@ -26,7 +26,7 @@ class cUser extends cKoneksi{
     return $newToken;
   }
 
-  function loadUserByID($userID){ //load user dr token key
+  function loadUserByID($userID){ //load user dr id user bisa juga asal dr token key, hasilkan id_level
     $sql = "SELECT * FROM users WHERE id= :userID ;";
     $param = ["userID" => $userID]; 
     $rowHasil = $this->ambil1Row($sql,$param,PDO::FETCH_OBJ);  
@@ -49,6 +49,22 @@ class cUser extends cKoneksi{
     $hasilID = $this->ambil1Data($sql,$param); 
     ($hasilID)?$rsp = $this->loadUserByID($hasilID): $rsp =  false;
     return $rsp ; 
+  }
+
+  /**
+   * @param fungsi load user metode password hash bcrypt seperti laravel 8
+   */
+  function loadUserHash($userName,$pass){ 
+    $hasilID=0;
+    $sql = "SELECT id,pwd FROM users WHERE username=:username ;"; 
+    $param = ["username" => $userName]; 
+    $rowHasil = $this->ambil1Row($sql,$param,PDO::FETCH_OBJ) ;  //ambil id dan pwd
+    if($rowHasil){
+      $pwd= $rowHasil->pwd; 
+      if (password_verify($pass, $pwd)) $hasilID = $rowHasil->id;  //verifikasi hasil hash pwd dg inputan 
+    }
+    $this->loadUserByID($hasilID);
+    return $this->userID(); 
   }
   
   function loadUserByKey($kunci){

@@ -4,7 +4,8 @@ if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor mengenali 
 // contoh data masuk request f7 {"c":"XN0123456","f":7,"b":1677297230} 
 // contoh data masuk request f7 {"c":"XN0123456"} ==> data biasa cek apakah ada update 
  
-if(array_key_exists("b",$data)){
+// if(array_key_exists("b",$data)){  //deprecated
+if(isset($data->b)){
   $iBuildVersion=$data->b ;  
 } else{
   ($cNode->cekUpdate() > 0)?$cNode->dieJsonOK(["f"=>7]) : $cNode->dieJsonNone(); //infokan keberadaan update
@@ -19,7 +20,8 @@ if($rHasil){
 }else{  //bila versi sudah baru.. update flag 8 di tabel binfirupd
   $sSQL="update binfirupd set flag=8 where id_chip=$cNode->chipID ";
   $cNode->eksekusi($sSQL);
-  if(array_key_exists("v",$data)){ // ada versi app
+  // if(array_key_exists("v",$data)){ // ada versi app
+  if(isset($data->v)){ // ada versi app
     $versi = $data->v; 
     $sSQL="update chip set build = $iBuildVersion, versi=$versi where id=$cNode->chipID ";   
   }else{

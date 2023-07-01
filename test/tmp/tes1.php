@@ -40,6 +40,21 @@ echo "<hr>";
 
 echo "<hr>\n";
 
+$password = "123456";
+// $options = [
+//   'cost' => 10,
+// ];
+// $hashedPassword = password_hash($password, PASSWORD_BCRYPT, $options); 
+// echo $hashedPassword;
+$hashedPassword = '$2y$10$bRlM0MkCAjh619SFcTgZceotk5/bN19jz4JVML78F06BXIfVqQ.yC';
+
+
+if (password_verify($password, $hashedPassword)) {
+  echo "Password cocok";
+} else {
+  echo "Password tidak cocok";
+}
+
 // for ($i=0; $i < (127-33); $i++) { 
 //   $hasil = $i ^ 255;
 //   // if ($hasil >=255) {

@@ -6,7 +6,7 @@ include_once '../../app/api_node/apiUmum.php';
 // $data = json_decode($sDataDataPost); 
 $waktu =  gmdate("Y-m-d H:i:s",time() + (3600 * 7)); //gmt+7 jam 
 
-if(isset($_GET['kode'])){
+if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder ini RewriteRule ^(.*)$ index.php?kode=$1 [L]
   $kodeApiFile = $_GET['kode'];   
   if(!$kodeApiFile) die("noCode");
   $cNode = new cNode();
@@ -65,7 +65,7 @@ function cNodeFailLog($sSumber = "", $dataMasuk=""){  //log error node/index.php
   global $cNode; 
   $dataMasuk .= " =>".$_SERVER['REMOTE_ADDR']; 
   $rData= $cNode->ambil1Row("SELECT COALESCE(min(hit),0) min, COALESCE(max(hit),0) max
-      FROM `log_fail` ") ; //WHERE id_node= $idNode "); 
+      FROM `log_fail` ") ; //WHERE id_node= $idNode ");  //jumlah row mengikuti jumlah baris/record di tabel
   $min=$rData['min'];
   $max=$rData['max'];  
   $sql = "update log_fail set sumber='node/$sSumber', data= :dt , hit = " . ($max + 1);
