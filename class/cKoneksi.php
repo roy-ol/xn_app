@@ -19,19 +19,15 @@ class cKoneksi{
     ($parameters)?$r->execute($parameters):$r->execute();
     return $r->rowCount(); 
   }
-
+ 
   /**
-   * default fetch = FETCH_ASSOC
+   * non Fetch, hanya query mengembalikan hasil pdo
    * ambil semua data / multirow array assoc
    */
-  function ambilData($sQuery,$parameters=null,$fetch_method = PDO::FETCH_ASSOC){  // bila ada parameters array untuk execute
-    $hasil = []; //ambil semua data / multirow array assoc
+  function ambilData($sQuery,$parameters=null){  // bila ada parameters array untuk execute 
     $r = $this->pdo->prepare($sQuery);  
     ($parameters)?$r->execute($parameters):$r->execute();
-    while($row = $r->fetch($fetch_method)){
-      $hasil = $row; 
-    }
-    return $hasil;
+    return $r;
   }
   
   /**

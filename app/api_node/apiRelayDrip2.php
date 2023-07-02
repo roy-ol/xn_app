@@ -1,4 +1,6 @@
 <?php  
+if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor mengenali variabel $cNode sebagai class sebelumnya
+
 /* ======================================================
 apirelay untuk aktuator Drip :
 #define RELAY0 15 //D8 Snubber  //pulled down D8 bootfail on high
@@ -20,7 +22,7 @@ apirelay untuk aktuator Drip :
 // $arrRespons['f']=0; //flag respons ke ESP tidak ada yang perlu dilakukan
 $responNone = '{"f":0}';  //flag respons ke ESP tidak ada yang perlu dilakukan
 
-$arrData=ambilData("SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $id_node AND keterangan LIKE '%*xt1*%' UNION 
+$arrData=$cNode->ambil1Row("SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $id_node AND keterangan LIKE '%*xt1*%' UNION 
     SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $id_node AND CURTIME() BETWEEN time0 AND time1 ");
 if(!$arrData){
   mysqli_close($con);
@@ -47,7 +49,7 @@ $istoday = $arrData['today'];
 // $isXNormal=(strpos($keterangan, '*xt1*')?false:true); //bernilai false bila strpos menghasilkan 0
 $xt1=strpos($keterangan, '*xt1*');
 //==== bila log tanggal == tanggal hari ini dan repeater = 'N'  
-if ($repeater == 'N' && $istoday == 1 && $xt1 === false) keluar();
+if ($repeater == 'N' && $istoday == 1 && $xt1 === false) $cNode->dieJsonNone();
 //===lanjut bila tanggal != CURDATE() atau repeater = Y  atau xt1=false / ada request xt1          
 if($xt1 !== false){ 
   $xtreset=strpos($keterangan, '*xt1*rst*');  //perintah untuk mereset tanggal agar tidak terkunci repeater Off 

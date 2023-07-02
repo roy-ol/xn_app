@@ -8,7 +8,7 @@ $flag=$data->f; //contoh data masuk request f1 {"c":"XN0123456","f":5}
 $respons['f']="2"; //flag balik dr jawaban logging status flag
 // 2=update sleep time
  
-$rData= $cNode->ambilData("SELECT count(id) jum, COALESCE(max(hit),0) max ,COALESCE(min(hit),0) min 
+$rData= $cNode->ambil1Row("SELECT count(id) jum, COALESCE(max(hit),0) max ,COALESCE(min(hit),0) min 
 FROM `node_status` WHERE id_node= $id_node and flag=$flag" );
 $jum=$rData['jum'];
 $max=$rData['max'];

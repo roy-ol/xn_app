@@ -14,7 +14,7 @@ include_once '../apiUmum.php';
 // $arrRespons['f']=0; //flag respons ke ESP tidak ada yang perlu dilakukan
 $responNone = '{"f":0}';  //flag respons ke ESP tidak ada yang perlu dilakukan
 
-$arrData=$cNode->ambilData("SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $cNode->nodeID AND keterangan LIKE '%*xt1*%' UNION 
+$arrData=$cNode->ambil1Row("SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $cNode->nodeID AND keterangan LIKE '%*xt1*%' UNION 
     SELECT COALESCE(tanggal=CURDATE(),0) AS today, nr.* FROM  node_role nr WHERE id_node = $cNode->nodeID AND CURTIME() BETWEEN time0 AND time1 ");
 if(!$arrData){
   // mysqli_close($con);
