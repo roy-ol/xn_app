@@ -2,65 +2,156 @@
 session_start(); // Memulai sesi
 
 // Cek apakah pengguna sudah login atau belum
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-  require_once __DIR__ . '../../../../app/init_class.php';
-  $cUmum = new cUmum();
-}else{  
-  header("Location: login.php");  
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+  header("Location: login.php"); // Redirect ke halaman login jika belum login
   exit;
 }
 
-// Query SELECT dengan JOIN
-$query = "SELECT p.nama AS perusahaan, k.nama AS kebun, c.id, c.chip, t.nama AS tipe, t.kelompok, c.keterangan, c.versi, c.build, c.updated, c.created
-          FROM chip c
-          JOIN kebun k ON k.id = c.id_kebun
-          JOIN perusahaan p ON p.id = k.id_perusahaan
-          JOIN tipe t ON t.id = c.id_tipe
-          ORDER BY id DESC limit 10" ;
-
-$result = $cUmum->ambilData($query);
-// Memeriksa apakah query berhasil dijalankan
-if ($result) {
-    echo '<table>';
-    echo '<thead>';
-    echo '<tr>';
-    echo '<th>Perusahaan</th>';
-    echo '<th>Kebun</th>';
-    echo '<th>ID</th>';
-    echo '<th>Chip</th>';
-    echo '<th>Tipe</th>';
-    echo '<th>Kel</th>';
-    echo '<th>Keterangan</th>';
-    echo '<th>Ver</th>';
-    echo '<th>Build</th>';
-    echo '<th>Updated</th>';
-    echo '<th>Created</th>';
-    echo '</tr>';
-    echo '</thead>';
-    echo '<tbody>';
-
-    // Menampilkan data dalam tabel
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        echo '<tr>';
-        echo '<td>' . $row['perusahaan'] . '</td>';
-        echo '<td>' . $row['kebun'] . '</td>';
-        echo '<td>' . $row['id'] . '</td>';
-        echo '<td>' . $row['chip'] . '</td>';
-        echo '<td>' . $row['tipe'] . '</td>';
-        echo '<td>' . $row['kelompok'] . '</td>';
-        echo '<td>' . $row['keterangan'] . '</td>';
-        echo '<td>' . $row['versi'] . '</td>';
-        echo '<td>' . $row['build'] . '</td>';
-        echo '<td>' . $row['updated'] . '</td>';
-        echo '<td>' . $row['created'] . '</td>';
-        echo '</tr>';
-    }
-
-    echo '</tbody>';
-    echo '</table>';
-} else {
-    $conn = $cUmum->getPDO();
-    echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];
-}
-
+require_once __DIR__ . '../../../../app/init_class.php';
+$cUmum = new cUmum(); 
 ?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Node Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
+    <style>
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .form-tombol { 
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            width: 150px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea {
+            flex: 1;
+            height: 30px;
+        }
+        .form-group textarea {
+        resize: vertical;
+        overflow-y: auto;
+    }
+</style>
+
+Dengan mengatur properti seperti di atas, textarea akan secara otomatis memperluas ketinggiannya saat konten teksnya bertambah dan menampilkan bilah pengguliran vertikal jika perlu.
+
+    </style>
+    
+</head>
+<body>
+    <h1>Modul system Chip XN / Node </h1> 
+    <form action="update_node.php" method="POST">
+        <div class="form-group">
+          <label for="kebun">Kebun:</label>
+          <select id="kebun" name="kebun">
+
+            <?php
+            // Query SELECT
+            $query = "SELECT k.nama AS kebun, k.id AS kebunid, p.nama AS perusahaan FROM kebun k 
+            JOIN perusahaan p ON k.id_perusahaan = p.id";
+
+            $result = $cUmum->ambilData($query);
+
+            // Memeriksa apakah query berhasil dijalankan
+            if ($result) {
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    echo '<option value="' . $row['kebunid'] . '">' . $row['kebun'] . ' - ' . $row['perusahaan'] . '</option>';
+                }
+            } else {
+                echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];
+            }
+            ?>
+
+          </select>
+        </div>
+
+        <div class="form-group">
+            <label for="nama">Nama:</label>
+            <input type="text" id="nama" name="nama" placeholder="Nama Chip">
+        </div>
+
+        <div class="form-group">
+            <label for="chip">Chip:</label>
+            <input type="text" id="chip" name="chip" placeholder="Chip">
+        </div>
+
+        <div class="form-group">
+          <label for="tipe">Tipe:</label>
+          <select id="tipe" name="tipe" style="width: 100%">
+
+            <?php
+            // Query SELECT
+            $query = "SELECT id, nama, kelompok, keterangan FROM tipe";
+
+            $result = $cUmum->ambilData($query);
+
+            // Memeriksa apakah query berhasil dijalankan
+            if ($result) {
+                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                    echo '<option value="' . $row['id'] . '">' .  $row['id'] . '='. $row['nama'] . ' K' .$row['kelompok']. ' ' . $row['keterangan'] . '</option>';
+                }
+            } else {
+                echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];
+            }
+            ?>
+
+          </select>
+        </div>
+
+        <div class="form-group">
+            <label for="keterangan">Keterangan:</label>
+            <input type="text" id="keterangan" name="keterangan" placeholder="Keterangan">
+        </div>
+
+        <div class="form-group">
+            <label for="versi">Versi:</label>
+            <input type="text" id="versi" name="versi" placeholder="Versi">
+        </div>
+
+        <div class="form-group">
+            <label for="build">Build:</label>
+            <input type="text" id="build" name="build" placeholder="Build">
+        </div>
+
+        <div class="form-group">
+            <label for="memo">Memo:</label>
+            <textarea id="memo" name="memo" placeholder="Memo"></textarea>
+        </div>
+        
+        <div class="form-tombol">
+        <button type="submit">Simpan</button>
+      </div>
+  </form>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#kebun').select2({
+            placeholder: 'Pilih Kebun',
+            allowClear: true,
+            maximumSelectionLength: 1
+        });
+        $('#tipe').select2({
+            placeholder: 'tipe chip',
+            allowClear: true, 
+            maximumSelectionLength: 1
+        });
+    });
+</script>
+</body>
+</html>
