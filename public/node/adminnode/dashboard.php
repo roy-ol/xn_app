@@ -18,7 +18,7 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
   <label id="date"></label> + <label id="elapsed-time"></label>
   <a href="logout.php">Logout</a>
   <br><br>
-  <a href="node_baru.php">+ Node/Chip Baru</a>
+  <a href="node_baru.php">+ Node / Chip Baru</a>
   <br><br><br> 
 
 <?php
