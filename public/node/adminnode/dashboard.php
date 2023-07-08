@@ -3,7 +3,7 @@ session_start();
 
 // Cek apakah pengguna sudah login atau belum
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: login.php"); // Redirect ke halaman login jika belum login
+    header("Location: index.php"); // Redirect ke halaman login jika belum login
     exit;
 }
 ?>

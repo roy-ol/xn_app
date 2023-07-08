@@ -14,6 +14,7 @@ if (isset($_POST['login'])) {
     require_once __DIR__ . '../../../../app/init_class.php';
     $myUser = new cUser();
     $userID = false;
+    $error_message="Login page:";
 
     $input_username = $_POST['username'];
     $input_password = $_POST['password'];
