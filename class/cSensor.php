@@ -231,10 +231,13 @@ class cSensor extends cKoneksi{
     return $val_hasil_map;
   }
 
-  function nodeByChip($chipID,$noSensor){
+  function nodeByChip($chipID,$subNode){
     $this->statusSensor=false; // awal check dari chip status default $this->getStatusSensor
-    $sql = "select * from node where chip= :chipID and no_sensor = :noSensor";
-    $param = ["chipID"=>$chipID,"noSensor" =>$noSensor];
+    $sql = "SELECT n.id, c.id AS id_chip, c.id_tipe, n.flag,n.keterangan
+    FROM chip c
+    JOIN node n ON n.id_chip = c.id
+    WHERE c.chip = :chip AND n.sub_node = :subNode";
+    $param = ["chip"=>$chipID,"subNode" =>$subNode];
     $hasil = $this->ambil1Row($sql,$param);
     if($hasil){
       $this->nodeID = $hasil['id'];
