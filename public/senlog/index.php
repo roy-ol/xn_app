@@ -7,7 +7,7 @@ $sDataDataPost=file_get_contents('php://input');
 // echo $sDataDataPost;    
 $data = json_decode($sDataDataPost);  //{"c":"XN0123456", "n":1, "r0":512, "v1":54, "t":"2022-05-26 02:28:34"}
 if (json_last_error() != JSON_ERROR_NONE) {
-  die('forbidden #1 '. json_last_error()); //cek format json apakah valid
+  die('forbidden #1:'. json_last_error()). "=>".$sDataDataPost; //cek format json apakah valid
 }
 require_once __DIR__ . '/../../app/init_class.php';
 
