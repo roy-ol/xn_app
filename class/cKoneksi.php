@@ -5,6 +5,7 @@ class cKoneksi{
 
   function __construct(){ 
     require_once __DIR__ . "/../app/fsambungan.php";
+    // require_once __DIR__ . "/../app/connection.php";
     $this->pdo = new PDO("mysql:host=".HOST.";dbname=".DB, USER, PASS);   
 	} 
 
