@@ -241,7 +241,7 @@ class cSensor extends cKoneksi{
     $hasil = $this->ambil1Row($sql,$param);
     if($hasil){
       $this->nodeID = $hasil['id'];
-      $this->chipID = $hasil['chip'];
+      $this->chipID = $hasil['id_chip'];
       $this->tipeID = $hasil['id_tipe'];
       $this->flag = $hasil['flag'];
       $this->keterangan = $hasil['keterangan'];
