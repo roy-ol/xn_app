@@ -8,7 +8,8 @@ if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor mengenali 
 (isset($data->t))?$WaktuNode=$data->t:$WaktuNode = false; //bila ada nilai t / waktu dari node
 (isset($data->il))?$id_loc=$data->il:$id_loc = false; //bila ada nilai idl / id_loc id dari tabel senlog lokal
  
-($cNode->nodeByChip($chipID,$sensorNum))?$status = 0:die("forbidden #3");// sensor tidak ketemu atau flag = 0
+// ($cNode->nodeByChip($chipID,$sensorNum))?$status = 0:die("forbidden #3");// sensor tidak ketemu atau flag = 0
+  // if($cNode->nodeByChip($data->c,$data->n) == false) die("Node"); //sudah dipanggil di index
 $nodeID=$cNode->nodeID;
 // $valMap = $cSensor->value_map($rawV1);
 $rInsert = $cNode->logging($raw0,$val1,$WaktuNode,$id_loc);

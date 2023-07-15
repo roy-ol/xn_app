@@ -1,8 +1,7 @@
 <?php  
 //api awal untuk aplikasi relay drip system GH Metro
 include_once '../../app/api_node/apiUmum.php';   
-
-
+ 
 // $data = json_decode($sDataDataPost); 
 $waktu =  gmdate("Y-m-d H:i:s",time() + (3600 * 7)); //gmt+7 jam 
 
