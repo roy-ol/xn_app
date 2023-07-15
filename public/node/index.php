@@ -17,7 +17,7 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
 
   switch ($kodeApiFile) { //======pause switch.  ===== case ada yang belum di tes=========
     case 'sl':
-      include_once '../../app/api_node/apiSensorLoger.php'; //sensor logger 
+      include_once '../../app/api_node/apiSensorLoger.php'; //sensor logger  //==== on dev
       break; 
     case 'd1':
       include_once '../../app/api_node/apiRelayDrip1.php'; //aktuator metro
