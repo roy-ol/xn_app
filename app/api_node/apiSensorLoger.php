@@ -1,6 +1,6 @@
 <?php //sensor logger
 if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor mengenali variabel $cNode sebagai class sebelumnya 
- //========pause ada sedikit update tambahan
+ //========pause ada sedikit update tambahan.. belum memperhitungkan maksimal data
 // $data = json_decode($sDataDataPost);  //{"c":"XN0123456", "n":1, "r0":512, "v1":54, "t":"2022-05-26 02:28:34"}  
  
 (isset($data->r0))?$raw0=$data->r0 : $raw0=null ; 
@@ -13,7 +13,7 @@ if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor mengenali 
 $nodeID=$cNode->nodeID;
 // $valMap = $cSensor->value_map($rawV1);
 $rInsert = $cNode->logging($raw0,$val1,$WaktuNode,$id_loc);
-if($rInsert) $status = 9;
+if($rInsert) $status = "OK";
 
 
 $respons = ["s" => $status];  
