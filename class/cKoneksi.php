@@ -65,18 +65,31 @@ class cKoneksi{
   function dieJsonGagal($sKeterangan = "0"){
     $respons = ["status" => "gagal"];  
     $respons["time"] = date('Y-m-d H:i:s');
-    $respons["keterangan"] = $sKeterangan;
-    $sJsonRespons = json_encode($respons);
-    die($sJsonRespons);
+    $respons["keterangan"] = $sKeterangan;    
+    $this->dieJson($respons);
+    // $sJsonRespons = json_encode($respons);
+    // die($sJsonRespons);
   }
 
+  /**
+   * cKoneksi bikin respon json sukses + param tambahan array merge sebelum json_encode
+   * @param array $param ex. $respons["t"] = date('Y-m-d H:i:s'); 
+   */
   function dieJsonOK($param=[]){  
     $respons = ["status" => "OK"];  
     $respons["time"] = date('Y-m-d H:i:s'); 
     $arResp = array_merge($respons,$param); 
-    $sJsonRespons = json_encode($arResp);
-    // echo $sJsonRespons;
-    // die();
+    // $sJsonRespons = json_encode($arResp); 
+    // die($sJsonRespons);
+    $this->dieJson($arResp);
+  }
+
+  /**
+   * cKoneksi bikin respon json   + param tambahan array untuk json_encode
+   * @param array $param ex. $respons["t"] = date('Y-m-d H:i:s'); 
+   */
+  function dieJson($param=[]){    
+    $sJsonRespons = json_encode($param); 
     die($sJsonRespons);
   }
 

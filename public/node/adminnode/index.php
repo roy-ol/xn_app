@@ -33,7 +33,13 @@ if (isset($_POST['login'])) {
 
 <!DOCTYPE html>
 <html>
-<head>
+<head> 
+<script> 
+    var userEmail = "email pengguna";
+  
+    alert(userEmail);
+    console.log(userEmail);
+    </script>
     <title>Halaman Login</title>
 </head>
 <body>
@@ -52,5 +58,24 @@ if (isset($_POST['login'])) {
 
         <input type="submit" name="login" value="Login">
     </form>
+    <div id="pesan"></div>
+
+<script> 
+    var userEmail = "email pengguna";
+
+    // Memeriksa apakah pengguna telah terautentikasi di browser
+    if (navigator.credentials && navigator.credentials.get) {
+      var credential = navigator.credentials.get({ type: 'email' });
+
+      // Mengambil email dari kredensial yang ditemukan
+      userEmail = credential && credential.id ? credential.id : "tidak ada";
+    }
+
+    // alert(userEmail);
+    // console.log(userEmail);
+
+  var pesanElement = document.getElementById("pesan");
+  pesanElement.textContent = userEmail;
+</script>
 </body>
 </html>

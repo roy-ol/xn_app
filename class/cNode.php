@@ -22,7 +22,8 @@ class cNode extends cKoneksi{
   }
 
   function dieJsonNone(){ // 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
-    $this->dieJsonOK(["f"=>0]);
+    // $this->dieJsonOK(["f"=>0]);
+    parent::dieJson(["f"=>0]);
   }
 
   function dieJsonNoneTime(){ // XNtime + 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
@@ -32,25 +33,23 @@ class cNode extends cKoneksi{
   /**
    * @brief XNtime + $arResp = array_merge($respons,$param); 
    */
-  function dieJsonOkTime($param=[]){ // XNtime + $arResp = array_merge($respons,$param); 
-    $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses
+  function dieJsonOkTime($param=[]){ // XNtime + $arResp = array_merge($respons,$param);  
     $respons["t"] = date('Y-m-d H:i:s');  
     $arResp = array_merge($respons,$param); 
     $this->dieJsonOK($arResp); 
   }
-
+  
   /**
    * bikin respon json sukses + param tambahan array merge sebelum json_encode
    * @param array $param ex. $respons["t"] = date('Y-m-d H:i:s'); 
    */
-  function dieJsonOK($param=[],$perluCekUpdate = false){  
-    $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses 
+  function dieJsonOK($param=[],$perluCekUpdate = false){     
+    $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses
     $arResp = array_merge($respons,$param); 
     if($perluCekUpdate){
       if($this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
     }  
-    $sJsonRespons = json_encode($arResp); 
-    die($sJsonRespons);
+    parent::dieJson($arResp); 
   }
 
   /**
@@ -135,7 +134,7 @@ class cNode extends cKoneksi{
     if($waktuNode){  
       $dateTime = new DateTime($waktuNode); 
       $timestamp = $dateTime->format('U');       
-      if($id_loc){
+      if($id_loc){ //bila ada id_loc (dikirim oleh local server)
         $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai, waktu_node,id_loc)
           VALUES(:nodeID , :raw0, :val1, :nilai,  FROM_UNIXTIME(:waktu), :id_loc )" ; 
         $param['waktu'] = $timestamp;
@@ -146,7 +145,7 @@ class cNode extends cKoneksi{
         $param['waktu'] = $timestamp;
       }
     }else{
-      if($id_loc){
+      if($id_loc){ //bila ada id_loc (dikirim oleh local server)
         $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai, id_loc)
         VALUES(:nodeID , :raw0, :val1, :nilai, :id_loc)" ;
         $param['id_loc'] = $id_loc;
