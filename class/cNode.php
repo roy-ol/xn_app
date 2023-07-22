@@ -124,6 +124,48 @@ class cNode extends cKoneksi{
     if(!$this->statusNode){ return false; } //keluar bila status false
 
     //ada r0 dan v1 kosong atau ada nilaii v1 
+    if ($raw0 != null && $val1 == null ){
+      $nilaiHasil = $this->value_map($raw0);
+    } else {
+      $nilaiHasil = $this->value_map($val1); 
+    }
+    $param = ["nodeID"=>$this->nodeID];  
+    $param += ["val1"=>$val1];  
+    $param += ["raw0"=>$raw0];  
+    $param["nilai"] = $nilaiHasil;
+
+    if($waktuNode){  
+      $dateTime = new DateTime($waktuNode); 
+      $timestamp = $dateTime->format('U');       
+      if($id_loc){ //bila ada id_loc (dikirim oleh local server)
+        $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai, waktu_node,id_loc)
+          VALUES(:nodeID , :raw0, :val1, :nilai,  FROM_UNIXTIME(:waktu), :id_loc )" ; 
+        $param['waktu'] = $timestamp;
+        $param['id_loc'] = $id_loc;
+      }else{
+        $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai, waktu_node)
+          VALUES(:nodeID , :raw0, :val1, :nilai,  FROM_UNIXTIME(:waktu) )" ; 
+        $param['waktu'] = $timestamp;
+      }
+    }else{
+      if($id_loc){ //bila ada id_loc (dikirim oleh local server)
+        $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai, id_loc)
+        VALUES(:nodeID , :raw0, :val1, :nilai, :id_loc)" ;
+        $param['id_loc'] = $id_loc;
+      }else{
+      $q = "INSERT INTO sensor_logger(id_node, raw0, val1, nilai)
+        VALUES(:nodeID , :raw0, :val1, :nilai)" ;
+      }
+    }
+
+    $hasil = $this->eksekusi($q,$param);  
+    return $hasil;
+  }
+
+  function logging1($raw0, $val1,$waktuNode = false, $id_loc = false ){  //false atau format ex. '2022-05-26 02:28:34'
+    if(!$this->statusNode){ return false; } //keluar bila status false
+
+    //ada r0 dan v1 kosong atau ada nilaii v1 
     ($raw0 != null && $val1 == null )? $nilaiHasil = $this->value_map($raw0) : $nilaiHasil = $this->value_map($val1); 
 
     $param = ["nodeID"=>$this->nodeID];  
@@ -185,13 +227,16 @@ class cNode extends cKoneksi{
     return $hasil;
   }
   
-  function value_map($rawVal1){  
+  function value_map($rawVal1,&$adaMinMax = false){  
     if($rawVal1 == null) return 0;
     $q="select * from value_map where id_node=" . $this->nodeID;
     $r=$this->ambil1Row($q);
 
-    if(!$r) return $rawVal1;  //keluar langsung pakai rawval bila tidak ketemu map value
-
+    if(!$r){
+      $adaMinMax = false;
+      return $rawVal1;  //keluar langsung pakai rawval bila tidak ketemu map value
+    }
+    
     $raw0=$r['raw_nol'];
     $raw1=$r['raw_satu'];
     $raw2=$r['raw_dua'];
@@ -250,9 +295,10 @@ class cNode extends cKoneksi{
     $val_hasil_map = $valAwal + ((($valAkhir - $valAwal) / ($rawAkhir - $rawAwal)) * ($rawVal1 - $rawAwal));
 
     if($min != null && $max != null){ //ada batas minmax nilai keduanya / tidak null
+      $adaMinMax = true;  
       if( $min < $max ){ 
         if($val_hasil_map < $min) $val_hasil_map = $min;
-        if($val_hasil_map > $max) $val_hasil_map = $max;        
+        if($val_hasil_map > $max) $val_hasil_map = $max;       
       }elseif ( $min > $max ) { 
         if($val_hasil_map > $min) $val_hasil_map = $min;
         if($val_hasil_map < $max) $val_hasil_map = $max;  
@@ -262,7 +308,7 @@ class cNode extends cKoneksi{
     return $val_hasil_map;
   }
 
-  function value_map_lama($rawVal1){  
+  function value_map_lama0($rawVal1){  
     $q="select * from value_map where id_node=" . $this->nodeID;
     $r=$this->ambil1Row($q);
 

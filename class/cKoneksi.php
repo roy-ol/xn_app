@@ -1,4 +1,4 @@
-<?php 
+<?php   //kelas koneksi dan layanan kelas umum
 
 class cKoneksi{
   private $pdo;
@@ -60,6 +60,24 @@ class cKoneksi{
     fwrite($fdlog,$pesan_debug);
     fclose($fdlog);
     return $pesan_debug;
+  }
+
+  /**
+   * mengirimkan jawaban tunggal ke Client tetapi melanjutkan skrip dari baris setelahnya
+   * @param string $sDataKirim data tunggal yang dikirimkan segera ke client 
+   * terus melanjutkan proses setelah fungsi ini
+   */
+  function echoFlush($sDataKirim){  // alternatif lain sebelum menggunakan Async PHP kompleks, 
+    ob_end_clean();                 // agar client segera dapat jawaban tanpa tunggu proses lain
+    header("Connection: close"); 
+    ignore_user_abort(true); // optional 
+    ob_start(); 
+    echo $sDataKirim;  
+    $size = ob_get_length(); 
+    header("Content-Length: $size"); 
+    ob_end_flush(); 
+    flush(); 
+    session_write_close(); 
   }
   
   function dieJsonGagal($sKeterangan = "0"){
