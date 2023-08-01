@@ -1,12 +1,12 @@
 <?php  
-if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor mengenali variabel $cNode sebagai class sebelumnya
+if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor vsc mengenali variabel $cNode sebagai class sebelumnya
 // if($cNode->nodeByChip($data->c,$data->n) == false) die("Node");
 // contoh data masuk request f7 {"c":"XN0123456","f":7,"b":1677297230} 
 // contoh data masuk request f7 {"c":"XN0123456"} ==> data biasa cek apakah ada update 
  
 // if(array_key_exists("b",$data)){  //deprecated
 if(isset($data->b)){
-  $iBuildVersion=$data->b ;  
+  $iBuildVersion=$data->b ;  //indikasi / jawaban balik dari node cek build num
 } else{
   ($cNode->cekUpdate() > 0)?$cNode->dieJsonOK(["f"=>7]) : $cNode->dieJsonNone(); //infokan keberadaan update
 }
