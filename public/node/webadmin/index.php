@@ -34,12 +34,12 @@ if (isset($_POST['login'])) {
 <!DOCTYPE html>
 <html>
 <head> 
-<script> 
+<!-- <script> 
     var userEmail = "email pengguna";
   
     alert(userEmail);
     console.log(userEmail);
-    </script>
+    </script> -->
     <title>Halaman Login</title>
 </head>
 <body>

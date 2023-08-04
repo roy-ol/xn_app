@@ -21,7 +21,7 @@ $data = json_decode($sDataDataPost);
 
 // dari sini ada data post untuk diolah:
 // ==========================================
-require_once __DIR__ . '/../init_class.php'; 
+require_once __DIR__ . '/../../app/init_class.php'; 
 
 
 // $data = json_decode($sDataDataPost); 

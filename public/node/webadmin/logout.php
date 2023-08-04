@@ -8,6 +8,6 @@ session_unset();
 session_destroy();
 
 // Redirect ke halaman login setelah logout
-header("Location: ../adminnode/");
+header("Location: ./");   //kembali ke default file di folder yang sama
 exit;
 ?>

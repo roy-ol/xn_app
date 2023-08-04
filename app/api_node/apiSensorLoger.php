@@ -5,9 +5,9 @@ if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor mengenali 
 (isset($data->r0))?$raw0=$data->r0 : $raw0=null ; 
 (isset($data->v1))?$val1=$data->v1 : $val1=null ; 
 (isset($data->t))?$WaktuNode=$data->t:$WaktuNode = false; //bila ada nilai t / waktu dari node
-(isset($data->il))?$id_loc=$data->il:$id_loc = false; //bila ada nilai idl / id_loc id dari tabel senlog lokal
+(isset($data->il))?$id_loc=$data->il:$id_loc = false; //bila ada nilai il / id_loc id dari tabel senlog lokal
 
-//========pause ada sedikit update tambahan.. belum memperhitungkan maksimal data
+//========pause for next ada sedikit update tambahan.. belum memperhitungkan maksimal data
   // if($cNode->nodeByChip($data->c,$data->n) == false) die("Node"); //sudah dipanggil di index
 $nodeID=$cNode->nodeID;
 // $valMap = $cSensor->value_map($rawV1);
