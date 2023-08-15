@@ -33,7 +33,7 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
   $cNode = new cNode();
   logIncomingData($kodeApiFile . "->" . $sDataDataPost);
   (isset($data->c))?:die("chip"); 
-  (isset($data->n))?:$data->n=1; // hanya chip tanpa sub_node n default = 1
+  (isset($data->n))?:$data->n=1; // hanya chip tanpa sub_node, n default = 1
   if($cNode->nodeByChip($data->c,$data->n) == false) die("Node");
 
   switch ($kodeApiFile) { //======pause switch.  ===== case ada yang belum di tes=========
@@ -42,7 +42,7 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
       break; 
     case 'sl':
       include_once '../../app/api_node/apiSensorLoger.php'; //sensor logger  //==== on dev
-      break; 
+      break;  
     case 'd1':
       include_once '../../app/api_node/apiRelayDrip1.php'; //aktuator metro
       break; 
