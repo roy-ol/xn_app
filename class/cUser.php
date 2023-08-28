@@ -43,12 +43,15 @@ class cUser extends cKoneksi{
     }
   }
 
-  function loadUser($userName,$pass){
-    $sql = "SELECT id FROM users WHERE username=:username AND pwd=MD5(AES_ENCRYPT(:pass,'crypt9'));";
-    $param = ["username" => $userName, "pass"=>$pass]; 
-    $hasilID = $this->ambil1Data($sql,$param); 
-    ($hasilID)?$rsp = $this->loadUserByID($hasilID): $rsp =  false;
-    return $rsp ; 
+  // function loadUser($userName,$pass){ //pakai AES_ENCRYPT crypt9
+  //   $sql = "SELECT id FROM users WHERE username=:username AND pwd=MD5(AES_ENCRYPT(:pass,'crypt9'));";
+  //   $param = ["username" => $userName, "pass"=>$pass]; 
+  //   $hasilID = $this->ambil1Data($sql,$param); 
+  //   ($hasilID)?$rsp = $this->loadUserByID($hasilID): $rsp =  false;
+  //   return $rsp ; 
+  // }
+  function loadUser($userName,$pass){ 
+    return $this->loadUserHash($userName,$pass) ; 
   }
 
   /**
@@ -87,12 +90,21 @@ class cUser extends cKoneksi{
   function fullname(){ 
     return $this->fullname;
   }
+  function id_level(){ 
+    return $this->id_level;
+  }
 
-  function updatePassword($sPass){
-    $sql = "UPDATE users SET pwd=MD5(AES_ENCRYPT(':pass','crypt9')) WHERE id= :userID";    
-    $param = ["pass"=>$sPass,"userID" => $this->userID];
+  function updatePassword($sPass){  
+    $hashedPassword = password_hash($sPass, PASSWORD_BCRYPT);
+    $sql = "UPDATE users SET pwd= MD5(AES_ENCRYPT(':pass','crypt9')) WHERE id= :userID";    
+    $param = ["pass"=>$hashedPassword,"userID" => $this->userID];
     return $this->eksekusi($sql,$param);
   }
+  // function updatePassword($sPass){ //metode AES_ENCRYPT
+  //   $sql = "UPDATE users SET pwd=MD5(AES_ENCRYPT(':pass','crypt9')) WHERE id= :userID";    
+  //   $param = ["pass"=>$sPass,"userID" => $this->userID];
+  //   return $this->eksekusi($sql,$param);
+  // }
 
   function cekKunci(){
 

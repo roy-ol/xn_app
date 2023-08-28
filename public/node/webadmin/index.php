@@ -20,13 +20,18 @@ if (isset($_POST['login'])) {
     $input_password = $_POST['password'];
     $userID = $myUser->loadUserHash($input_username,$input_password); 
     if($userID) {
+      if($myUser->id_level() > 1){
+        $error_message = "maaf hak akses anda tidak diperbolehkan menggunakan fitur ini"; 
+      }else{
         $_SESSION['logged_in'] = true;
+        $_SESSION['id_level'] = $myUser->id_level();
         $_SESSION['userID'] = $userID;
         $_SESSION['username'] =$myUser->fullname();
         header("Location: dashboard.php"); // Redirect ke halaman dashboard setelah login berhasil
         exit;
+      }
     } else {
-        $error_message = "Username atau password salah";
+      $error_message = "Username atau password salah";
     }
 }
 ?>

@@ -8,28 +8,38 @@ if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor vsc mengen
 if(isset($data->b)){
   $iBuildVersion=$data->b ;  //indikasi / jawaban balik dari node cek build num
 } else{
-  ($cNode->cekUpdate() > 0)?$cNode->dieJsonOK(["f"=>7]) : $cNode->dieJsonNone(); //infokan keberadaan update
+  ($cNode->cekUpdate() > 0)?$cNode->dieJsonOK(["f"=>7]) : $cNode->dieJsonNone(); //infokan keberadaan update/keluar
 }
 
-$sSQL="SELECT * FROM binfirupd WHERE id_chip= $cNode->chipID AND flag=7 AND build > $iBuildVersion";
+//pause ===
+
+$sSQL="SELECT c.build, b.build as bin_build, b.file_repo FROM chip c , binfirupd b where b.id = c.id_repo 
+  AND c.id=$cNode->chipID ";
+  // AND c.id=$cNode->chipID AND b.build > $iBuildVersion";
 $rHasil=$cNode->ambil1Row($sSQL);
 if($rHasil){
-  $respons["url_update"]="http://xn.online-farm.com/repo/" . $rHasil["file_repo"] . ".bin";
-  $respons["f"]=8;
-  $cNode->dieJsonOkTime($respons); 
-}else{  //bila versi sudah baru.. update flag 8 di tabel binfirupd
-  $sSQL="update binfirupd set flag=8 where id_chip=$cNode->chipID ";
-  $cNode->eksekusi($sSQL);
-  // if(array_key_exists("v",$data)){ // ada versi app
-  if(isset($data->v)){ // ada versi app
-    $versi = $data->v; 
-    $sSQL="update chip set build = $iBuildVersion, versi=$versi where id=$cNode->chipID ";   
-  }else{
-    $sSQL="update chip set build = $iBuildVersion where id=$cNode->chipID "; 
-  }
-  $cNode->eksekusi($sSQL);
-  $cNode->dieJsonNone();
-}
+  $cBuild =intval($rHasil["build"]);  // fungsi menjadikan nilai integer
+  $bBuild = (int) $rHasil["bin_build"];  // casting menjadikan nilai integer
+  if($bBuild > $iBuildVersion ){
+    $respons["url_update"]="http://xn.online-farm.com/repo/" . $rHasil["file_repo"] . ".bin";
+    $respons["f"]=8;
+    $cNode->dieJsonOkTime($respons); 
+  }else{ //jika iBuild sudah lebih besar  dengan repo Build / binRepoBuild / bBuild
+    if($cBuild < $iBuildVersion){ 
+        if(isset($data->v)){ // ada versi app
+          $versi = $data->v; 
+          $sSQL="update chip set flag=8, build = $iBuildVersion, versi=$versi where id=$cNode->chipID ";   
+        }else{ 
+          $sSQL="update chip set flag=8, build = $iBuildVersion where id=$cNode->chipID "; 
+        }
+        $cNode->eksekusi($sSQL);
+        $cNode->dieJsonNone();
+    }else{
+      $sSQL="update chip set flag=5 where id=$cNode->chipID "; // jika sudah besar/sama nilai ibuild vs cBuild
+      $cNode->eksekusi($sSQL);
+    }
+  }  
+} 
  
 $cNode->dieJsonNone();
 

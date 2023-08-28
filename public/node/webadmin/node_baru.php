@@ -1,14 +1,5 @@
-<?php
-session_start(); // Memulai sesi
-
-// Cek apakah pengguna sudah login atau belum
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-  header("Location: login.php"); // Redirect ke halaman login jika belum login
-  exit;
-}
-
-require_once __DIR__ . '../../../../app/init_class.php';
-$cUmum = new cUmum(); 
+<?php  
+require_once __DIR__ . '/menu.php';  
 ?>
 
 
@@ -44,9 +35,7 @@ $cUmum = new cUmum();
         overflow-y: auto;
     }
 </style>
-
-Dengan mengatur properti seperti di atas, textarea akan secara otomatis memperluas ketinggiannya saat konten teksnya bertambah dan menampilkan bilah pengguliran vertikal jika perlu.
-
+ 
     </style>
     
 </head>
