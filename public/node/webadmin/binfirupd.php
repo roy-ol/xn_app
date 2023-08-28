@@ -136,7 +136,7 @@ if(isset($_POST['timestamp']) && isset($_POST['submit'])){
       UPDATE build = :nilaiTimestamp, keterangan = :keterangan,
           versi= :versi, id_tipe = :id_tipe";
     $param['namaFileRepo'] = substr($namaFileRepo, 0, -4) ;
-    $param['nilaiTimestamp']= $timestamp ;
+    $param['nilaiTimestamp']= $timestamp - 1 ; //penyesuaian menit build vs proses penulisan file asumsi menit waktu dibutuhkan untuk tulis file bin oleh arduino IDE dari nilai build
     $param['versi']=$versi ; 
     $param['id_tipe']=$id_tipe ; 
     $param['keterangan']=$keterangan ; 
