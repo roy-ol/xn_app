@@ -61,6 +61,25 @@ function bikinTabelSQL($sqlQuery) {
 
     return $tableHTML;
 }
+
+/**
+ * bikin isian option dari sql berisi id (ex: <Select .. . )
+ * @param sTampil wajib ada setelah id text tampil di dalam opsi
+ * @param sp1 = pemisah 1 2 3
+ * @param tampil1 = field dari query untuk menjadi teks ditampilkan 1 2 3 
+ */
+function bikinOption($sqlQuery,$sTampil,$sp1="",$sTampil1="",$sp2="",$sTampil2="",$sp3="",$sTampil3=""){
+  global $cUmum ;
+  $result = $cUmum->ambilData($sqlQuery); 
+  // Memeriksa apakah query berhasil dijalankan
+  if ($result) {
+      while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
+        echo '<option value="' . $row['id'] . '">' . $row[$sTampil] .$sp1 . $row[$sTampil1] 
+        . $sp2 . $row[$sTampil2] . $sp3 . $row[$sTampil3]  . '</option>';
+      }
+  } else { echo "Error: " . $sqlQuery . "<br>" . $cUmum->getPDO()->errorInfo()[2];}
+}
+
 ?>
   
 <style>

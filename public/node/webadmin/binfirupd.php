@@ -34,13 +34,7 @@ if(isset($_POST['assign_repo'])){
         <option value=0> - - - pilih Chip - - - - </option>;
         <?php 
           $query = "select id,chip,keterangan from chip "; 
-          $result = $cUmum->ambilData($query); 
-          // Memeriksa apakah query berhasil dijalankan
-          if ($result) {
-              while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                  echo '<option value="' . $row['id'] . '">' . $row['chip'] . ' - ' . $row['keterangan'] . '</option>';
-              }
-          } else { echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];}
+          bikinOption($query,"chip"," - ","keterangan"); 
         ?>
       </select>
   </div>
@@ -50,14 +44,7 @@ if(isset($_POST['assign_repo'])){
         <option value=0> - - - - - - - pilih binary firmware update - - - - - - </option>;
         <?php 
           $query = "SELECT id,file_repo,build,left(keterangan,36) as keterangan from binfirupd "; 
-          $result = $cUmum->ambilData($query); 
-          // Memeriksa apakah query berhasil dijalankan
-          if ($result) {
-              while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                  echo '<option value="' . $row['id'] . '">' . $row['file_repo'] . 
-                      ' (' . $row['build'] . ') ' . $row['keterangan'] . '</option>';
-              }
-          } else { echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];}
+          bikinOption($query,"file_repo"," (","build",") ","keterangan"); 
         ?>
       </select>
   </div>
@@ -136,7 +123,8 @@ if(isset($_POST['timestamp']) && isset($_POST['submit'])){
       UPDATE build = :nilaiTimestamp, keterangan = :keterangan,
           versi= :versi, id_tipe = :id_tipe";
     $param['namaFileRepo'] = substr($namaFileRepo, 0, -4) ;
-    $param['nilaiTimestamp']= $timestamp - 1 ; //penyesuaian menit build vs proses penulisan file asumsi menit waktu dibutuhkan untuk tulis file bin oleh arduino IDE dari nilai build
+    //====nilai menit diamankan agar jamngan sampai tabel repo build nya lebih besar dari XNBuild di firmware sebenarnya
+    $param['nilaiTimestamp']= $timestamp - 2 ; //penyesuaian menit build vs proses penulisan file asumsi menit waktu dibutuhkan untuk tulis file bin oleh arduino IDE dari nilai build
     $param['versi']=$versi ; 
     $param['id_tipe']=$id_tipe ; 
     $param['keterangan']=$keterangan ; 
@@ -194,13 +182,7 @@ if(isset($_POST['timestamp']) && isset($_POST['submit'])){
       <option value=0> - - - pilih tipe - - - </option>
       <?php 
         $query = "select id,nama,keterangan from tipe "; 
-        $result = $cUmum->ambilData($query); 
-        // Memeriksa apakah query berhasil dijalankan
-        if ($result) {
-            while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                echo '<option value="' . $row['id'] . '">' . $row['nama'] . ' - ' . $row['keterangan'] . '</option>';
-            }
-        } else { echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];}
+        bikinOption($query,"nama"," ","keterangan"); 
       ?>
     </select>
     </div>

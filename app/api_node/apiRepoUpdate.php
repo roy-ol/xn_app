@@ -24,8 +24,8 @@ if($rHasil){
     $respons["url_update"]="http://xn.online-farm.com/repo/" . $rHasil["file_repo"] . ".bin";
     $respons["f"]=8;
     $cNode->dieJsonOkTime($respons); 
-  }else{ //jika iBuild sudah lebih besar  dengan repo Build / binRepoBuild / bBuild
-    if($cBuild < $iBuildVersion){ 
+  }else{ //jika iBuild sudah lebih besar atau sama dengan repo Build / binRepoBuild / bBuild
+    // if($cBuild != $iBuildVersion){ 
         if(isset($data->v)){ // ada versi app
           $versi = $data->v; 
           $sSQL="update chip set flag=8, build = $iBuildVersion, versi=$versi where id=$cNode->chipID ";   
@@ -34,10 +34,10 @@ if($rHasil){
         }
         $cNode->eksekusi($sSQL);
         $cNode->dieJsonNone();
-    }else{
-      $sSQL="update chip set flag=5 where id=$cNode->chipID "; // jika sudah besar/sama nilai ibuild vs cBuild
-      $cNode->eksekusi($sSQL);
-    }
+    // }else{
+    //   $sSQL="update chip set flag=5 where id=$cNode->chipID "; // jika sudah besar/sama nilai ibuild vs cBuild
+    //   $cNode->eksekusi($sSQL);
+    // }
   }  
 } 
  
