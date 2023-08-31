@@ -40,15 +40,6 @@ function submitFormKebun() {
 </script>
 
 <?php
-// $cUmum = new cUmum();
-// Query SELECT dengan JOIN
-// $query = "SELECT p.nama AS perusahaan, k.nama AS kebun, c.id, c.chip, t.nama AS tipe, t.kelompok as kel, 
-//     c.keterangan, c.versi, c.build, c.updated, c.created,c.id_repo as brep
-//     FROM chip c
-//     JOIN kebun k ON k.id = c.id_kebun
-//     JOIN perusahaan p ON p.id = k.id_perusahaan
-//     JOIN tipe t ON t.id = c.id_tipe
-//     ORDER BY id DESC limit 10" ;
 
   echo $kebunTerpilih;
   $query = "call getStatusKebun($id_Kebun) " ;

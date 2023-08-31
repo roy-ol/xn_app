@@ -1,6 +1,7 @@
 .htaccess
 coba.php
 public/tes1/*
+public/repo/*
 test/*
 app/sambungan.php
 app/fsambungan.php 
