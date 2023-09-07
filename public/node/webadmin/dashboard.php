@@ -16,7 +16,8 @@ $kebunTerpilih="";
       <select id="idKebun" name="idKebun"  onchange="submitFormKebun()">
         <option value=0> - - - pilih kebun - - - - </option>;
         <?php 
-          $query = "SELECT k.id,p.nama as prs,k.nama,k.keterangan FROM kebun k, perusahaan p where p.id = k.id_perusahaan"; 
+          $query = "SELECT k.id,p.nama as prs,k.nama,substr(k.keterangan,1,27) as keterangan
+            FROM kebun k, perusahaan p where p.id = k.id_perusahaan"; 
           $result = $cUmum->ambilData($query); 
           // Memeriksa apakah query berhasil dijalankan
           if ($result) {

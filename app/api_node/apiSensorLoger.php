@@ -27,7 +27,8 @@ if(isset($data->D)){ // format data array bisa jadi lebih dari 1 sensor
 
 $respons = ["s" => $status];    
 $respons["t"] = $waktu;  
-$cNode->dieJson($respons);
+$cNode->dieJsonOK($respons,true);  //plus cek update, contoh hasil {"s":6,"t":"2023-09-07 03:02:43","f":0} 
+// $cNode->dieJson($respons);  //contoh hasil {"s":6,"t":"2023-09-07 03:02:43"}
 
 
 

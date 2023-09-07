@@ -45,10 +45,12 @@ class cNode extends cKoneksi{
    */
   function dieJsonOK($param=[],$perluCekUpdate = false){     
     $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses
-    $arResp = array_merge($respons,$param); 
+    // $arResp = array_merge($respons,$param); 
     if($perluCekUpdate){
-      if($this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
+      if($this->cekUpdate()) $respons = ["f" => 7] ; 
+      // if($this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
     }  
+    $arResp = array_merge($respons,$param); 
     parent::dieJson($arResp); 
   }
 
