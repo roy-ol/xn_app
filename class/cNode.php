@@ -125,11 +125,15 @@ class cNode extends cKoneksi{
   function logging($raw0, $val1,$waktuNode = false, $id_loc = false ){  //false atau format ex. '2022-05-26 02:28:34'
     if(!$this->statusNode){ return false; } //keluar bila status false
 
+    //pause == angka v1 = 0 yang masuk nilai hasil kenapa r0 ..?
     //ada r0 dan v1 kosong atau ada nilaii v1 
-    if ($raw0 != null && $val1 == null ){
-      $nilaiHasil = $this->value_map($raw0);
-    } else {
+    // if ($raw0 != null && $val1 == null ){  //disini nilai angka 0 di samakan nilainya dg null atau falsy
+    if ($val1 === null && $raw0 !== null ){   //disini uji identik bahkan tipe datanya benar benar null
+      $nilaiHasil = $this->value_map($raw0); //ada data r0 tetapi v1 == null
+    } elseif($val1 !== null ) {
       $nilaiHasil = $this->value_map($val1); 
+    } else{
+      return 0; //kedua data r0 maupun v1 kosong
     }
     $param = ["nodeID"=>$this->nodeID];  
     $param += ["val1"=>$val1];  

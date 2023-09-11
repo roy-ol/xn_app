@@ -39,7 +39,7 @@ function arr_to_logging($arrDataSensor){
   // $raw0 = isset($arrDataSensor->r0) ? $arrDataSensor->r0 : null;       // ternary dengan lebih efisien
   $raw0 = $arrDataSensor->r0 ?? null;                                  // Null Coalescing Operator (PHP 7.0 ke atas):
   // $raw0 = $arrDataSensor->r0 ;                                            // fitur di PHP yang disebut dengan "Null Property Fetching" dan berlaku jika Anda mencoba mengakses properti yang tidak ada dalam objek.
-  $val1=$arrDataSensor->v1;
+  $val1=$arrDataSensor->v1 ?? null;
   $WaktuNode = $arrDataSensor->t ?? false;  //bila ada nilai t / waktu dari node / Null Coalescing Operator (??) 
   $id_loc = $arrDataSensor->il ?? false;     //bila ada nilai il / id_loc id dari tabel senlog lokal
 
