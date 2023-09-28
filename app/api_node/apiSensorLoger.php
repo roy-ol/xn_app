@@ -56,7 +56,7 @@ function sleepDataLogging($data){
   $dataArray = $data->D ;  
   $status = 0; 
   for ($i=0; $i < $iCount; $i++) { 
-    $iDetikSelisih = $sleeptime * ($iCount - $i);
+    $iDetikSelisih = $sleeptime * ($iCount - $i - 1);
     $Waktu_Node[$i]= date("Y-m-d H:i:s", strtotime($WaktuNode) - $iDetikSelisih);
     $key_r0[$i]="r0_" . $i ;
     $key_v1[$i]="v1_" . $i ; 
