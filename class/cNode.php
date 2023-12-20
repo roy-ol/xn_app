@@ -27,7 +27,9 @@ class cNode extends cKoneksi{
   }
 
   function dieJsonNoneTime(){ // XNtime + 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
-    $this->dieJsonOK(["f"=>0],["t"=>date('Y-m-d H:i:s')]);
+    $respons["f"] = 0;  
+    $respons["t"] = date('Y-m-d H:i:s');   
+    $this->dieJsonOK($respons); 
   }
 
   /**
@@ -91,7 +93,7 @@ class cNode extends cKoneksi{
       FROM node n, chip c, tipe t
       WHERE c.id=n.id_chip AND c.id_tipe=t.id
       AND n.id= :nodeID ";
-    $param = ["chnodeID"=>$nodeID];
+    $param = ["nodeID"=>$nodeID];
     $hasil = $this->ambil1Row($sql,$param);
     if($hasil){
       $this->konstrukNode($hasil);
@@ -122,6 +124,7 @@ class cNode extends cKoneksi{
     return $this->statusNode;
   }
   
+  //untuk sensor_logger
   function logging($raw0, $val1,$waktuNode = false, $id_loc = false ){  //false atau format ex. '2022-05-26 02:28:34'
     if(!$this->statusNode){ return false; } //keluar bila status false
 

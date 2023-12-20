@@ -32,7 +32,7 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
   if(!$kodeApiFile) die("noCode");
   $cNode = new cNode();
   logIncomingData($kodeApiFile . "->" . $sDataDataPost);
-  (isset($data->c))?:die("chip"); 
+  (isset($data->c))?:die("chip"); //tidak ada kode chip = die
   (isset($data->n))?:$data->n=1; // hanya chip tanpa sub_node, n default = 1
   if($cNode->nodeByChip($data->c,$data->n) == false) die("Node");
 
@@ -41,8 +41,11 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
       include_once '../../app/api_node/apixxxxxxx'; //next coding
       break; 
     case 'sl':
-      include_once '../../app/api_node/apiSensorLoger.php'; //sensor logger  //==== on dev
+      include_once '../../app/api_node/apiSensorLoger.php'; //sensor logger  //====running n on dev //==pause
       break;  
+    case 'di':  //dipanggil ESP url =  http://xn.online-farm.com/node/di 
+      include_once '../../app/api_node/apiDripInject.php'; //aktuator drip Inject //==== on dev
+      break; 
     case 'd1':
       include_once '../../app/api_node/apiRelayDrip1.php'; //aktuator metro
       break; 
@@ -99,6 +102,14 @@ function cNodeFailLog($sSumber = "", $dataMasuk=""){  //log error node/index.php
 }
 
 //pause=========
+
+function logAktuator0($chip='', $noRelay=1, $exetime = 0){ 
+  global $con;
+  $sql = "INSERT INTO log_aktuator(chip,no_relay,exetime) VALUES ('$chip', $noRelay, $exetime)
+      ON DUPLICATE KEY UPDATE exetime =  $exetime, waktu=now()";
+  // $r = mysqli_query($con,$sql);
+}
+
 
 function logAktuator2($idNode, $relay=1, $exetime = 0){  //log aktuator 5 data terakhir
   global $cNode; 
