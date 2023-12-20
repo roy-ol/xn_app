@@ -55,7 +55,7 @@ $relay  = $arrData['relay'];
 $repeater  = $arrData['repeater']; 
 $limval0  = $arrData['limval0'];
 $limval1  = $arrData['limval1'];
-$keterangan  = $arrData['keterangan']; 
+// $keterangan  = $arrData['keterangan']; 
 // $istoday = $arrData['today']; 
 
       
