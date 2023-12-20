@@ -60,10 +60,9 @@ $keterangan  = $arrData['keterangan'];
 
       
 $respons['f']=20; //flag ada respons untuk aktuator action 
-$respons['sleep']=$sleeptime ; 
-$respons['xtime']=$exetime ; 
+// $respons['sleep']=$sleeptime ; 
+$respons['xtime']=$exeval ; 
 $respons["relay"]=$relay ; // penugasan, nomer relay mana yang on (0 = aktif low)
-
- 
+$cNode->dieJsonOkTime($respons); 
  
 ?>
