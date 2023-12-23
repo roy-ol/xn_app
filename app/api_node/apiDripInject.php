@@ -35,7 +35,9 @@ LIMIT 1;   ";
 $param = ["id_node"=>$id_node];
 $arrData = $cNode->ambil1Row($sSQL,$param);
 if(!$arrData){
-  $cNode->dieJsonNoneTime(); 
+  // $cNode->dieJsonNone(); 
+  $cNode->dieJsonNoneCheckUpdate(); 
+  // $cNode->dieJsonNoneTime(); 
 }
 //id,id_perusahaan,pola,flag,exeval,satuan,reff_node,ref_n1,ref_n2,ref_n4,
 // ref_n3,ref_n5,relay,repeater,limval0,limval1,keterangan,updater 
@@ -44,6 +46,8 @@ $id  = $arrData['id'];
 $flag  = $arrData['flag'];
 $pola  = $arrData['pola'];  
 $exeval  = $arrData['exeval']; 
+$exe_v1  = $arrData['exe_v1']; 
+$exe_v2  = $arrData['exe_v2']; 
 $satuan  = $arrData['satuan']; 
 $reff_node  = $arrData['reff_node']; 
 $ref_n1  = $arrData['ref_n1']; 
@@ -60,9 +64,11 @@ $limval1  = $arrData['limval1'];
 
       
 $respons['f']=20; //flag ada respons untuk aktuator action 
-// $respons['sleep']=$sleeptime ; 
-$respons['xtime']=$exeval ; 
-$respons["relay"]=$relay ; // penugasan, nomer relay mana yang on (0 = aktif low)
+// $respons['sleep']=$sleeptime ; //isian bila ada setting sleep berubah
+$respons['xtime']=$exeval ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
+$respons["EC"]=$exe_v1 ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
 $cNode->dieJsonOkTime($respons); 
- 
+
+
+
 ?>

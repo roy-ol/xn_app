@@ -23,7 +23,11 @@ class cNode extends cKoneksi{
 
   function dieJsonNone(){ // 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
     // $this->dieJsonOK(["f"=>0]);
-    parent::dieJson(["f"=>0]);
+    parent::dieJson(["f"=>0]);  //hasil sama
+  }
+
+  function dieJsonNoneCheckUpdate(){ //flag 0 sekaligus cmemeriksa update
+    $this->dieJsonOK(["f"=>0],true);
   }
 
   function dieJsonNoneTime(){ // XNtime + 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
