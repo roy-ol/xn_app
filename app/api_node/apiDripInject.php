@@ -65,8 +65,8 @@ $limval1  = $arrData['limval1'];
       
 $respons['f']=20; //flag ada respons untuk aktuator action 
 // $respons['sleep']=$sleeptime ; //isian bila ada setting sleep berubah
-$respons['xtime']=$exeval ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
-$respons["EC"]=$exe_v1 ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
+$respons['exeval']=$exeval ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
+$respons["exe_v1"]=$exe_v1 ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
 $cNode->dieJsonOkTime($respons); 
 
 
