@@ -54,7 +54,7 @@ class cNode extends cKoneksi{
     // $arResp = array_merge($respons,$param); 
     $arResp = array_merge($respons,$param); 
     if($perluCekUpdate){ 
-      if($this->cekUpdate()) $arResp = ["f" => 7] ; 
+      if($this->cekUpdate()) $arResp["f"]=7 ; 
       // if($this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
     }   
     parent::dieJson($arResp); 
