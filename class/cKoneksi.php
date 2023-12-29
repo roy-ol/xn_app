@@ -46,6 +46,7 @@ class cKoneksi{
     ($parameters)?$r->execute($parameters):$r->execute();
     $hasil = $r->fetch(PDO::FETCH_NUM) ; //diambil data row pertama meskipun banyak data row terambil 
     return ($hasil)?$hasil[0]:false;
+    // return ($hasil && isset($hasil[0])) ? $hasil[0] : false;
   }
 
   function getPDO(){ //menggunakan koneksi pdo yang sudah jadi

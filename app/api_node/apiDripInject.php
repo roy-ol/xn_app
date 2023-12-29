@@ -19,7 +19,7 @@ $id_node = $cNode->nodeID ;
 //===========pause kejar tayang agar alat GH mergan Jalan====
 // bypas sementara hanya untuk melayani jadwal mingguan... 
 
-$sSQL = "SELECT nr.* 
+$sSQL = "SELECT nr.*,nrw.id as id_nrw
 FROM node_role_week nrw, node_role nr
 WHERE nr.id=nrw.id_role and id_node = :id_node AND 
     (h1 = IF(DAYOFWEEK(NOW()) = 1, 1, 0)
@@ -43,6 +43,7 @@ if(!$arrData){
 // ref_n3,ref_n5,relay,repeater,limval0,limval1,keterangan,updater 
 
 $id  = $arrData['id']; 
+$id_nrw  = $arrData['id_nrw']; 
 $flag  = $arrData['flag'];
 $pola  = $arrData['pola'];  
 $exeval  = $arrData['exeval']; 
@@ -62,13 +63,12 @@ $limval1  = $arrData['limval1'];
 // $keterangan  = $arrData['keterangan']; 
 // $istoday = $arrData['today']; 
 
-      
+$cNode->log_eksekutor(null,$id_nrw,$relay,$exeval,$exe_v1,$exe_v2);      
 $respons['f']=20; //flag ada respons untuk aktuator action 
 // $respons['sleep']=$sleeptime ; //isian bila ada setting sleep berubah
 $respons['exeval']=$exeval ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
 $respons["exe_v1"]=$exe_v1 ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
 $cNode->dieJsonOkTime($respons); 
-
 
 
 ?>

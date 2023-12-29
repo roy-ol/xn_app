@@ -52,11 +52,11 @@ class cNode extends cKoneksi{
   function dieJsonOK($param=[],$perluCekUpdate = false){     
     $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses
     // $arResp = array_merge($respons,$param); 
-    if($perluCekUpdate){
-      if($this->cekUpdate()) $respons = ["f" => 7] ; 
-      // if($this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
-    }  
     $arResp = array_merge($respons,$param); 
+    if($perluCekUpdate){ 
+      if($this->cekUpdate()) $arResp = ["f" => 7] ; 
+      // if($this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
+    }   
     parent::dieJson($arResp); 
   }
 
@@ -66,10 +66,9 @@ class cNode extends cKoneksi{
   function cekUpdate(){
     $sSQL="SELECT * FROM chip WHERE id= $this->chipID AND flag=7 ";
     $rHasil=$this->ambil1Row($sSQL);
-    // return ($rHasil >= 1)? $this->dieJsonOkTime( ["f" => 7] ) :  $rHasil;
-    return ($rHasil >= 1)? true : false ;
-  }
-
+    // return ($rHasil >= 1)? $this->dieJsonOkTime( ["f" => 7] ) :  $rHasil;    
+    return ($rHasil >= 0 )? true : false ;
+  } 
 
   
   private function konstrukNode($hasil){
@@ -175,6 +174,8 @@ class cNode extends cKoneksi{
     return $hasil;
   }
 
+
+
   function logging1($raw0, $val1,$waktuNode = false, $id_loc = false ){  //false atau format ex. '2022-05-26 02:28:34'
     if(!$this->statusNode){ return false; } //keluar bila status false
 
@@ -214,6 +215,31 @@ class cNode extends cKoneksi{
     return $hasil;
   }
   
+
+  /**
+   * logging bila ada eksekusi aktuator
+   */
+  function log_eksekutor($id_nr_date, $id_nr_week, $relay, $exeval, $exe_v1, $exe_v2){  //false atau format ex. '2022-05-26 02:28:34'
+    if(!$this->statusNode){ return false; } //keluar bila status false
+    
+    $q =" INSERT INTO `log_eksekutor`
+    (`id_nr_date`, `id_nr_week`, `id_node`, `relay`, `exeval`, `exe_v1`, `exe_v2`) VALUES 
+    (:id_nr_date, :id_nr_week, :id_node, :relay, :exeval, :exe_v1, :exe_v2) ";
+  
+    $param = ["id_nr_week"=>''];   
+    $param += ["id_nr_date"=>''];   
+    if($id_nr_week !== null ) $param["id_nr_week"] = $id_nr_week;   
+    if($id_nr_date !== null ) $param["id_nr_date"] = $id_nr_date;   
+    $param += ["id_node"=>$this->nodeID];  
+    $param += ["relay"=>$relay];  
+    $param += ["exeval"=>$exeval];  
+    $param += ["exe_v1"=>$exe_v1];  
+    $param += ["exe_v2"=>$exe_v2];  
+    
+    // var_dump($param);
+    $this->eksekusi($q,$param);   
+  }
+  
   function logging0($raw0, $val1,$waktuNode = false){  //false atau format ex. '2022-05-26 02:28:34'
     if(!$this->statusNode){ return false; } //keluar bila status false
 
@@ -240,6 +266,9 @@ class cNode extends cKoneksi{
     return $hasil;
   }
   
+  /**
+   * mapping Value
+   */
   function value_map($rawVal1,&$adaMinMax = false){  
     if($rawVal1 == null) return 0;
     $q="select * from value_map where id_node=" . $this->nodeID;

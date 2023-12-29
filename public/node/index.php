@@ -35,10 +35,17 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
   (isset($data->c))?:die("chip"); //tidak ada kode chip = die
   (isset($data->n))?:$data->n=1; // hanya chip tanpa sub_node, n default = 1
   if($cNode->nodeByChip($data->c,$data->n) == false) die("Node");
+  hitLogChip();
 
   switch ($kodeApiFile) { //======pause switch.  ===== case ada yang belum di tes=========
     case 'f':   //fungsi umum / default rutin dr node =========== // belum dibuat
       include_once '../../app/api_node/apixxxxxxx'; //next coding
+      break; 
+    case 'f1':    //flag Status node  OK : 11-03-2023
+      include_once '../../app/api_node/apiFlagNode1.php';
+      break;
+    case 'f7':    //request url repo binary update OK : 2023-03-05
+      include_once '../../app/api_node/apiRepoUpdate.php';
       break; 
     case 'sl':
       include_once '../../app/api_node/apiSensorLoger.php'; //sensor logger  //====running n on dev //==pause
@@ -52,12 +59,6 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'd2':  //dipanggil ESP url =  http://xn.online-farm.com/node/d2 belum OK
       include_once '../../app/api_node/apiRelayDrip2.php';
       break;
-    case 'f1':    //flag Status node  OK : 11-03-2023
-      include_once '../../app/api_node/apiFlagNode1.php';
-      break;
-    case 'f7':    //request url repo binary update OK : 2023-03-05
-      include_once '../../app/api_node/apiRepoUpdate.php';
-      break; 
     default: // OK : 2023-03-05
       cNodeFailLog("default Switch",$sDataDataPost  );
       die("failcode");
@@ -101,8 +102,24 @@ function cNodeFailLog($sSumber = "", $dataMasuk=""){  //log error node/index.php
   $cNode->eksekusi($sql,$param);
 }
 
+/**
+ * logging jumlah hit id chip tertentu (jumlah permintaan koneksi ke server)
+ */
+function hitLogChip(){ 
+  global $cNode; 
+  $sql = "UPDATE hit_chip SET hit = hit+1 WHERE id_chip=$cNode->chipID ";
+  $cNode->eksekusi($sql);
+}
+
+
 //pause=========
 
+
+
+
+
+
+//===old to delete .. ?
 function logAktuator0($chip='', $noRelay=1, $exetime = 0){ 
   global $con;
   $sql = "INSERT INTO log_aktuator(chip,no_relay,exetime) VALUES ('$chip', $noRelay, $exetime)
@@ -110,7 +127,7 @@ function logAktuator0($chip='', $noRelay=1, $exetime = 0){
   // $r = mysqli_query($con,$sql);
 }
 
-
+ 
 function logAktuator2($idNode, $relay=1, $exetime = 0){  //log aktuator 5 data terakhir
   global $cNode; 
   $rData=$cNode->ambilData("SELECT count(id) jum, COALESCE(max(hit),0) max, COALESCE(min(hit),0) min 
