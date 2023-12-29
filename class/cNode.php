@@ -64,10 +64,10 @@ class cNode extends cKoneksi{
    * @brief rutin mengecek apakah ada update firmware untuk langsung dieOkTime dengan status 7 jika update
    */
   function cekUpdate(){
-    $sSQL="SELECT * FROM chip WHERE id= $this->chipID AND flag=7 ";
+    $sSQL="SELECT * FROM chip WHERE id= $this->chipID AND flag=7 "; 
     $rHasil=$this->ambil1Row($sSQL);
     // return ($rHasil >= 1)? $this->dieJsonOkTime( ["f" => 7] ) :  $rHasil;    
-    return ($rHasil >= 0 )? true : false ;
+    return ($rHasil !== false )? true : false ;
   } 
 
   
