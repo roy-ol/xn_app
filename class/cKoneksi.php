@@ -49,6 +49,13 @@ class cKoneksi{
     // return ($hasil && isset($hasil[0])) ? $hasil[0] : false;
   }
 
+  /**
+   * ambil nilai pdo lastInsertID
+   */
+  function ambil_pdo_lastInsertID(){
+    return $this->pdo->lastInsertId();
+  }
+
   function getPDO(){ //menggunakan koneksi pdo yang sudah jadi
     return $this->pdo;
   }

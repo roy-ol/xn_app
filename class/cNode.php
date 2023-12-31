@@ -238,8 +238,20 @@ class cNode extends cKoneksi{
     
     // var_dump($param);
     $this->eksekusi($q,$param);   
+    return $this->ambil_pdo_lastInsertID();
   }
-  
+
+  /**
+   * update flag menjadi 9 atau sudah terlaksana dari tabel eksekutor berdasarkan ID
+   */
+  function flag_eksekutor($id_log_eksekutor){
+    $q = "UPDATE log_eksekutor SET flag = 9 WHERE id_node = :nodeID and  id = :id ";
+    $param = ["id"=>$id_log_eksekutor];  
+    $param += [":nodeID"=>$this->nodeID];  
+    $this->eksekusi($q,$param);   
+  }
+
+
   function logging0($raw0, $val1,$waktuNode = false){  //false atau format ex. '2022-05-26 02:28:34'
     if(!$this->statusNode){ return false; } //keluar bila status false
 

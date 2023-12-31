@@ -15,6 +15,13 @@ if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cNode seba
 
 $status = "0";   
 $id_node = $cNode->nodeID ;
+if(isset($data->id_log)){
+  $id_log_eksekutor = $data->id_log;
+  // $id_log_eksekutor = $data["id_log"];
+  $cNode->flag_eksekutor($id_log_eksekutor);
+  $cNode->dieJsonNoneCheckUpdate();
+}
+
 
 //===========pause kejar tayang agar alat GH mergan Jalan====
 // bypas sementara hanya untuk melayani jadwal mingguan... 
@@ -63,11 +70,13 @@ $limval1  = $arrData['limval1'];
 // $keterangan  = $arrData['keterangan']; 
 // $istoday = $arrData['today']; 
 
-$cNode->log_eksekutor(null,$id_nrw,$relay,$exeval,$exe_v1,$exe_v2);      
+$idInsert = $cNode->log_eksekutor(null,$id_nrw,$relay,$exeval,$exe_v1,$exe_v2);      
+$respons['id_log']=intval($idInsert); // id log eksekutor yang baru dibuat di tabel log
 $respons['f']=20; //flag ada respons untuk aktuator action 
 // $respons['sleep']=$sleeptime ; //isian bila ada setting sleep berubah
 $respons['exeval']=$exeval ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
 $respons["exe_v1"]=$exe_v1 ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
+
 $cNode->dieJsonOkTime($respons); 
 
 
