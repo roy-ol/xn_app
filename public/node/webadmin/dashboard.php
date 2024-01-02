@@ -46,7 +46,16 @@ function submitFormKebun() {
   $query = "call getStatusKebun($id_Kebun) " ;
   $sTabel = bikinTabelSQL($query);
   echo $sTabel;  
+
+  echo "<br><br>";
+  echo "Chip Last Hit :";
+  $sql = "SELECT c.chip,c.keterangan,hc.waktu,hc.hit FROM `hit_chip` hc, chip c where hc.id_chip=c.id and c.id_kebun=$id_Kebun";
+  $sHitTabel=bikinTabelSQL($sql);
+  echo $sHitTabel;
+
+
 ?>
+
 
 
 </body>
