@@ -15,6 +15,8 @@ if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cNode seba
 
 $status = "0";   
 $id_node = $cNode->nodeID ;
+
+//jika kiriman berupa report status sukses aktuator
 if(isset($data->id_log)){
   $id_log_eksekutor = $data->id_log;
   // $id_log_eksekutor = $data["id_log"];
