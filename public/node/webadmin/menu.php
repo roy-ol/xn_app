@@ -11,13 +11,15 @@ if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 
 echo $_SESSION['username'] . " lvl:" . $_SESSION['id_level']; 
 ?>  
+ 
 <label id="clock"></label>
 <label id="date"></label> + <label id="elapsed-time"></label>
-<a href="logout.php">Logout</a>
+<a href="logout.php">Logout</a> 
 <br><br>
 <a href="dashboard.php">Dashboard</a> &nbsp &nbsp &nbsp
 <a href="node_baru.php">+Node / Chip Baru</a> &nbsp &nbsp &nbsp
 <a href="binfirupd.php">binfirup</a>&nbsp &nbsp &nbsp
+<a href="xt_aktuator.php">XT ExeTest Katuator</a>&nbsp &nbsp &nbsp
 <br><br><br> 
 
 <?php //================fungsi fungsi umum web php koneksi dll   
