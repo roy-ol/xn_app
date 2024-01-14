@@ -57,7 +57,13 @@ function submitFormKebun() {
   
   echo "<br><br>";
   echo "Eksekutor Last Hit :";
-  $sql = "SELECT *  FROM log_eksekutor ORDER BY id DESC limit 9";
+  $sql = "SELECT *  FROM log_eksekutor ORDER BY id DESC limit 12";
+  $sHitTabel=bikinTabelSQL($sql);
+  echo $sHitTabel;
+  
+  echo "<br><br>";
+  echo "log apig :";
+  $sql = "SELECT *  FROM log_apig";
   $sHitTabel=bikinTabelSQL($sql);
   echo $sHitTabel;
 
