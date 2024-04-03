@@ -44,6 +44,7 @@ if($arrData){
   // $respons['sleep']=$sleeptime ; //isian bila ada setting sleep berubah
   $respons['exeval']=$exeval ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
   $respons["exe_v1"]=$exe_v1 ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
+  $respons["relay"]=$relay ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
   
   $cNode->dieJsonOkTime($respons); 
 
