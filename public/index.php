@@ -5,11 +5,11 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 	//Getting values  
 	$sDataDataPost=file_get_contents('php://input');	
 } elseif($_SERVER['REQUEST_METHOD']=='GET'){ 
-  $sDefHTMLisi = "forbidden "; 
+  $sDefHTMLisi = "forbidden _8"; 
   $sDefHTML .= $sDefHTMLisi . $sDefHTMLtutup;
   die($sDefHTML); 
 }else{
-  $sDefHTMLisi = "forbidden : NOr GET Nor POST"; 
+  $sDefHTMLisi = "forbidden _12 : NOr GET Nor POST";  // forbiden _12 ~~ baris 12 di sourcecode
   $sDefHTML .= $sDefHTMLisi . $sDefHTMLtutup;
   die($sDefHTML); 
 }
@@ -19,7 +19,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 require_once __DIR__ . '/../app/init_class.php';
 
 $data = json_decode($sDataDataPost);
-(json_last_error() == JSON_ERROR_NONE)?:die('forbidden #1'); //cek format json apakah valid
+(json_last_error() == JSON_ERROR_NONE)?:die('forbidden #3'); //cek format json apakah valid
 $myUser = new cUser();
 $userID = false;
 

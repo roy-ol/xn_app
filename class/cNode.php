@@ -226,10 +226,14 @@ class cNode extends cKoneksi{
     (`id_nr_date`, `id_nr_week`, `id_node`, `relay`, `exeval`, `exe_v1`, `exe_v2`) VALUES 
     (:id_nr_date, :id_nr_week, :id_node, :relay, :exeval, :exe_v1, :exe_v2) ";
   
-    $param = ["id_nr_week"=>''];   
-    $param += ["id_nr_date"=>''];   
-    if($id_nr_week !== null ) $param["id_nr_week"] = $id_nr_week;   
-    if($id_nr_date !== null ) $param["id_nr_date"] = $id_nr_date;   
+  // $param = ["id_nr_week"=>''];   
+  // $param += ["id_nr_date"=>''];   
+    $param = ["id_nr_week"=> $id_nr_week];   
+    $param += ["id_nr_date"=> $id_nr_date];    
+    // $param["id_nr_week"] = $id_nr_week;   
+    // $param["id_nr_date"] = $id_nr_date;   
+    // if($id_nr_week !== null ) $param["id_nr_week"] = $id_nr_week;   
+    // if($id_nr_date !== null ) $param["id_nr_date"] = $id_nr_date;   
     $param += ["id_node"=>$this->nodeID];  
     $param += ["relay"=>$relay];  
     $param += ["exeval"=>$exeval];  

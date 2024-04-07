@@ -14,7 +14,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 if (isset($_POST['login'])) { 
     // dari sini ada data post untuk diolah:
     // ==========================================
-    require_once __DIR__ . '../../../../app/init_class.php';
+    require_once __DIR__ . '../../../app/init_class.php';
     $myUser = new cUser();
     $userID = false;
     $error_message="Login page:";
@@ -23,11 +23,12 @@ if (isset($_POST['login'])) {
     $input_password = $_POST['password'];
     $userID = $myUser->loadUserHash($input_username,$input_password); 
     if($userID) {
-      if($myUser->id_level() > 1){
+      if($myUser->id_level() == 13){  //sementara disini tidak dibatasi akses level
         $error_message = "maaf hak akses anda tidak diperbolehkan menggunakan fitur ini"; 
       }else{
         $_SESSION['logged_in'] = true;
         $_SESSION['id_level'] = $myUser->id_level();
+        $_SESSION['id_perusahaan'] = $myUser->id_perusahaan();
         $_SESSION['userID'] = $userID;
         $_SESSION['username'] =$myUser->fullname();
         header("Location: dashboard.php"); // Redirect ke halaman dashboard setelah login berhasil

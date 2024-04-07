@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../app/init_class.php';
 
 class cUser extends cKoneksi{
-  protected $userID, $id_level, $username, $email, $fullname, $flag_active;
+  protected $userID, $id_level, $username, $email, $fullname, $flag_active, $id_perusahaan;
 
   function __construct(){      
     parent::__construct();
@@ -31,12 +31,13 @@ class cUser extends cKoneksi{
     $param = ["userID" => $userID]; 
     $rowHasil = $this->ambil1Row($sql,$param,PDO::FETCH_OBJ);  
     if($rowHasil){
-      $this->userID       = $rowHasil->id; //model array obj dari  PDO::FETCH_OBJ
-      $this->id_level     = $rowHasil->id_level;
-      $this->username     = $rowHasil->username;
-      $this->email        = $rowHasil->email;
-      $this->fullname     = $rowHasil->fullname;
-      $this->flag_active  = $rowHasil->flag_active;
+      $this->userID         = $rowHasil->id; //model array obj dari  PDO::FETCH_OBJ
+      $this->id_level       = $rowHasil->id_level;
+      $this->id_perusahaan  = $rowHasil->id_perusahaan;
+      $this->username       = $rowHasil->username;
+      $this->email          = $rowHasil->email;
+      $this->fullname       = $rowHasil->fullname;
+      $this->flag_active    = $rowHasil->flag_active;
       return $this->id_level;
     }else{
      return false;
@@ -54,6 +55,7 @@ class cUser extends cKoneksi{
     return $this->loadUserHash($userName,$pass) ; 
   }
 
+  
   /**
    * @param fungsi load user metode password hash bcrypt seperti laravel 8
    */
@@ -78,6 +80,12 @@ class cUser extends cKoneksi{
     return $rsp ; 
   }
 
+  function getNamaPerusahaan(){
+    $sql = "SELECT nama FROM perusahaan WHERE id = :idperus ";
+    $namaPerusahaan = $this->ambil1Data($sql , ["idperus" => $this->id_perusahaan]);
+    return $namaPerusahaan;
+  }
+
 
   function isAktif(){
     if($this->flag_active == 0)   return false; // "diactivated";
@@ -94,7 +102,11 @@ class cUser extends cKoneksi{
     return $this->id_level;
   }
 
-  function updatePassword($sPass){  
+  function id_perusahaan(){ 
+    return $this->id_perusahaan;
+  }
+
+  function updatePassword($sPass){  //password menggunakan cara aes n md5
     $hashedPassword = password_hash($sPass, PASSWORD_BCRYPT);
     $sql = "UPDATE users SET pwd= MD5(AES_ENCRYPT(':pass','crypt9')) WHERE id= :userID";    
     $param = ["pass"=>$hashedPassword,"userID" => $this->userID];
