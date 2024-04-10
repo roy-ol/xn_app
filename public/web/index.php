@@ -35,56 +35,10 @@ if (isset($_POST['login'])) {
         exit;
       }
     } else {
-      $error_message = "Username atau password salah";
+      echo "<h2>Username dan/atau password salah. <a href='login.php'> Login Ulang</a> <h2>"; 
+      exit;
     }
 }
-?>
 
-<!DOCTYPE html>
-<html>
-<head> 
-<!-- <script> 
-    var userEmail = "email pengguna";
-  
-    alert(userEmail);
-    console.log(userEmail);
-    </script> -->
-    <title>Halaman Login</title>
-</head>
-<body>
-    <h2>Halaman Login</h2>
-
-    <?php if (isset($error_message)) { ?>
-        <p><?php echo $error_message; ?></p>
-    <?php } ?>
-
-    <form method="POST" action="">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-
-        <input type="submit" name="login" value="Login">
-    </form>
-    <div id="pesan"></div>
-
-<script> 
-    var userEmail = "email pengguna";
-
-    // Memeriksa apakah pengguna telah terautentikasi di browser
-    if (navigator.credentials && navigator.credentials.get) {
-      var credential = navigator.credentials.get({ type: 'email' });
-
-      // Mengambil email dari kredensial yang ditemukan
-      userEmail = credential && credential.id ? credential.id : "tidak ada";
-    }
-
-    // alert(userEmail);
-    // console.log(userEmail);
-
-  var pesanElement = document.getElementById("pesan");
-  pesanElement.textContent = userEmail;
-</script>
-</body>
-</html>
+header("Location: login.php"); // Redirect ke halaman  login 
+?> 

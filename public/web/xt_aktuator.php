@@ -26,11 +26,11 @@
   margin-bottom: 15px;
 }
 
-label {
+/* label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-}
+} */
 
 input,
 select {
@@ -53,8 +53,8 @@ input[type="submit"]:hover {
 
 </style>
 
-<h2>Execution Test Aktuator</h2>
 <?php require_once __DIR__ . '/menu.php'; // berisi juga tag <body> 
+echo "<h4>Execution Test Aktuator</h4>";
 if(1 == 0 ) $cUmum = new cUmum();
 $sPesan ="";
  
@@ -100,44 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
 ?>
 
 
-<br><h3>Node to test : <?= $sPesan ?></h3>
-<!-- <form action="?" method="post" enctype="multipart/form-data">
-  <div class="form-group">
-    <label for="idChip">Node aktuator</label>
-    <select id="idChip" name="idChip">
-      <option value="0">- - - Pilih Chip - - -</option>
-      <?php 
-        $query = "SELECT n.id, c.chip, n.nama FROM `node` n 
-        INNER JOIN chip c ON c.id = n.id_chip 
-        INNER JOIN tipe t ON c.id_tipe = t.id 
-        WHERE t.kelompok IN (2, 3) ORDER BY n.id DESC";       
-        bikinOption($query, "chip", " - ", "nama"); 
-      ?>
-    </select>
-  </div>
-
-  <div class="form-group">
-    <label for="relay">Relay</label>
-    <input type="text" id="relay" name="relay" placeholder="Relay">
-  </div>
-
-  <div class="form-group">
-    <label for="exeval">Exeval</label>
-    <input type="text" id="exeval" name="exeval" placeholder="Exeval">
-  </div>
-
-  <div class="form-group">
-    <label for="exe_v1">Exe_v1</label>
-    <input type="text" id="exe_v1" name="exe_v1" placeholder="Exe_v1">
-  </div>
-
-  <div class="form-group">
-    <label for="exe_v2">Exe_v2</label>
-    <input type="text" id="exe_v2" name="exe_v2" placeholder="Exe_v2">
-  </div>
-
-  <input type="submit" value="Submit Update" name="assign_repo">
-</form> --> 
+<br>Node to test : <?= $sPesan ?> 
 <form action="?" method="post" enctype="multipart/form-data" class="two-column-form">
   <div class="form-group"> 
     <select id="node_id" name="id_node">
@@ -146,7 +109,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
         $query = "SELECT n.id, c.chip, n.nama, n.keterangan FROM `node` n 
         INNER JOIN chip c ON c.id = n.id_chip 
         INNER JOIN tipe t ON c.id_tipe = t.id 
-        WHERE t.kelompok IN (2, 3) ORDER BY n.id DESC";       
+        INNER JOIN kebun k ON c.id_kebun = k.id
+        WHERE t.kelompok IN (2, 3) and k.id_perusahaan=$id_perusahaan ORDER BY n.id DESC";       
         bikinOption($query, "chip", " - ", "nama"," :=> ","keterangan"); 
       ?>
     </select>
@@ -177,9 +141,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
 
 
 <?php 
-$sql = "SELECT c.chip, n.nama,n.keterangan, nx.* FROM node n
-    INNER JOIN node_xt nx on n.id = nx.id_node
-    INNER JOIN chip c on c.id = n.id_chip order by id desc limit 9;";
+$sql = "SELECT  n.nama Node,  nx.created,nx.updated ,nx.relay Rel, nx.exeval Val,
+  nx.exe_v1 V1, nx.exe_v2 V2, nx.flag F
+  FROM node n
+  INNER JOIN node_xt nx on n.id = nx.id_node
+  INNER JOIN chip c on n.id_chip = c.id
+  INNER JOIN kebun k on c.id_kebun = k.id
+  where k.id_perusahaan = 5
+  order by nx.created desc limit  9;";
 
 $tabel = bikinTabelSQL($sql);
 echo "<br>Chip Repo<br>";

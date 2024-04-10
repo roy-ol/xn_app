@@ -26,11 +26,12 @@ $id_perusahaan= $_SESSION['id_perusahaan'] ;
 $sNamaPerus = $cUser->getNamaPerusahaan();
 $id_level =  $_SESSION['id_level'];
 
-echo $_SESSION['username'] . " L$id_level "  .$cUser->getNamaPerusahaan() ;
+echo "<label id='user'>" . $_SESSION['username'] . " (L" . $_SESSION['id_level'] .")  $sNamaPerus </label><br>"; 
+
 ?>  
  
 <label id="clock"></label>
-<label id="date"></label> + <label id="elapsed-time"></label>
+<label id="date"></label> +<label id="elapsed-time"></label>
 <a href="logout.php">Logout</a> 
 <br><br>
 <a href="dashboard.php">Dashboard</a> &nbsp &nbsp &nbsp 
