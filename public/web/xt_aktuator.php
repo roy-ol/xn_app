@@ -148,7 +148,7 @@ $sql = "SELECT  n.nama Node,  nx.created,nx.updated ,nx.relay Rel, nx.exeval Val
   INNER JOIN chip c on n.id_chip = c.id
   INNER JOIN kebun k on c.id_kebun = k.id
   where k.id_perusahaan = 5
-  order by nx.created desc limit  9;";
+  order by nx.created desc limit  12;";
 
 $tabel = bikinTabelSQL($sql);
 echo "<br>Chip Repo<br>";

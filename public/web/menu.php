@@ -3,11 +3,7 @@
 require_once __DIR__ . '../../../app/init_class.php';
 session_start();
 
-
-// $_SESSION['id_perusahaan'] = $myUser->id_perusahaan();
-// $_SESSION['userID'] = $userID;
-// $_SESSION['username'] =$myUser->fullname();
-
+ 
 $cUmum = new cUmum();
 $cUser = new cUser();
 // if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cNode sebagai class sebelumnya  
@@ -35,6 +31,7 @@ echo "<label id='user'>" . $_SESSION['username'] . " (L" . $_SESSION['id_level']
 <a href="logout.php">Logout</a> 
 <br><br>
 <a href="dashboard.php">Dashboard</a> &nbsp &nbsp &nbsp 
+<a href="node_role.php">NodeRole</a> &nbsp &nbsp &nbsp 
 <a href="xt_aktuator.php">XT ExeTest Katuator</a>&nbsp &nbsp &nbsp
 <br><br><br> 
 

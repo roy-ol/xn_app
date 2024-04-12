@@ -1,7 +1,8 @@
 <?php
-// Set umur sesi menjadi 30 menit
-$umur_session = 1800; // 30 * 60 (30 menit dalam detik)
-session_set_cookie_params($umur_session);
+// // Set umur sesi menjadi 30 menit
+// $umur_session = 60 * 60 * 5; // detik x 60 x 5== 5 jam
+// // $umur_session = 1800; // 30 * 60 (30 menit dalam detik)
+// session_set_cookie_params($umur_session);
 session_start();
 
 // Cek apakah pengguna sudah login atau belum
@@ -25,7 +26,10 @@ if (isset($_POST['login'])) {
     if($userID) {
       if($myUser->id_level() == 13){  //sementara disini tidak dibatasi akses level
         $error_message = "maaf hak akses anda tidak diperbolehkan menggunakan fitur ini"; 
-      }else{
+      }else{ 
+        $umur_session = 60 * 60 * 5; // detik x 60 x 5 = 5 jam 
+        session_set_cookie_params($umur_session);
+        // session_start();
         $_SESSION['logged_in'] = true;
         $_SESSION['id_level'] = $myUser->id_level();
         $_SESSION['id_perusahaan'] = $myUser->id_perusahaan();

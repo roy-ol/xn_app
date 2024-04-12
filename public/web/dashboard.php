@@ -61,7 +61,7 @@ function submitFormKebun() {
     JOIN kebun k ON c.id_kebun = k.id
     WHERE k.id_perusahaan = $id_perusahaan
     ORDER BY l.id DESC 
-    LIMIT 10;";
+    LIMIT 16;";
   // $sql = "SELECT n.nama Node,DATE(l.created) Tanggal , l.relay Rly, TIME(l.created) Strt, l.exeval Val, l.exe_v1 V1, l.exe_v2 V2, TIME(l.waktu)Fin ,  IF(TIME_FORMAT(TIMEDIFF(l.waktu, l.created), '%i') + 0 = 0, 
   //   CONCAT(TIME_FORMAT(TIMEDIFF(l.waktu, l.created), '%s'), '``'),
   //   CONCAT(TIME_FORMAT(TIMEDIFF(l.waktu, l.created), '%i') + 0, '`', TIME_FORMAT(TIMEDIFF(l.waktu, l.created), '%s'), '``')) as Durasi FROM log_eksekutor l 
