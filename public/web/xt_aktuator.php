@@ -147,7 +147,7 @@ $sql = "SELECT  n.nama Node,  nx.created,nx.updated ,nx.relay Rel, nx.exeval Val
   INNER JOIN node_xt nx on n.id = nx.id_node
   INNER JOIN chip c on n.id_chip = c.id
   INNER JOIN kebun k on c.id_kebun = k.id
-  where k.id_perusahaan = 5
+  where k.id_perusahaan = $id_perusahaan
   order by nx.created desc limit  12;";
 
 $tabel = bikinTabelSQL($sql);
