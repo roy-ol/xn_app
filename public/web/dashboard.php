@@ -53,7 +53,7 @@ function submitFormKebun() {
   
   echo "<br><br>";
   echo "Eksekutor Last Hit :";
-  $sql = "SELECT n.nama Node,DATE(l.created) Tanggal , l.relay Rly, 
+  $sql = "SELECT CONCAT(n.nama,' ', DATE(l.created)) Node , l.relay Rly, 
     TIME(l.created) Strt,TIME(l.waktu)Fin , l.exeval Val, l.exe_v1 V1, l.exe_v2 V2,  
      TIMEDIFF(l.waktu, l.created) Durasi FROM log_eksekutor l 
     JOIN node n ON l.id_node = n.id
