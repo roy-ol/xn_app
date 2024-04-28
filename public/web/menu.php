@@ -1,178 +1,165 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <body onload="onLoadFunctions()">
 <?php
-require_once __DIR__ . '../../../app/init_class.php';
-session_start();
-
- 
-$cUmum = new cUmum();
-$cUser = new cUser();
-// if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cNode sebagai class sebelumnya  
-//     $cUser = new cUser();
-// }  
-
-// Cek apakah pengguna sudah login atau belum
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: index.php"); // Redirect ke halaman login jika belum login
-    exit;
-}
-
-$userID=$_SESSION['userID'];
-$cUser->loadUserByID($userID);
-$id_perusahaan= $_SESSION['id_perusahaan'] ; 
-$sNamaPerus = $cUser->getNamaPerusahaan();
-$id_level =  $_SESSION['id_level'];
-
-echo "<label id='user'>" . $_SESSION['username'] . " (L" . $_SESSION['id_level'] .")  $sNamaPerus </label><br>"; 
-
+require_once __DIR__ . '/fungsi/koneksi_umum.php';  
+?>
+ <button  id="menuButton" onclick="toggleMenu()">&#9782;</button> 
+<?php
+echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESSION['id_level'] . ') <label id="elapsed-time"></label> </div>';  
+// echo ' &nbsp <label id="date"></label> <label id="clock"></label>  ';
+// echo '<br> &nbsp &nbsp '. $sNamaPerus . ' + <label id="elapsed-time"></label> ';  
 ?>  
  
-<label id="clock"></label>
-<label id="date"></label> +<label id="elapsed-time"></label>
-<a href="logout.php">Logout</a> 
+
+<div id="popupMenu" class="popup-menu">
+    <!-- <button onclick="toggleMenu()">&#9665;</button><br><br> -->
+    <ul>
+        <li><a href="#"> </a></li>
+        <li><a href="dashboard.php">Dashboard</a></li>
+        <li><a href="node_role.php">NodeRole</a></li>
+        <li><a href="xt_aktuator.php">XT ExeTest Katuator</a></li>
+        <li><a href="test.php">..</a></li>
+        <li><a href="logout.php">Logout</a></li>
+    </ul>
+</div>
 <br><br>
-<a href="dashboard.php">Dashboard</a> &nbsp &nbsp &nbsp 
-<a href="node_role.php">NodeRole</a> &nbsp &nbsp &nbsp 
-<a href="xt_aktuator.php">XT ExeTest Katuator</a>&nbsp &nbsp &nbsp
-<br><br><br> 
-
-<?php //================fungsi fungsi umum web php koneksi dll   
-/**
- * membuat tampilan tabel dari query sql
- */
-function bikinTabelSQL($sqlQuery) {
-    // Menggunakan kelas umum untuk eksekusi query
-    global $cUmum ;
- 
-    // Query SQL
-    $hasil = $cUmum->ambilData($sqlQuery);
-    $result = $hasil->fetchAll(PDO::FETCH_ASSOC); 
-
-    if (empty($result)) {
-        return '<p>Tidak ada data yang ditemukan.</p>';
-    }
-
-    // Buat tampilan tabel
-    $tableHTML = '<table>
-                    <tr>';
-    
-    // Membuat header tabel dari nama kolom hasil query
-    foreach(array_keys($result[0]) as $columnName) {
-        $tableHTML .= '<th>'.$columnName.'</th>';
-    }
-    
-    $tableHTML .= '</tr>'; 
-    // Membuat baris tabel dari hasil query
-    foreach($result as $row) {
-        $tableHTML .= '<tr>'; 
-        foreach($row as $value) {
-            $tableHTML .= '<td>'.$value.'</td>';
-        } 
-        $tableHTML .= '</tr>';
-    }
-
-    // Menutup tabel
-    $tableHTML .= '</table>';
-
-    return $tableHTML;
-}
-
-/**
- * bikin isian option dari sql berisi id (ex: <Select .. . )
- * @param sTampil wajib ada setelah id text tampil di dalam opsi
- * @param sp1 = pemisah 1 2 3
- * @param tampil1 = field dari query untuk menjadi teks ditampilkan 1 2 3 
- */
-function bikinOption($sqlQuery,$sTampil,$sp1="",$sTampil1="",$sp2="",$sTampil2="",$sp3="",$sTampil3=""){
-  global $cUmum ;
-  $result = $cUmum->ambilData($sqlQuery); 
-  // Memeriksa apakah query berhasil dijalankan
-  if ($result) {
-      while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
-        echo '<option value="' . $row['id'] . '">' . $row[$sTampil] .$sp1 . $row[$sTampil1] 
-        . $sp2 . $row[$sTampil2] . $sp3 . $row[$sTampil3]  . '</option>';
-      }
-  } else { echo "Error: " . $sqlQuery . "<br>" . $cUmum->getPDO()->errorInfo()[2];}
-}
-
-?>
   
 <style>
   table {
       border-collapse: collapse;
       width: 100%;
       border: 2px solid black; /* Ketebalan garis tepi tabel */
-  }
-
-  th, td {
+  } 
+  td  {
       text-align: left;
       padding: 8px;
       border-bottom: 1px solid black; /* Garis antara baris */
-  }
-
+  } 
   th {
-      background-color: #f2f2f2;
+      text-align: left;
+      padding: 8px;
+      border-bottom:2px solid black; /* Garis antara baris */
+  } 
+  th,td { 
       border-right: 1px solid black; /* Garis antara kolom header */
-  }
-
-  td {
-      border-right: 1px solid black; /* Garis antara kolom isi tabel */
-  }
-
+  }  
   tr:nth-child(even) {
       background-color: #f2f2f2;
-  }    
+  }   
+  
+/* Gaya untuk menu popup */
+#menuButton {
+    position: fixed;
+    top: 9px;
+    left: 9px;
+    z-index: 999; /* Pastikan tombol di atas konten lainnya */
+}
+
+.popup-menu {
+    position: fixed;
+    top: 0; 
+    left: -300px; /* Mulai dari luar layar */
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    padding: 20px;
+    transition: left 0.7s ease; /* Transisi untuk efek keluar masuk */
+}
+.popup-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.popup-menu ul li {
+    padding: 10px 0;
+    border-bottom: 1px solid #555;
+}
+.popup-menu ul li:last-child {
+    border-bottom: none; /* Menghilangkan garis bawah pada item terakhir */
+}
+.popup-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+}
 </style>
 
 <script>
-  function onLoadFunctions() {
-      displayDateTime();
-      displayElapsedTime();
-  }
-  function displayDateTime() {
-    var date = new Date();
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var seconds = date.getSeconds();
-    var day = date.getDate();
-    var month = date.getMonth() + 1; // Nilai bulan dimulai dari 0, sehingga perlu ditambah 1
-    var year = date.getFullYear();
+function onLoadFunctions() {
+//   displayDateTime();
+    displayElapsedTime();
+}
+function displayDateTime() {
+var date = new Date();
+var hours = date.getHours();
+var minutes = date.getMinutes();
+var seconds = date.getSeconds();
+var day = date.getDate();
+var month = date.getMonth() + 1; // Nilai bulan dimulai dari 0, sehingga perlu ditambah 1
+var year = date.getFullYear();
+
+// Menambahkan nol pada angka satu digit
+hours = (hours < 10) ? "0" + hours : hours;
+minutes = (minutes < 10) ? "0" + minutes : minutes;
+seconds = (seconds < 10) ? "0" + seconds : seconds;
+day = (day < 10) ? "0" + day : day;
+month = (month < 10) ? "0" + month : month;
+
+var time = hours + ":" + minutes + ":" + seconds;
+var fullDate = day + "/" + month + "/" + year;
+
+document.getElementById("clock").textContent = time;
+document.getElementById("date").textContent = fullDate;
+
+// setTimeout(displayDateTime, 1000); // Memperbarui waktu dan tanggal setiap 1 detik
+}
+
+function displayElapsedTime() {
+var startTime = new Date(); // Waktu mulai
+var interval = setInterval(updateElapsedTime, 1000); // Memperbarui waktu yang telah berlalu setiap 1 detik
+
+function updateElapsedTime() {
+    var currentTime = new Date(); // Waktu saat ini
+    var elapsedTime = Math.floor((currentTime - startTime) / 1000); // Waktu yang telah berlalu dalam detik
+
+    var hours = Math.floor(elapsedTime / 3600);
+    var minutes = Math.floor((elapsedTime % 3600) / 60);
+    var seconds = elapsedTime % 60;
 
     // Menambahkan nol pada angka satu digit
     hours = (hours < 10) ? "0" + hours : hours;
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
-    day = (day < 10) ? "0" + day : day;
-    month = (month < 10) ? "0" + month : month;
 
-    var time = hours + ":" + minutes + ":" + seconds;
-    var fullDate = day + "/" + month + "/" + year;
+    var elapsedTimeString = hours + ":" + minutes + ":" + seconds;
 
-    document.getElementById("clock").textContent = time;
-    document.getElementById("date").textContent = fullDate;
+    document.getElementById("elapsed-time").textContent = elapsedTimeString;
+}
+}
 
-    // setTimeout(displayDateTime, 1000); // Memperbarui waktu dan tanggal setiap 1 detik
-  }
-
-  function displayElapsedTime() {
-    var startTime = new Date(); // Waktu mulai
-    var interval = setInterval(updateElapsedTime, 1000); // Memperbarui waktu yang telah berlalu setiap 1 detik
-
-    function updateElapsedTime() {
-        var currentTime = new Date(); // Waktu saat ini
-        var elapsedTime = Math.floor((currentTime - startTime) / 1000); // Waktu yang telah berlalu dalam detik
-
-        var hours = Math.floor(elapsedTime / 3600);
-        var minutes = Math.floor((elapsedTime % 3600) / 60);
-        var seconds = elapsedTime % 60;
-
-        // Menambahkan nol pada angka satu digit
-        hours = (hours < 10) ? "0" + hours : hours;
-        minutes = (minutes < 10) ? "0" + minutes : minutes;
-        seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-        var elapsedTimeString = hours + ":" + minutes + ":" + seconds;
-
-        document.getElementById("elapsed-time").textContent = elapsedTimeString;
+// Fungsi untuk menampilkan atau menyembunyikan menu popup
+function toggleMenu() {
+    var menu = document.getElementById('popupMenu'); 
+    if (menu.style.left !== '0px') {
+        menu.style.left = '0px';
+    } else {
+        menu.style.left = '-300px';
     }
-  }
+}   
+
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    
+    document.getElementById("menuButton").style.display = "block";
+    // if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    //     document.getElementById("menuButton").style.display = "block";
+    // } else {
+    //     document.getElementById("menuButton").style.display = "none";
+    // }
+}
+
 </script>

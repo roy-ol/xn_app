@@ -15,6 +15,11 @@ class cKoneksi{
     $this->pdo = null;   //close connection di akhir 
   } 
 
+  /**
+   * @brief eksekusi mengembalikan int jumlah record terpengaruh, dengan parameter array assoc
+   * @param $sQuery sql nya dengan pdo :namavariabel
+   * @param $parameters variabel sql pdo->prepare
+   */
   function eksekusi($sQuery,$parameters=null){ //mengembalikan row affected
     $r = $this->pdo->prepare($sQuery);    // parameters array bila diperlukan 
     ($parameters)?$r->execute($parameters):$r->execute();
