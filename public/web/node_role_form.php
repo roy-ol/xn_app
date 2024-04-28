@@ -115,11 +115,10 @@ var sMemoPola = "Ket";
 function tampilMemoPola() {
   // if(sMemoPola.length() < 2){
     if(sMemoPola === null || sMemoPola.length < 2){
-      alert("Tidak ada Keterangan khusus untuk pola ini ");
-    }else{
+      sMemoPola = "Tidak ada Keterangan khusus untuk pola ini "; 
+    } 
     showPopup(); 
-    // alert(sMemoPola);
-  }  
+    // alert(sMemoPola); //webview standar tidak bisa menampilkan alert 
 }
 
 // Fungsi untuk menampilkan popup
