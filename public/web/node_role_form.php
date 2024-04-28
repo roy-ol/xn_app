@@ -167,9 +167,7 @@ function showKetDetail(id_pola) {
     })
     .then(data => {
         // Tampilkan balon info dengan keterangan pola 
-        const ketPolaLabel = document.getElementById('lblMemPola');
-        // Ubah isi dari label
-        // ketPolaLabel.textContent = '?'; 
+        const ketPolaLabel = document.getElementById('lblMemPola'); 
         ketPolaLabel.textContent = '\u25A5'; 
         // ketPolaLabel.textContent = '\u25BA'; 
         ketPolaLabel.style.cursor = 'pointer';
