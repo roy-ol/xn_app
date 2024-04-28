@@ -50,14 +50,7 @@ echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESS
   tr:nth-child(even) {
       background-color: #f2f2f2;
   }   
-
-/* CSS untuk mode gelap */
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #333; /* Warna latar belakang gelap */
-        color: #fff; /* Warna teks putih untuk kontras yang baik */
-    }
-}
+ 
 
   
 /* Gaya untuk menu popup */
