@@ -48,10 +48,10 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
       include_once '../../app/api_node/apiRepoUpdate.php';
       break; 
     case 'sl':
-      include_once '../../app/api_node/apiSensorLoger.php'; //sensor logger  //====running n on dev //==pause
+      include_once '../../app/api_node/apiSensorLoger.php'; //sensor logger  //====running n on dev  
       break;  
     case 'di':  //dipanggil ESP url =  http://xn.online-farm.com/node/di 
-      include_once '../../app/api_node/apiDripInject.php'; //aktuator drip Inject //==== on dev
+      include_once '../../app/api_node/apiDripInject.php'; //aktuator drip Inject //==== awal dipakai Mergan and UNISMA
       break; 
     case 'd1':
       include_once '../../app/api_node/apiRelayDrip1.php'; //aktuator metro

@@ -20,7 +20,10 @@ echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESS
     <ul>
         <li><a href="#"> </a></li>
         <li><a href="dashboard.php">Dashboard</a></li>
-        <li><a href="node_role.php">NodeRole</a></li>
+        <li><a href="#">NodeRole</a>▶<ul> 
+            <li class="submenu"><a href="node_role.php">NodeRole List</a></li>
+            <li class="submenu"><a href="node_role_form.php">NodeRole Baru</a></li>
+        </ul></li> 
         <li><a href="xt_aktuator.php">XT ExeTest Katuator</a></li>
         <li><a href="test.php">..</a></li>
         <li><a href="logout.php">Logout</a></li>
@@ -87,6 +90,37 @@ echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESS
     color: #fff;
     text-decoration: none;
 }
+
+/* set posisi sub menuitem */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    margin: 0;
+    padding: 0;
+}
+
+ul li.submenu {
+    padding-left: 20px;
+    position: relative;
+}
+
+ul li.submenu::before {
+    content: '\203A'; /* kode unicode untuk simbol panah ke kanan */
+    position: absolute;
+    left: 0;
+}
+
+ul ul {
+    display: none;
+}
+
+ul li:hover ul {
+    display: block;
+}
+
 </style>
 
 <script>

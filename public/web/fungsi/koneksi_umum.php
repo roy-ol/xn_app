@@ -133,7 +133,7 @@ function bikinTabelSQL($sqlQuery) {
  * @param sTampil wajib ada setelah id text tampil di dalam opsi
  * @param sp1 = pemisah 1 2 3
  * @param tampil1 = field dari query untuk menjadi teks ditampilkan 1 2 3 
- * @param iTerpilih = default index terpilih untuk tampil di option
+ * @param iTerpilih = default id terpilih untuk tampil di option
  */
 function bikinOption($sqlQuery,$iTerpilih=0, $sTampil,$sp1="",$sTampil1="",$sp2="",$sTampil2="",$sp3="",$sTampil3=""){
   global $cUmum ;
