@@ -49,6 +49,9 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'addNodeRole1':    //menambahkan NodeRole Standart field
       addNodeRole1($data);
       break; 
+    case 'updateNodeRole1':    //update NodeRole Standart field
+      updateNodeRole1($data);
+      break; 
     default: // OK : 2023-03-05 
       die("failcode");
       break;
@@ -63,14 +66,69 @@ die("t o");
 //====================fungsi fungsi=========================
 //====================fungsi fungsi=========================
 
+function updateNodeRole1($data){ //edit NodeRole Standart field dari data Post minimalis
+  global $cUmum; 
+  
+  $id_memo = intval($data->id_memo);
+  $sMemo = $data->memo ;
+  $iRecAff1 = 0 ;
+  if($id_memo >1){    
+    $sql = "UPDATE memo set memo= :memo where id=$id_memo ; ";
+    $paramMemo['memo']=$sMemo;
+    $iRecAff1 = $cUmum->eksekusi($sql,$paramMemo);
+    // $id_memo = $cUmum->ambil1Data("SELECT LAST_INSERT_ID();"); 
+  } else if(strlen($sMemo) >= 9 ){
+    $sql = "INSERT INTO memo(memo) values (:memo) ";
+    $paramMemo['memo']=$sMemo;
+    $cUmum->eksekusi($sql,$paramMemo);
+    $id_memo = $cUmum->ambil1Data("SELECT LAST_INSERT_ID();"); 
+    $iRecAff1 = ($id_memo > 0) ? 1 : 0 ;
+  }
+  
+   
+  $paramNR['id_role']=intval($data->id_role);
+  $paramNR['id_perusahaan']=intval($_SESSION['id_perusahaan'] ); 
+  $paramNR['pola']=intval($data->pola);
+  $paramNR['exeval']=intval($data->exeval);
+  $paramNR['exe_v1']=intval($data->val1);
+  $paramNR['exe_v2']=intval($data->val2);
+  $paramNR['reff_node']=intval($data->reff_node);
+  $paramNR['relay']=intval($data->relay);
+  $paramNR['repeater']=intval($data->repeater);  
+  $paramNR['nilai_1']=intval($data->nilai_1);
+  $paramNR['keterangan']=$data->keterangan;
+  $paramNR['id_memo']=$id_memo; 
+  global $userID ;
+  $paramNR['updater']=$userID;
+ 
+  $sql = "UPDATE node_role SET pola = :pola, exeval = :exeval, exe_v1 = :exe_v1, exe_v2 = :exe_v2, reff_node = :reff_node,
+   relay = :relay, repeater = :repeater, nilai_1 = :nilai_1, keterangan = :keterangan, id_memo = :id_memo, updater = :updater 
+   WHERE id = :id_role AND id_perusahaan = :id_perusahaan";
+
+  // $sql = "UPDATE node_role set pola = :pola, exeval= :exeval, exe_v1= :exe_v1, exe_v2=:exe_v2, reff_node=:reff_node,
+  //  relay=:relay, repeater=:repeater, nilai_1=:nilai1, keterangan=:keterangan, id_memo=:id_memo, updater=:updater 
+  //  WHERE id = :id_role and id_perusahaan = :id_perusahaan ; ";
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sql,$paramNR); 
+  //==============
+  // echo $sql;
+  // var_dump($paramNR);
+  // return;
+  //============
+  if($iRecAff > 0 || $iRecAff1 > 0) splashBerhasil("$iRecAff1 Memo, $iRecAff Node_Role, terupdate","/../node_role.php");
+  splashBerhasil("tidak ada perubahan data");  
+
+}
+
 function addNodeRole1($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum; 
-
-  $sMemo = $data->memo;
+ 
+  // $sMemo = (isset($data->memo))? $data->memo : $sMemo="" ;
+  $sMemo = $data->memo ;
   $id_memo = 0;
   if(strlen($sMemo) >= 9 ){
     $sql = "INSERT INTO memo(memo) values (:memo) ";
-    $paramMemo['memo']=$data->memo;
+    $paramMemo['memo']=$sMemo;
     $cUmum->eksekusi($sql,$paramMemo);
     $id_memo = $cUmum->ambil1Data("SELECT LAST_INSERT_ID();"); 
   }
@@ -97,7 +155,7 @@ function addNodeRole1($data){ //menambahkan NodeRole Standart field dari data Po
     :updater )";
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sql,$paramNR); 
-  if($iRecAff > 0) splashBerhasil("$iRecAff record Node_Role, Berhasil ditambahkan","../node_role.php");
+  if($iRecAff > 0) splashBerhasil("$iRecAff record Node_Role, Berhasil ditambahkan","/../node_role.php");
   splashBerhasil("ada kesalahan tambah data");  
 
 }

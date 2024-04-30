@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
         INNER JOIN tipe t ON c.id_tipe = t.id 
         INNER JOIN kebun k ON c.id_kebun = k.id
         WHERE t.kelompok IN (2, 3) and k.id_perusahaan=$id_perusahaan ORDER BY n.id DESC";       
-        bikinOption($query, "chip", " - ", "nama"," :=> ","keterangan"); 
+        bikinOption($query,0, "chip", " - ", "nama"," :=> ","keterangan"); 
       ?>
     </select>
   </div>

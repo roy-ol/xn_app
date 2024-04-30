@@ -34,7 +34,7 @@ if(isset($_POST['assign_repo'])){
         <option value=0> - - - pilih Chip - - - - </option>;
         <?php 
           $query = "select id,chip,keterangan from chip "; 
-          bikinOption($query,"chip"," - ","keterangan"); 
+          bikinOption($query,0,"chip"," - ","keterangan"); 
         ?>
       </select>
   </div>
@@ -44,7 +44,7 @@ if(isset($_POST['assign_repo'])){
         <option value=0> - - - - - - - pilih binary firmware update - - - - - - </option>;
         <?php 
           $query = "SELECT id,file_repo,build,left(keterangan,36) as keterangan from binfirupd "; 
-          bikinOption($query,"file_repo"," (","build",") ","keterangan"); 
+          bikinOption($query,0,"file_repo"," (","build",") ","keterangan"); 
         ?>
       </select>
   </div>
@@ -182,7 +182,7 @@ if(isset($_POST['timestamp']) && isset($_POST['submit'])){
       <option value=0> - - - pilih tipe - - - </option>
       <?php 
         $query = "select id,nama,keterangan from tipe "; 
-        bikinOption($query,"nama"," ","keterangan"); 
+        bikinOption($query,0,"nama"," ","keterangan"); 
       ?>
     </select>
     </div>

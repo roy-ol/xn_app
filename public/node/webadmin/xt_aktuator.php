@@ -111,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
         INNER JOIN chip c ON c.id = n.id_chip 
         INNER JOIN tipe t ON c.id_tipe = t.id 
         WHERE t.kelompok IN (2, 3) ORDER BY n.id DESC";       
-        bikinOption($query, "chip", " - ", "nama"); 
+        bikinOption($query, 0, "chip", " - ", "nama"); 
       ?>
     </select>
   </div>
@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
         INNER JOIN chip c ON c.id = n.id_chip 
         INNER JOIN tipe t ON c.id_tipe = t.id 
         WHERE t.kelompok IN (2, 3) ORDER BY n.id DESC";       
-        bikinOption($query, "chip", " - ", "nama"," :=> ","keterangan"); 
+        bikinOption($query, 0, "chip", " - ", "nama"," :=> ","keterangan"); 
       ?>
     </select>
   </div>

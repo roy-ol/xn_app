@@ -2,7 +2,7 @@
 <html lang="en"> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<link rel="icon" type="image/png" href="favicon.png">
 <body onload="onLoadFunctions()">
 <?php
 require_once __DIR__ . '/fungsi/koneksi_umum.php';  
@@ -154,14 +154,8 @@ function toggleMenu() {
 
 window.onscroll = function() {scrollFunction()};
 
-function scrollFunction() {
-    
-    document.getElementById("menuButton").style.display = "block";
-    // if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-    //     document.getElementById("menuButton").style.display = "block";
-    // } else {
-    //     document.getElementById("menuButton").style.display = "none";
-    // }
+function scrollFunction() { 
+    document.getElementById("menuButton").style.display = "block"; 
 }
 
 </script>

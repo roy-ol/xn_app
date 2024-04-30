@@ -29,10 +29,10 @@ $id_level =  intval($_SESSION['id_level']);
 /**
  * @brief membuat tampilan tabel dari query sql dengan Key dan link target tujuan
  * @param $sqlQuery Select dg kolom pertama adalah key yang hidden 
- * @param $sKey field key sekaligus nama keynya untuk post ke link target
- * @param $sLink tujuan url dengan POST nilai sKey
+ *          sekaligus nama keynya untuk kirim ke url link target
+ * @param $sLink tujuan url dengan  nilai sKey kemggunakan metode GET
  */
-function bikinTabelSQL2($sqlQuery,$sKey = null, $sLink = null) {
+function bikinTabelSQL2($sqlQuery, $sLink = null) {
     // Menggunakan kelas umum untuk eksekusi query
     global $cUmum ;
     $sKunci = "id";
@@ -49,24 +49,35 @@ function bikinTabelSQL2($sqlQuery,$sKey = null, $sLink = null) {
     $iKolom = 0 ;
     // Membuat header tabel dari nama kolom hasil query
     foreach(array_keys($result[0]) as $columnName) {
-        if($iKolom == 0){
-            if($sLink){
-                $sKunci = $columnName ;
-                $iKolom++;
-                // next();
-            }
-        }else {
-            $tableHTML .= '<th>'.$columnName.'</th>';
+        if($iKolom == 0 && $sLink !== null){  //=== kolom pertama kalau jadi kunci link tidak ditampilkan
             $iKolom++;
-        }
+            $sKunci = $columnName ;
+            continue; 
+        }  
+        $tableHTML .= '<th>'.$columnName.'</th>';
+        $iKolom++; 
     }
     
     $tableHTML .= '</tr>'; 
     // Membuat baris tabel dari hasil query
     foreach($result as $row) {
         $tableHTML .= '<tr>'; 
+        $iKolom = 0 ;
+        $keyVal = 0;
         foreach($row as $value) {
+            if($iKolom == 0 && $sLink !== null){  //=== kolom pertama kalau jadi kunci link tidak ditampilkan
+                $iKolom++;
+                $keyVal = intval($value);
+                continue;
+            }
+            if($iKolom == 1 && $sLink !== null){
+                $iKolom++; //<a href="index.php?key1=value1&key2=value2">edit</a>
+                $sDataCell1 = '<a href="'.$sLink.'?'.$sKunci.'='.$keyVal.'">'.$value.'</a>' ; //berisi link dan key
+                $tableHTML .= '<td>'.$sDataCell1.'</td>';
+                continue;
+            }
             $tableHTML .= '<td>'.$value.'</td>';
+            $iKolom++;
         } 
         $tableHTML .= '</tr>';
     }
@@ -122,14 +133,16 @@ function bikinTabelSQL($sqlQuery) {
  * @param sTampil wajib ada setelah id text tampil di dalam opsi
  * @param sp1 = pemisah 1 2 3
  * @param tampil1 = field dari query untuk menjadi teks ditampilkan 1 2 3 
+ * @param iTerpilih = default index terpilih untuk tampil di option
  */
-function bikinOption($sqlQuery,$sTampil,$sp1="",$sTampil1="",$sp2="",$sTampil2="",$sp3="",$sTampil3=""){
+function bikinOption($sqlQuery,$iTerpilih=0, $sTampil,$sp1="",$sTampil1="",$sp2="",$sTampil2="",$sp3="",$sTampil3=""){
   global $cUmum ;
   $result = $cUmum->ambilData($sqlQuery); 
   // Memeriksa apakah query berhasil dijalankan
   if ($result) {
       while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
-        echo '<option value="' . $row['id'] . '">' . $row[$sTampil] .$sp1 . $row[$sTampil1] 
+        $sTerpilih = (intval($row['id']) == $iTerpilih )? 'SELECTED' : '' ;
+        echo '<option value="' . $row['id'] . '" ' .$sTerpilih .'>' . $row[$sTampil] .$sp1 . $row[$sTampil1] 
         . $sp2 . $row[$sTampil2] . $sp3 . $row[$sTampil3]  . '</option>';
       }
   } else { echo "Error: " . $sqlQuery . "<br>" . $cUmum->getPDO()->errorInfo()[2];}
@@ -145,7 +158,7 @@ function splashBerhasil($sPesan = "Berhasil", $sLinkRedirect=null, $iMillisSplas
     }
     $sHTMLSplash = '<!DOCTYPE html> <head><style> .centered-message {
         position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);
-        text-align: center;}</style> <script> setTimeout(function() { '.$sLinkRedirect.' ;
+        text-align: center;}</style> <script> setTimeout(function() { window.location.href = '.$sLinkRedirect.' ;
         }, '. intval($iMillisSplash) .'); </script>
     </head><body><div class="centered-message"> <h2>'.$sPesan.' </h2> </div>  </body></html> '; 
    die($sHTMLSplash);
