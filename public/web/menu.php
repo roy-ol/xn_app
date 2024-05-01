@@ -24,6 +24,7 @@ echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESS
             <li class="submenu"><a href="node_role.php">NodeRole List</a></li>
             <li class="submenu"><a href="node_role_form.php">NodeRole Baru</a></li>
         </ul></li> 
+        <li><a href="nr_week.php">NodeRole Mingguan</a></li>
         <li><a href="xt_aktuator.php">XT ExeTest Katuator</a></li>
         <li><a href="test.php">..</a></li>
         <li><a href="logout.php">Logout</a></li>

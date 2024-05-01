@@ -24,13 +24,14 @@ $kebunTerpilih="";
               while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
                 if($isAwal && $id_Kebun == 0 ){
                   $id_Kebun = $row['id'];
-                  $isAwal = false;
+                  $isAwal =false;
                 }
+                echo '<option value="' . $row['id'] . '">' . $row['prs'] . ':' . $row['nama'] .'-' . $row['keterangan'] . '</option>';
                 if($row['id'] === $id_Kebun){
                   $kebunTerpilih = $row['prs'] . ' : ' . $row['nama'] .' - ' . $row['keterangan'] ;
-                  echo '<option value="' . $row['id'] . '" SELECTED >' . $row['prs'] . ':' . $row['nama'] .'-' . $row['keterangan'] . '</option>';
-                } else{ 
-                  echo '<option value="' . $row['id'] . '">' . $row['prs'] . ':' . $row['nama'] .'-' . $row['keterangan'] . '</option>';
+                  // echo '<option value="' . $row['id'] . '" SELECTED >' . $row['prs'] . ':' . $row['nama'] .'-' . $row['keterangan'] . '</option>';
+                // } else{ 
+                  // echo '<option value="' . $row['id'] . '">' . $row['prs'] . ':' . $row['nama'] .'-' . $row['keterangan'] . '</option>';
                 }
               }
           } else { echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];}  
