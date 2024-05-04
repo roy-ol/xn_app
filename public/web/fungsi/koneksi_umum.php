@@ -5,6 +5,8 @@
 require_once __DIR__ . '../../../../app/init_class.php';
 session_start();
 
+// Simpan URL halaman saat ini
+$_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
  
 $cUmum = new cUmum();
 $cUser = new cUser();
@@ -152,15 +154,18 @@ function bikinOption($sqlQuery,$iTerpilih=0, $sTampil,$sp1="",$sTampil1="",$sp2=
 function splashBerhasil($sPesan = "Berhasil", $sLinkRedirect=null, $iMillisSplash = 3339){
     if($sLinkRedirect == null){
         // $sLinkRedirect = "window.location.href";
-        $sLinkRedirect = "history.go(-1)";
+        $sLinkRedirect = "window.history.go(-2)";
+    } elseif($sLinkRedirect > 0 && $sLinkRedirect < 7 ){
+        $sLinkRedirect = 0 - $sLinkRedirect;
+        $sLinkRedirect = "window.history.go($sLinkRedirect)";
     } else {
         $sLinkRedirect = "window.location.href = '.$sLinkRedirect.'";
     }
     $sHTMLSplash = '<!DOCTYPE html> <head><style> .centered-message {
         position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);
-        text-align: center;}</style> <script> setTimeout(function() { window.location.href = '.$sLinkRedirect.' ;
+        text-align: center;}</style> <script> setTimeout(function() {'.$sLinkRedirect.' ;
         }, '. intval($iMillisSplash) .'); </script>
-    </head><body><div class="centered-message"> <h2>'.$sPesan.' </h2> </div>  </body></html> '; 
+    </head><body><div class="centered-message"> <h2>'.$sPesan.' </h2> </div></body></html> '; 
    die($sHTMLSplash);
 }
 

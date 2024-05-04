@@ -35,7 +35,19 @@ if (isset($_POST['login'])) {
         $_SESSION['id_perusahaan'] = $myUser->id_perusahaan();
         $_SESSION['userID'] = $userID;
         $_SESSION['username'] =$myUser->fullname();
-        header("Location: dashboard.php"); // Redirect ke halaman dashboard setelah login berhasil
+        
+        // Periksa apakah ada URL halaman yang disimpan
+        if(isset($_SESSION['last_page'])) {
+          $lastPage = $_SESSION['last_page'];
+          unset($_SESSION['last_page']); // Hapus URL halaman terakhir dari session
+          header('Location: ' . $lastPage); // Arahkan pengguna ke URL halaman terakhir
+          exit;
+        } else {
+          // Jika tidak ada URL halaman yang disimpan, arahkan ke halaman default
+          header("Location: dashboard.php"); // Redirect ke halaman dashboard setelah login berhasil
+          exit;
+        }
+
         exit;
       }
     } else {

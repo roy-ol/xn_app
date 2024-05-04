@@ -20,39 +20,42 @@ echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESS
     <ul>
         <li><a href="#"> </a></li>
         <li><a href="dashboard.php">Dashboard</a></li>
-        <li><a href="#">NodeRole</a>▶<ul> 
+        <li id="subMenu1" style="color : greenyellow">NodeRole▶<ul> 
             <li class="submenu"><a href="node_role.php">NodeRole List</a></li>
             <li class="submenu"><a href="node_role_form.php">NodeRole Baru</a></li>
         </ul></li> 
-        <li><a href="nr_week.php">NodeRole Mingguan</a></li>
+        <li id="subMenuJadwal" style="color : greenyellow">Jadwal Aktuator▶<ul> 
+            <li class="submenu"><a href="nr_jadwal_list.php"></a>List Jadwal</li>
+            <li class="submenu"><a href="nr_week.php">NodeRole Mingguan</a></li>
+            <li class="submenu"><a href="nr_date.php">NodeRole Tanggal</a></li>
+        </ul></li> 
         <li><a href="xt_aktuator.php">XT ExeTest Katuator</a></li>
         <li><a href="test.php">..</a></li>
         <li><a href="logout.php">Logout</a></li>
     </ul>
 </div>
-<br><br>
-  
+<br>
 <style>
   table {
       border-collapse: collapse;
       width: 100%;
-      border: 2px solid black; /* Ketebalan garis tepi tabel */
+      border: 2px solid #090945; /* Ketebalan garis tepi tabel */
   } 
   td  {
       text-align: left;
       padding: 8px;
-      border-bottom: 1px solid black; /* Garis antara baris */
+      border-bottom: 1px solid #090945; /* Garis antara baris */
   } 
   th {
       text-align: left;
       padding: 8px;
-      border-bottom:2px solid black; /* Garis antara baris */
+      border-bottom:2px solid #090945; /* Garis antara baris */
   } 
   th,td { 
-      border-right: 1px solid black; /* Garis antara kolom header */
+      border-right: 1px solid #090945; /* Garis antara kolom + header */
   }  
   tr:nth-child(even) {
-      background-color: #f2f2f2;
+      background-color: #f2f2f9;
   }   
  
 
@@ -71,9 +74,11 @@ echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESS
     left: -300px; /* Mulai dari luar layar */
     width: 250px;
     height: 100%;
-    background-color: #333;
+    /* background-color: #333; */
     padding: 20px;
     transition: left 0.7s ease; /* Transisi untuk efek keluar masuk */
+    background-color: rgba(27,27,45,0.9); /* Latar belakang semi transparan */ 
+    z-index: 9999; /* Menempatkan popup di atas elemen lain */
 }
 .popup-menu ul {
     list-style-type: none;
@@ -121,6 +126,7 @@ ul ul {
 ul li:hover ul {
     display: block;
 }
+ 
 
 </style>
 
@@ -186,6 +192,15 @@ function toggleMenu() {
         menu.style.left = '-300px';
     }
 }   
+
+window.onclick = function(event) {  
+    var modal = document.getElementById("menuButton");
+    var modal1 = document.getElementById("subMenu1");
+    if (event.target != modal && event.target != modal1 ) { 
+        var menu = document.getElementById('popupMenu');  
+        menu.style.left = '-300px'; 
+    } 
+}
 
 window.onscroll = function() {scrollFunction()};
 

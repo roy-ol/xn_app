@@ -46,6 +46,14 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
       $idPola = $data->idPola; 
       getInfoPola($idPola);
       break; 
+    case 'ketRole':   //fungsi ambil data keterangan pola
+      $idRole = $data->idRole; 
+      getInfoRole($idRole);
+      break; 
+    case 'ketNode':   //fungsi ambil data keterangan pola
+      $idKey = $data->idKey; 
+      getInfoNode($idKey);
+      break; 
     case 'addNodeRole1':    //menambahkan NodeRole Standart field
       addNodeRole1($data);
       break; 
@@ -115,7 +123,8 @@ function updateNodeRole1($data){ //edit NodeRole Standart field dari data Post m
   // var_dump($paramNR);
   // return;
   //============
-  if($iRecAff > 0 || $iRecAff1 > 0) splashBerhasil("$iRecAff1 Memo, $iRecAff Node_Role, terupdate","/../node_role.php");
+  // $sLinkRedirect = '/../node_role.php';
+  if($iRecAff > 0 || $iRecAff1 > 0) splashBerhasil("$iRecAff1 Memo, $iRecAff Node_Role, terupdate");
   splashBerhasil("tidak ada perubahan data");  
 
 }
@@ -155,9 +164,37 @@ function addNodeRole1($data){ //menambahkan NodeRole Standart field dari data Po
     :updater )";
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sql,$paramNR); 
-  if($iRecAff > 0) splashBerhasil("$iRecAff record Node_Role, Berhasil ditambahkan","/../node_role.php");
+  if($iRecAff > 0) splashBerhasil("$iRecAff record Node_Role, Berhasil ditambahkan");
   splashBerhasil("ada kesalahan tambah data");  
 
+}
+
+function getInfoNode($idNode){
+  global $cUmum;
+  // Query untuk mengambil detail //==pause==
+  $sql = "SELECT n.nama,c.chip, k.nama kebun,k.keterangan ketKebun,c.keterangan ketChip, 
+  n.keterangan ketNode,m.memo  from node n
+  INNER JOIN chip c ON c.id = n.id_chip
+  INNER JOIN kebun k ON k.id=c.id_kebun
+  LEFT JOIN memo m ON m.id=c.id_memo
+  where n.id = :id_node ";  
+  $rData = $cUmum->ambil1Row($sql,["id_node" => $idNode]);  
+  $sRsp = json_encode($rData);
+  die($sRsp); 
+}
+
+function getInfoRole($idRole){
+  global $cUmum;
+  // Query untuk mengambil detail role
+  $sql = "SELECT nr.keterangan, nr.id,p.pola,u.fullname, m.memo FROM node_role nr   
+    INNER JOIN nrpola p ON p.id=nr.pola 
+    INNER JOIN users u ON u.id=nr.updater 
+    LEFT JOIN memo m ON m.id = nr.id_memo 
+    WHERE nr.id = :id_role ";  
+  $rData = $cUmum->ambil1Row($sql,["id_role" => $idRole]);  
+  $sRsp = json_encode($rData);
+  die($sRsp);
+  // die('{"keterangan":"'. $sData . '"}');
 }
 
 function getInfoPola($idPola){
