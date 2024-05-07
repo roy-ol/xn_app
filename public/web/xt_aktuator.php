@@ -141,8 +141,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
 
 
 <?php 
-$sql = "SELECT CONCAT(n.nama, ' ', DATE(nx.created)) Node  , time(nx.created) Start ,
-  time(nx.updated) fin ,nx.relay Rel, nx.exeval Val, nx.exe_v1 V1, nx.exe_v2 V2,
+$sql = "SELECT CONCAT(n.nama, ' ', DATE(nx.created)) Node  , time(nx.created) req ,
+  time(nx.updated) get ,nx.relay Rel, nx.exeval Val, nx.exe_v1 V1, nx.exe_v2 V2,
   nx.flag F  FROM node n
   INNER JOIN node_xt nx on n.id = nx.id_node
   INNER JOIN chip c on n.id_chip = c.id

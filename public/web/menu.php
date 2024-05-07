@@ -196,7 +196,8 @@ function toggleMenu() {
 window.onclick = function(event) {  
     var modal = document.getElementById("menuButton");
     var modal1 = document.getElementById("subMenu1");
-    if (event.target != modal && event.target != modal1 ) { 
+    var modal2 = document.getElementById("subMenuJadwal");
+    if (event.target != modal && event.target != modal1 && event.target != modal2 ) { 
         var menu = document.getElementById('popupMenu');  
         menu.style.left = '-300px'; 
     } 
