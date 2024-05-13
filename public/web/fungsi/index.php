@@ -69,6 +69,12 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'updateNode':    //menambahkan   Node 
       updateNode($data);
       break; 
+    case 'addPerusahaan':    //menambahkan   Perusahaan 
+      addPerusahaan($data);
+      break; 
+    case 'addKebun':    //menambahkan   Kebun 
+      addKebun($data);
+      break; 
     default: // OK : 2023-03-05 
       die("failcode");
       break;
@@ -288,6 +294,25 @@ function updateNode($data){ //menambahkan NodeRole Standart field dari data Post
   splashBerhasil("ada kesalahan tambah data");  
   
 }
+
+function addKebun($data){
+  global $cUmum;    
+  
+  $sSQL = "INSERT INTO kebun (id_perusahaan, nama, apikey, keterangan, log_limit, flag)
+  VALUES (:id_perusahaan, :nama, :apikey, :keterangan, :log_limit, :flag)" ;
+  $param["id_perusahaan"] = intval($data->id_perusahaan);
+  $param["nama"] = $data->nama;
+  $param["apikey"] = $data->apikey;
+  $param["keterangan"] = $data->keterangan;
+  $param["log_limit"] = intval($data->log_limit);
+  $param["flag"] = intval($data->flag); 
+  
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param);
+  if($iRecAff > 0) splashBerhasil("$iRecAff record baru, Berhasil ditambahkan",1);
+  splashBerhasil("ada kesalahan tambah data");  
+}
+
 
 function addPerusahaan($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum;    
