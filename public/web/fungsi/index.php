@@ -60,6 +60,15 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'updateNodeRole1':    //update NodeRole Standart field
       updateNodeRole1($data);
       break; 
+    case 'addNodeRoleWeek':    //menambahkan daftar NodeRole WeeK
+      addNodeRoleWeek($data);
+      break; 
+    case 'addNode':    //menambahkan   Node 
+      addNode($data);
+      break; 
+    case 'updateNode':    //menambahkan   Node 
+      updateNode($data);
+      break; 
     default: // OK : 2023-03-05 
       die("failcode");
       break;
@@ -169,6 +178,33 @@ function addNodeRole1($data){ //menambahkan NodeRole Standart field dari data Po
 
 }
 
+function addNodeRoleWeek($data){ //menambahkan NodeRole Standart field dari data Post minimalis
+  global $cUmum;  
+  global $userID ;
+
+  $param['id_role']=intval($data->id_role);
+  $param['id_node']=intval($data->id_node); 
+  $sMulai = date('H:i:s', strtotime($data->mulai)); // Mengonversi waktu ke format yang sesuai untuk kolom TIME
+  $sSelesai = date('H:i:s', strtotime($data->selesai)); // Mengonversi waktu ke format yang sesuai untuk kolom TIME
+  $param['updater']=$userID; 
+  $param['h1']=(isset($data->h1) && $data->h1 =="on" )? 1 : 0 ;
+  $param['h2']=(isset($data->h2) && $data->h2 =="on" )? 1 : 0 ;
+  $param['h3']=(isset($data->h3) && $data->h3 =="on" )? 1 : 0 ;
+  $param['h4']=(isset($data->h4) && $data->h4 =="on" )? 1 : 0 ;
+  $param['h5']=(isset($data->h5) && $data->h5 =="on" )? 1 : 0 ;
+  $param['h6']=(isset($data->h6) && $data->h6 =="on" )? 1 : 0 ;
+  $param['h7']=(isset($data->h7) && $data->h7 =="on" )? 1 : 0 ;   
+    
+  $sql = "INSERT INTO node_role_week ( id_node, id_role, mulai, selesai,  updater, h1, h2, h3, h4, h5, h6, h7 ) 
+  VALUES ( :id_node, :id_role, TIME_FORMAT('$sMulai', '%H:%i:%s'),TIME_FORMAT('$sSelesai', '%H:%i:%s'),
+  :updater, :h1, :h2, :h3, :h4, :h5, :h6, :h7);";
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sql,$param); 
+  if($iRecAff > 0) splashBerhasil("$iRecAff record Jadwal, Berhasil ditambahkan",1);
+  splashBerhasil("ada kesalahan tambah data");  
+
+}
+
 function getInfoNode($idNode){
   global $cUmum;
   // Query untuk mengambil detail //==pause==
@@ -212,5 +248,66 @@ function getInfoPola($idPola){
 }
 
 
+function addNode($data){ //menambahkan NodeRole Standart field dari data Post minimalis
+  global $cUmum;   
+  $sSQL = "INSERT INTO `node` (`id_chip`, `sub_node`, `id_pola`, `nama`, `keterangan`,`flag`)
+  VALUES (:id_chip, :sub_node, :id_pola, :nama, :keterangan, :flag)" ;
+  $param["id_chip"] = intval($data->id_chip);
+  $param["sub_node"] = intval($data->sub_node);
+  $param["id_pola"] = intval($data->id_pola);
+  $param["nama"] = $data->nama;
+  $param["keterangan"] = $data->keterangan;
+  $param["flag"] = intval($data->flag); 
+ 
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param); 
+  // $urlBalik=__DIR__ . '../webadmin/node_baru.php';
+  // if($iRecAff > 0) splashBerhasil("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
+  if($iRecAff > 0) splashBerhasil("$iRecAff record Node baru, Berhasil ditambahkan",1);
+  splashBerhasil("ada kesalahan tambah data");  
+
+}
+
+function updateNode($data){ //menambahkan NodeRole Standart field dari data Post minimalis
+  global $cUmum;   
+  $sSQL = "UPDATE `node` set `id_chip`=:id_chip, sub_node=:sub_node, id_pola= :id_pola, nama= :nama ,
+   keterangan = :keterangan, flag =:flag where id = :id_node " ;
+  $param["id_node"] = intval($data->id_node);
+  $param["id_chip"] = intval($data->id_chip);
+  $param["sub_node"] = intval($data->sub_node);
+  $param["id_pola"] = intval($data->id_pola);
+  $param["nama"] = $data->nama;
+  $param["keterangan"] = $data->keterangan;
+  $param["flag"] = intval($data->flag); 
+  
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param); 
+  // $urlBalik= __DIR__ . '../webadmin/node_baru.php';
+  if($iRecAff > 0) splashBerhasil("$iRecAff record update", 1);
+  // if($iRecAff > 0) splashBerhasil("$iRecAff record update",$urlBalik);
+  splashBerhasil("ada kesalahan tambah data");  
+  
+}
+
+function addPerusahaan($data){ //menambahkan NodeRole Standart field dari data Post minimalis
+  global $cUmum;    
+  
+  $sSQL = "INSERT INTO perusahaan (nama, singkatan, alamat, kota, telp,dirut,flag)
+  VALUES (:nama, :singkatan, :alamat, :kota, :telp, :dirut, :flag)" ;
+  $param["nama"] = $data->nama;
+  $param["singkatan"] = $data->singkatan;
+  $param["alamat"] = $data->alamat;
+  $param["kota"] = $data->kota;
+  $param["telp"] = $data->telp;
+  $param["dirut"] = $data->dirut; 
+ 
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param); 
+  // $urlBalik=__DIR__ . '../webadmin/node_baru.php';
+  // if($iRecAff > 0) splashBerhasil("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
+  if($iRecAff > 0) splashBerhasil("$iRecAff record baru, Berhasil ditambahkan",1);
+  splashBerhasil("ada kesalahan tambah data");  
+
+}
 
 ?>

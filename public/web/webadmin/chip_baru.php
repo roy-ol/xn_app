@@ -6,7 +6,7 @@ require_once __DIR__ . '/menu.php';
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Node Form</title>
+    <title>Chip Form</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
     <style>
         .form-group {
@@ -40,7 +40,7 @@ require_once __DIR__ . '/menu.php';
     
 </head>
 <body>
-    <h1>Modul system Chip XN / Node </h1> 
+    <h1>Modul system Chip XN </h1> 
     <form action="update_node.php" method="POST">
         <div class="form-group">
           <label for="kebun">Kebun:</label>
@@ -124,7 +124,9 @@ require_once __DIR__ . '/menu.php';
       </div>
   </form>
 
-
+<?php 
+echo bikinTabelSQL("select * from chip order by id desc limit 36");
+?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
@@ -142,5 +144,8 @@ require_once __DIR__ . '/menu.php';
         });
     });
 </script>
+
+
+
 </body>
 </html>

@@ -14,6 +14,7 @@ require_once __DIR__ . '/menu.php';
 $id_role = 0 ;
 $id_node = 0 ;
 
+$sURL_Action = "../web/fungsi/addNodeRoleWeek"; 
 ?>
 <h2>Jadwal Mingguan</h2>
 <!-- Popup  Form -->
@@ -25,9 +26,9 @@ $id_node = 0 ;
     </div>
 </div>
 <!-- popup form -->
-<form action="#" method="post">
+<form action="<?=$sURL_Action;?>" method="post">
   <table>  
-    <input type="checkbox" onclick="toggleAllDays()" title="Pilih Semua" name="hh"> Pilih Semua Hari
+    <input type="checkbox" onclick="toggleAllDays()" title="Pilih Semua" > Pilih Semua Hari
     <tr>
         <td title="Minggu" class="center-text"><input type="checkbox" name="h1" onchange="updateSelectedDays()" title="Minggu"></td> 
         <td title="Senin"  class="center-text"><input type="checkbox" name="h2" onchange="updateSelectedDays()" title="Senin" ></td>  
@@ -90,7 +91,7 @@ $id_node = 0 ;
   </table> 
   <br>
   <div>
-    <input type="submit" value="Submit">
+    <input type="submit" value="simpan">
   </div>
 </form>
 
@@ -238,13 +239,16 @@ $('#timepicker1').timepicker({
   defaultTime: 'current',
   showInputs: false, 
   showMeridian: false,
-  timeFormat: 'H:i:s'
+  timeFormat: 'HH:mm:ss',
+  showSecond:true,
+  interval: 1 // 1 minutes
 });
 $('#timepicker2').timepicker({
   defaultTime: 'current',
   showInputs: false, 
   showMeridian: false,
-  timeFormat: 'H:i:s'
+  timeFormat: 'H:i:s',
+  stepMinutes: 1
 });
 
 </script>

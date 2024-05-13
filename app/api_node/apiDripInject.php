@@ -34,13 +34,13 @@ $arrData = false;
 $sSQL = "SELECT nr.*,nrw.id as id_nrw
 FROM node_role_week nrw, node_role nr
 WHERE nr.id=nrw.id_role and id_node = :id_node AND 
-    (h1 = IF(DAYOFWEEK(NOW()) = 1, 1, 0)
-    OR h2 = IF(DAYOFWEEK(NOW()) = 2, 1, 0)
-    OR h3 = IF(DAYOFWEEK(NOW()) = 3, 1, 0)
-    OR h4 = IF(DAYOFWEEK(NOW()) = 4, 1, 0)
-    OR h5 = IF(DAYOFWEEK(NOW()) = 5, 1, 0)
-    OR h6 = IF(DAYOFWEEK(NOW()) = 6, 1, 0)
-    OR h7 = IF(DAYOFWEEK(NOW()) = 7, 1, 0)
+      (h1 = IF(DAYOFWEEK(NOW())=1, 1, 8)
+    OR h2 = IF(DAYOFWEEK(NOW())=2, 1, 8)
+    OR h3 = IF(DAYOFWEEK(NOW())=3, 1, 8)
+    OR h4 = IF(DAYOFWEEK(NOW())=4, 1, 8)
+    OR h5 = IF(DAYOFWEEK(NOW())=5, 1, 8)
+    OR h6 = IF(DAYOFWEEK(NOW())=6, 1, 8)
+    OR h7 = IF(DAYOFWEEK(NOW())=7, 1, 8)
     )
      AND TIME(NOW()) BETWEEN mulai AND selesai
 LIMIT 1;   "; 
@@ -67,8 +67,8 @@ if($arrData){
   $ref_n5  = $arrData['ref_n5'];  
   $relay  = $arrData['relay'];
   $repeater  = $arrData['repeater']; 
-  $limval0  = $arrData['limval0'];
-  $limval1  = $arrData['limval1'];
+  $limval0  = $arrData['nilai_1'];
+  $limval1  = $arrData['nilai_2'];
   // $keterangan  = $arrData['keterangan']; 
   // $istoday = $arrData['today']; 
 

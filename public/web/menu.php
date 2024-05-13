@@ -25,7 +25,7 @@ echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESS
             <li class="submenu"><a href="node_role_form.php">NodeRole Baru</a></li>
         </ul></li> 
         <li id="subMenuJadwal" style="color : greenyellow">Jadwal Aktuator▶<ul> 
-            <li class="submenu"><a href="nr_jadwal_list.php"></a>List Jadwal</li>
+            <li class="submenu"><a href="nr_jadwal_list.php">List Jadwal</a></li>
             <li class="submenu"><a href="nr_week.php">NodeRole Mingguan</a></li>
             <li class="submenu"><a href="nr_date.php">NodeRole Tanggal</a></li>
         </ul></li> 

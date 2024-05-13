@@ -1,7 +1,7 @@
 <body onload="onLoadFunctions()">
 <?php
-require_once __DIR__ . '../../../../app/init_class.php';
-session_start();
+require_once __DIR__ . '../../fungsi/koneksi_umum.php';
+// session_start();
 
 // Cek apakah pengguna sudah login atau belum
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
@@ -17,71 +17,15 @@ echo $_SESSION['username'] . " lvl:" . $_SESSION['id_level'];
 <a href="logout.php">Logout</a> 
 <br><br>
 <a href="dashboard.php">Dashboard</a> &nbsp &nbsp &nbsp
-<a href="node_baru.php">+Node / Chip Baru</a> &nbsp &nbsp &nbsp
 <a href="binfirupd.php">binfirup</a>&nbsp &nbsp &nbsp
 <a href="xt_aktuator.php">XT ExeTest Katuator</a>&nbsp &nbsp &nbsp
+<a href="node_baru.php">Node+edit </a> &nbsp &nbsp &nbsp
+<a href="chip_baru.php">+Chip</a> &nbsp &nbsp &nbsp
+<a href="perusahaan.php">+Perusahaan</a> &nbsp &nbsp &nbsp
 <br><br><br> 
 
 <?php //================fungsi fungsi umum web php koneksi dll   
-$cUmum = new cUmum();
-/**
- * membuat tampilan tabel dari query sql
- */
-function bikinTabelSQL($sqlQuery) {
-    // Menggunakan kelas umum untuk eksekusi query
-    global $cUmum ;
- 
-    // Query SQL
-    $hasil = $cUmum->ambilData($sqlQuery);
-    $result = $hasil->fetchAll(PDO::FETCH_ASSOC); 
-
-    if (empty($result)) {
-        return '<p>Tidak ada data yang ditemukan.</p>';
-    }
-
-    // Buat tampilan tabel
-    $tableHTML = '<table>
-                    <tr>';
-    
-    // Membuat header tabel dari nama kolom hasil query
-    foreach(array_keys($result[0]) as $columnName) {
-        $tableHTML .= '<th>'.$columnName.'</th>';
-    }
-    
-    $tableHTML .= '</tr>'; 
-    // Membuat baris tabel dari hasil query
-    foreach($result as $row) {
-        $tableHTML .= '<tr>'; 
-        foreach($row as $value) {
-            $tableHTML .= '<td>'.$value.'</td>';
-        } 
-        $tableHTML .= '</tr>';
-    }
-
-    // Menutup tabel
-    $tableHTML .= '</table>';
-
-    return $tableHTML;
-}
-
-// /**
-//  * bikin isian option dari sql berisi id (ex: <Select .. . )
-//  * @param sTampil wajib ada setelah id text tampil di dalam opsi
-//  * @param sp1 = pemisah 1 2 3
-//  * @param tampil1 = field dari query untuk menjadi teks ditampilkan 1 2 3 
-//  */
-// function bikinOption($sqlQuery,$sTampil,$sp1="",$sTampil1="",$sp2="",$sTampil2="",$sp3="",$sTampil3=""){
-//   global $cUmum ;
-//   $result = $cUmum->ambilData($sqlQuery); 
-//   // Memeriksa apakah query berhasil dijalankan
-//   if ($result) {
-//       while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
-//         echo '<option value="' . $row['id'] . '">' . $row[$sTampil] .$sp1 . $row[$sTampil1] 
-//         . $sp2 . $row[$sTampil2] . $sp3 . $row[$sTampil3]  . '</option>';
-//       }
-//   } else { echo "Error: " . $sqlQuery . "<br>" . $cUmum->getPDO()->errorInfo()[2];}
-// }
-
+  if(1==0) $cUmum = new cUmum(); 
 ?>
   
 <style>

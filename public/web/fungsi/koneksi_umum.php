@@ -144,14 +144,17 @@ function bikinOption($sqlQuery,$iTerpilih=0, $sTampil,$sp1="",$sTampil1="",$sp2=
   if ($result) {
       while ($row = $result->fetch(PDO::FETCH_ASSOC)) { 
         $sTerpilih = (intval($row['id']) == $iTerpilih )? 'SELECTED' : '' ;
-        echo '<option value="' . $row['id'] . '" ' .$sTerpilih .'>' . $row[$sTampil] .$sp1 . $row[$sTampil1] 
-        . $sp2 . $row[$sTampil2] . $sp3 . $row[$sTampil3]  . '</option>';
+        $oTampil1 = ($sTampil1 !== "")?$row[$sTampil1]:"";
+        $oTampil2 = ($sTampil2 !== "")?$row[$sTampil2]:"";
+        $oTampil3 = ($sTampil3 !== "")?$row[$sTampil3]:"";
+        echo '<option value="' . $row['id'] . '" ' .$sTerpilih .'>' . $row[$sTampil] .$sp1 . $oTampil1 
+        . $sp2 .  $oTampil2  . $sp3 . $oTampil3  . '</option>';
       }
   } else { echo "Error: " . $sqlQuery . "<br>" . $cUmum->getPDO()->errorInfo()[2];}
 }
 
 
-function splashBerhasil($sPesan = "Berhasil", $sLinkRedirect=null, $iMillisSplash = 3339){
+function splashBerhasil($sPesan = "Berhasil", $sLinkRedirect=null, $iMillisSplash = 3339){ 
     if($sLinkRedirect == null){
         // $sLinkRedirect = "window.location.href";
         $sLinkRedirect = "window.history.go(-2)";

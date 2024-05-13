@@ -4,7 +4,7 @@
     <title>update firmware binary</title>
 </head>
 
-<h2>Binary Firmware Update</h2>
+<h2>Binary Firmware Update form</h2>
 <?php require_once __DIR__ . '/menu.php'; // berisi juga tag <body> 
 
 
@@ -26,6 +26,7 @@ if(isset($_POST['assign_repo'])){
 
 ?>
 <br><h3>Assign repo to chip</h3>
+ 
 
 <form action="?" method="post" enctype="multipart/form-data">
   <div class="form-group">
@@ -181,7 +182,7 @@ if(isset($_POST['timestamp']) && isset($_POST['submit'])){
     <select id="id_tipe" name="id_tipe">
       <option value=0> - - - pilih tipe - - - </option>
       <?php 
-        $query = "select id,nama,keterangan from tipe "; 
+        $query = "SELECT id,nama,keterangan FROM tipe WHERE keterangan NOT LIKE 'Dicadangkan%' "; 
         bikinOption($query,0,"nama"," ","keterangan"); 
       ?>
     </select>
