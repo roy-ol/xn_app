@@ -1,5 +1,3 @@
-
-
 <?php  
 require_once __DIR__ . '/menu.php';
     
@@ -13,20 +11,61 @@ require_once __DIR__ . '/menu.php';
 <?php 
 $id_role = 0 ;
 $id_node = 0 ;
+$sNamaNode = "" ;
 
 $sURL_Action = "../web/fungsi/addNodeRoleWeek"; 
 ?>
-<h2>Jadwal Mingguan</h2>
 <!-- Popup  Form -->
 <div class="popup" id="popup">
-    <div class="popup-content">   
-      <div id="popup_memo"></div><br><br> 
-      <!-- <label id="popup_memo"></label><br><br>  -->
-      <button onclick="hidePopup()" style="margin: 0 auto; display: block;">Tutup</button>
-    </div>
+  <div class="popup-content">   
+    <div id="popup_memo"></div><br><br> 
+    <!-- <label id="popup_memo"></label><br><br>  -->
+    <button onclick="hidePopup()" style="margin: 0 auto; display: block;">Tutup</button>
+  </div>
 </div>
 <!-- popup form -->
+
+
 <form action="<?=$sURL_Action;?>" method="post">
+  <select id="id_aktuator" name="id_node" value=<?=$id_node;?> style="background-color: #f9f9ff; display:none;" 
+      onchange="showDetailAktuator(this.value)">
+    <option value=0> --pilih Node--</option>
+    <?php  
+    $sSqlOp2 = "SELECT n.id,n.nama,c.chip from node n INNER JOIN chip c ON c.id = n.id_chip 
+    INNER JOIN kebun k ON k.id=c.id_kebun where k.id_perusahaan=" . $id_perusahaan;
+    bikinOption($sSqlOp2, $id_node, "chip", "-", "nama");
+    ?>
+  </select> 
+  <br><label id="sNamaNode">pilih Node <?=$sNamaNode;?></label>
+  <label id="lblMemAktuator" for="id_aktuator" onclick="tampilMemo(sMemAktuator)"> </label> 
+  <br>
+  <table>  
+    <tr><td>Awal Eksekusi</td><td>
+      <div class="input-group bootstrap-timepicker" >
+        <input id="timepicker1" type="text" class="input-small" name="mulai" 
+          style="width: 90px;">
+        <i class="glyphicon glyphicon-time input-group-addon"></i>Waktu mulai 
+      </div>
+    </td></tr>
+    <tr><td>NodeRole</td><td>
+      <select id="id_role" name="id_role" value=<?=$id_role;?>  style="background-color: #fdfdff;" 
+       onchange="showDetailNR(this.value)">
+      <option value=0 > --pilih Role--</option>
+        <?php  
+          $sSqlOp1 = "SELECT nr.id, nr.keterangan FROM node_role nr 
+          WHERE nr.id_perusahaan =" . $id_perusahaan;
+          bikinOption($sSqlOp1, $id_role,"keterangan");
+        ?>
+      </select> 
+      <label id="lblMemNR" for="id_role" onclick="tampilMemo(sMemoNR)"> </label> 
+    </td></tr>
+    <tr><td>Batas Waktu</td><td>
+      <div class="input-group bootstrap-timepicker">
+          <input id="timepicker2" type="text" class="input-small" name="selesai" style="width: 90px;" >
+          <i class="glyphicon glyphicon-time input-group-addon"></i>Batas mulai
+      </div>
+    </td></tr>
+  </table> <br>
   <table>  
     <input type="checkbox" onclick="toggleAllDays()" title="Pilih Semua" > Pilih Semua Hari
     <tr>
@@ -49,52 +88,15 @@ $sURL_Action = "../web/fungsi/addNodeRoleWeek";
     </tr> 
   </table>
   <table><tr><td>Jadwal Terpilih</td><td>
-  <div id="selectedDays">--</div></td></tr></table> <br>
-  <table> 
-    <tr><td>NodeRole</td><td>
-      <select id="id_role" name="id_role" value=<?=$id_role;?>  style="background-color: #fdfdff;" 
-       onchange="showDetailNR(this.value)">
-      <option value=0 > --pilih Role--</option>
-        <?php  
-          $sSqlOp1 = "SELECT nr.id, nr.keterangan FROM node_role nr 
-          WHERE nr.id_perusahaan =" . $id_perusahaan;
-          bikinOption($sSqlOp1, $id_role,"keterangan");
-        ?>
-      </select> 
-      <label id="lblMemNR" for="id_role" onclick="tampilMemo(sMemoNR)"> </label> 
-    </td></tr>
-    <tr><td>Awal Eksekusi</td><td>
-      <div class="input-group bootstrap-timepicker" >
-        <input id="timepicker1" type="text" class="input-small" name="mulai" 
-          style="width: 90px;">
-        <i class="glyphicon glyphicon-time input-group-addon"></i>Waktu mulai 
-      </div>
-    </td></tr>
-    <tr><td>Aktuator</td><td>
-      <select id="id_aktuator" name="id_node" value=<?=$id_node;?>  style="background-color: #f9f9ff;"
-       onchange="showDetailAktuator(this.value)">
-      <option value=0> --pilih Node--</option>
-        <?php  
-          $sSqlOp2 = "SELECT n.id,n.nama,c.chip from node n INNER JOIN chip c ON c.id = n.id_chip 
-          INNER JOIN kebun k ON k.id=c.id_kebun where k.id_perusahaan=" . $id_perusahaan;
-          bikinOption($sSqlOp2, $id_node,"chip","-","nama",);
-        ?>
-      </select> 
-      <label id="lblMemAktuator" for="id_aktuator" onclick="tampilMemo(sMemAktuator)"> </label> 
-    </td></tr>
-    <tr><td>Batas Waktu</td><td>
-      <div class="input-group bootstrap-timepicker">
-          <input id="timepicker2" type="text" class="input-small" name="selesai" style="width: 90px;" >
-          <i class="glyphicon glyphicon-time input-group-addon"></i>Batas mulai
-      </div>
-    </td></tr>
-  </table> 
+  <div id="selectedDays">--</div></td></tr></table> 
   <br>
   <div>
     <input type="submit" value="simpan">
   </div>
 </form>
 
+<br><label id="sNamaNode2">Jadwal Mingguan <?=$sNamaNode;?></label>
+<div id="sHtmlTabelNRW"></div> 
 
 <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -154,10 +156,11 @@ function showDetailAktuator(id_key){
       const ketLabel = document.getElementById('lblMemAktuator'); 
       ketLabel.textContent = '\u25A5'; 
       // ketPolaLabel.textContent = '\u25BA'; 
-      ketLabel.style.cursor = 'pointer';
-  //  n.nama,c.chip, k.nama kebun,k.keterangan ketKebun,c.keterangan ketChip, 
-  // n.keterangan ketNode,m.memo 
- 
+      ketLabel.style.cursor = 'pointer'; 
+      document.getElementById('sNamaNode').textContent ='Jadwal Node ' + data.nama;
+      document.getElementById('sNamaNode2').textContent = 'Jadwal Mingguan ' + data.nama;
+      showOpsiAktuator();
+      loadTabelNRweek(id_key);
       document.getElementById('id_aktuator').title = data.nama + ' ' + data.ketNode; //== pause ====
       sMemAktuator ='<table><tr><td>' + data.nama +' ' + data.chip + '</td><td>' + data.ketNode 
       +' =>' + data.ketChip + '</td></tr><tr><td>' + data.kebun + '</td><td>'+ data.ketKebun
@@ -167,6 +170,7 @@ function showDetailAktuator(id_key){
       console.error('Error:', error);
   });
 }
+
 
 function showDetailNR(id_role){ 
   // Buat objek data dengan ID pola
@@ -234,23 +238,66 @@ function updateSelectedDays() {
     document.getElementById("selectedDays").innerHTML = "<label>" + selectedDays.join(", ") + "</label>";
 }
 
-
 $('#timepicker1').timepicker({
   defaultTime: 'current',
   showInputs: false, 
   showMeridian: false,
   timeFormat: 'HH:mm:ss',
-  showSecond:true,
-  interval: 1 // 1 minutes
+  showSeconds: true, // Menampilkan detik
+  secondStep: 1, // Langkah perubahan detik
+  minuteStep: 1 
 });
 $('#timepicker2').timepicker({
   defaultTime: 'current',
   showInputs: false, 
   showMeridian: false,
-  timeFormat: 'H:i:s',
-  stepMinutes: 1
+  timeFormat: 'HH:mm:ss',
+  showSeconds: true, // Menampilkan detik
+  secondStep: 1, // Langkah perubahan detik
+  minuteStep: 1 
 });
+
+function loadTabelNRweek(id_node){
+  var sHtmlTabel="";
+  var sUrlData="../web/fungsi/tabelNRweek";
+  const data = {
+    id_node: id_node
+  };  
+  fetch(sUrlData, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(data)
+  })  
+  .then(response => {
+    console.log("Status respons:", response.status);
+    return response.json();
+  })
+  .then(data => {
+    sHtmlTabel = data.tabel;
+    document.getElementById('sHtmlTabelNRW').innerHTML = sHtmlTabel;
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  }); 
+}
+
+function showOpsiAktuator(){
+  var selectAktuator = document.getElementById('id_aktuator');
+  if (selectAktuator.style.display === 'none') {
+    selectAktuator.style.display = 'block';
+  } else {
+    selectAktuator.style.display = 'none';
+  }  
+}
+
+document.getElementById('sNamaNode').addEventListener('click', function() {
+  showOpsiAktuator();
+}); 
 
 </script>
 </body>
+</html>
 </html>

@@ -75,6 +75,9 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'addKebun':    //menambahkan   Kebun 
       addKebun($data);
       break; 
+    case 'tabelNRweek':    //ambil tabel nr week
+      tabelNRweek($data);
+      break; 
     default: // OK : 2023-03-05 
       die("failcode");
       break;
@@ -88,6 +91,21 @@ die("t o");
 
 //====================fungsi fungsi=========================
 //====================fungsi fungsi=========================
+
+function tabelNRweek($data){
+  global $cUmum; 
+  $id_node = intval($data->id_node);
+  $sSQL =  "SELECT nr.keterangan AS nrole, CONCAT(mulai, ' ', selesai) AS jadwal,
+  CONCAT(IF(h1=1, 'Minggu, ', ''),IF(h2=1, 'Senin, ', ''), IF(h3=1, 'Selasa, ', ''),
+         IF(h4=1, 'Rabu, ', ''), IF(h5=1, 'Kamis, ', ''), IF(h6=1, 'Jumat, ', ''), IF(h7=1, 'Sabtu, ', '')) AS hari_terpilih 
+  FROM node_role_week nw INNER JOIN node_role nr ON nr.id = nw.id_role 
+  WHERE nw.id_node = $id_node "; 
+  // $param["id_node"] = $id_node;
+  $sHtmlTabel = bikinTabelSQL($sSQL);
+  // $sHtmlTabel = bikinTabelSQL($sSQL,$param);
+  $rspData['tabel'] = $sHtmlTabel;
+  die(json_encode($rspData));
+} 
 
 function updateNodeRole1($data){ //edit NodeRole Standart field dari data Post minimalis
   global $cUmum; 

@@ -23,12 +23,7 @@ if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cUmum seba
 $sql = "SELECT nr.id nrid, CONCAT('▶ ',nr.keterangan) NodeRole, CONCAT('R:',nr.relay,'\nX:',nr.exeval)'Rel xVal', CONCAT('V1:',nr.exe_v1 , ' V2:', 
   nr.exe_v2) 'Val1 Val2', CONCAT('Ref:',nr.reff_node, ' Nil:' , nr.nilai_1) Ref,nr.updated 
   FROM `node_role` nr WHERE nr.id_perusahaan = $id_perusahaan ORDER BY nr.id DESC";  
-$sHitTabel=bikinTabelSQL2($sql,"../web/node_role_form.php");
-// $sql = "SELECT nr.keterangan NodeRole, nr.relay rl,nr.exeval xVal, CONCAT('V1:',nr.exe_v1 , ' V2:', 
-//   nr.exe_v2) Val, CONCAT('Ref:',nr.reff_node, ' Nil:' , nr.nilai_1) Ref,nr.updated 
-//   FROM `node_role` nr WHERE nr.id_perusahaan = $id_perusahaan ORDER BY nr.id DESC";  
-// $sHitTabel=bikinTabelSQL($sql);
-
+$sHitTabel=bikinTabelSQL2($sql,"../web/node_role_form.php"); 
 echo $sHitTabel;
 
 ?>
