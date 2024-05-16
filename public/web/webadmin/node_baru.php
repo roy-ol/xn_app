@@ -17,6 +17,7 @@ $id_pola =   0;
 $nama =  "";
 $keterangan = "";
 $flag =  1; 
+$id_node =0;
 
 if(isset($_GET['id_node'])) {
     $id_node = $_GET['id_node'];

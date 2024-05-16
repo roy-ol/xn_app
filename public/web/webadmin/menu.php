@@ -22,6 +22,7 @@ echo $_SESSION['username'] . " lvl:" . $_SESSION['id_level'];
 <a href="node_baru.php">Node+edit </a> &nbsp &nbsp &nbsp
 <a href="chip_baru.php">+Chip</a> &nbsp &nbsp &nbsp
 <a href="kebun.php">+Kebun</a> &nbsp &nbsp &nbsp
+<a href="user.php">+User</a> &nbsp &nbsp &nbsp
 <a href="perusahaan.php">+Perusahaan</a> &nbsp &nbsp &nbsp
 <br><br><br> 
 

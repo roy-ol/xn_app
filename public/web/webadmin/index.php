@@ -30,6 +30,7 @@ if (isset($_POST['login'])) {
         $_SESSION['id_level'] = $myUser->id_level();
         $_SESSION['userID'] = $userID;
         $_SESSION['username'] =$myUser->fullname();
+        $_SESSION['id_perusahaan'] =$myUser->id_perusahaan();
         header("Location: dashboard.php"); // Redirect ke halaman dashboard setelah login berhasil
         exit;
       }

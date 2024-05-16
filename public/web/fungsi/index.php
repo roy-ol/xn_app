@@ -81,6 +81,12 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'tabelNRweek':    //ambil tabel nr week
       tabelNRweek($data);
       break; 
+    case 'addUser':    //menambahkan   User 
+      addUser($data);
+      break; 
+    case 'pwdUpdate':    //update password
+      pwdUpdate($data,$userID);
+      break; 
     default: // OK : 2023-03-05 
       die("failcode");
       break;
@@ -94,8 +100,7 @@ die("t o");
 
 //====================fungsi fungsi=========================
 //====================fungsi fungsi=========================
-function bikintabelNRweek($id_node,$sUrl_nrw){
-  global $cUmum;  
+function bikintabelNRweek($id_node,$sUrl_nrw){ 
   $sSQL =  "SELECT nw.id id_nrw,  CONCAT(mulai, ' ', selesai) AS jadwal, nr.keterangan AS nrole,
   CONCAT(IF(h1=1, 'Minggu, ', ''),IF(h2=1, 'Senin, ', ''), IF(h3=1, 'Selasa, ', ''),
          IF(h4=1, 'Rabu, ', ''), IF(h5=1, 'Kamis, ', ''), IF(h6=1, 'Jumat, ', ''), IF(h7=1, 'Sabtu, ', '')) AS hari_terpilih 
@@ -151,19 +156,9 @@ function updateNodeRole1($data){ //edit NodeRole Standart field dari data Post m
  
   $sql = "UPDATE node_role SET pola = :pola, exeval = :exeval, exe_v1 = :exe_v1, exe_v2 = :exe_v2, reff_node = :reff_node,
    relay = :relay, repeater = :repeater, nilai_1 = :nilai_1, keterangan = :keterangan, id_memo = :id_memo, updater = :updater 
-   WHERE id = :id_role AND id_perusahaan = :id_perusahaan";
-
-  // $sql = "UPDATE node_role set pola = :pola, exeval= :exeval, exe_v1= :exe_v1, exe_v2=:exe_v2, reff_node=:reff_node,
-  //  relay=:relay, repeater=:repeater, nilai_1=:nilai1, keterangan=:keterangan, id_memo=:id_memo, updater=:updater 
-  //  WHERE id = :id_role and id_perusahaan = :id_perusahaan ; ";
+   WHERE id = :id_role AND id_perusahaan = :id_perusahaan"; 
   $iRecAff = 0 ;
-  $iRecAff = $cUmum->eksekusi($sql,$paramNR); 
-  //==============
-  // echo $sql;
-  // var_dump($paramNR);
-  // return;
-  //============
-  // $sLinkRedirect = '/../node_role.php';
+  $iRecAff = $cUmum->eksekusi($sql,$paramNR);  
   if($iRecAff > 0 || $iRecAff1 > 0) splashBerhasil("$iRecAff1 Memo, $iRecAff Node_Role, terupdate");
   splashBerhasil("tidak ada perubahan data");  
 
@@ -171,8 +166,7 @@ function updateNodeRole1($data){ //edit NodeRole Standart field dari data Post m
 
 function addNodeRole1($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum; 
- 
-  // $sMemo = (isset($data->memo))? $data->memo : $sMemo="" ;
+  
   $sMemo = $data->memo ;
   $id_memo = 0;
   if(strlen($sMemo) >= 9 ){
@@ -370,6 +364,45 @@ function addKebun($data){
   splashBerhasil("ada kesalahan tambah data");  
 }
 
+function pwdUpdate($data,$userID){
+  global $cUmum;
+
+  $sSQL = "SELECT pwd from users where id = :id_user ";
+  $param["id_user"] = $userID;
+  $rData = $cUmum->ambil1Row($sSQL,$param);
+  $sPwdLama = $rData['pwd'];
+  if(!password_verify($data->passwordLama, $sPwdLama)){
+    splashBerhasil("Password Lama tidak cocok",1);
+    return;
+  }  
+  $sSQL = "UPDATE users set pwd = :pwd where id = :id_user ";
+  $param["id_user"] = $userID;
+  $param["pwd"] = password_hash($data->passwordBaru, PASSWORD_DEFAULT); // Menggunakan password_hash dengan algoritma bcrypt
+
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param);
+  if($iRecAff > 0) splashBerhasil("$iRecAff record baru, Berhasil di update",1);
+  splashBerhasil("ada kesalahan update data",1);  
+}
+
+function addUser($data){
+  global $cUmum;     
+  $sSQL = "INSERT INTO users (id_level, id_perusahaan, fullname, username, pwd, flag_active,email)
+  VALUES (:id_level, :id_perusahaan, :fullname, :username, :pwd, :flag_active,:email)" ;
+  $param["id_level"] = intval($data->id_level);
+  $param["id_perusahaan"] = intval($data->id_perusahaan);
+  $param["username"] = $data->username;
+  $param["email"] = $data->email;
+  $param["fullname"] = $data->fullname;
+  $pwd_xn = $data->pwd;
+  $param["pwd"] = password_hash($pwd_xn, PASSWORD_DEFAULT); // Menggunakan password_hash dengan algoritma bcrypt
+  $param["flag_active"] = intval($data->flag_active); 
+
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param);
+  if($iRecAff > 0) splashBerhasil("$iRecAff record baru, Berhasil ditambahkan",1);
+  splashBerhasil("ada kesalahan tambah data");  
+}
 
 function addPerusahaan($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum;    
