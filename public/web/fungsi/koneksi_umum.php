@@ -162,7 +162,7 @@ function splashBerhasil($sPesan = "Berhasil", $sLinkRedirect=null, $iMillisSplas
         $sLinkRedirect = 0 - $sLinkRedirect;
         $sLinkRedirect = "window.history.go($sLinkRedirect)";
     } else {
-        $sLinkRedirect = "window.location.href = '.$sLinkRedirect.'";
+        $sLinkRedirect = "window.location.href = '$sLinkRedirect'";
     }
     $sHTMLSplash = '<!DOCTYPE html> <head><style> .centered-message {
         position: fixed;top: 50%;left: 50%;transform: translate(-50%, -50%);

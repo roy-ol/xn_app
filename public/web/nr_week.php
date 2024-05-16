@@ -9,11 +9,47 @@ require_once __DIR__ . '/menu.php';
 <link rel="stylesheet" href="css/cssumum1.css">
 <body> 
 <?php 
+$id_nrw = 0;
 $id_role = 0 ;
 $id_node = 0 ;
 $sNamaNode = "" ;
+$sHtmlTabelNRW = "";
+$mulai = "";
+$selesai = "";
+$h1=0; $h2=0; $h3=0; $h4=0; $h5=0; $h6=0; $h7=0;
 
 $sURL_Action = "../web/fungsi/addNodeRoleWeek"; 
+$sUrl_nrw = $_SERVER['PHP_SELF'];
+
+
+if(isset($_GET['id_nrw'])){
+  $id_nrw = $_GET['id_nrw'];
+  $sSql = "SELECT n.nama, nrw.* FROM node_role_week nrw 
+    JOIN node n ON n.id = nrw.id_node WHERE nrw.id=:id_nrw";
+  $r_nrw = $cUmum->ambil1Row($sSql,['id_nrw'=>$id_nrw]);
+  $id_node = $r_nrw['id_node'];
+  $id_role = $r_nrw['id_role'];
+  $mulai = $r_nrw['mulai'];
+  $selesai = $r_nrw['selesai'];
+  $h1 = $r_nrw['h1'];
+  $h2 = $r_nrw['h2'];
+  $h3 = $r_nrw['h3'];
+  $h4 = $r_nrw['h4'];
+  $h5 = $r_nrw['h5'];
+  $h6 = $r_nrw['h6'];
+  $h7 = $r_nrw['h7'];
+  $sNamaNode = $r_nrw['nama'];
+  $sURL_Action = "../web/fungsi/UpdateNRW"; 
+  
+  $sSQL =  "SELECT nw.id id_nrw,  CONCAT(mulai, ' ', selesai) AS jadwal, nr.keterangan AS nrole,
+  CONCAT(IF(h1=1, 'Minggu, ', ''),IF(h2=1, 'Senin, ', ''), IF(h3=1, 'Selasa, ', ''),
+         IF(h4=1, 'Rabu, ', ''), IF(h5=1, 'Kamis, ', ''), IF(h6=1, 'Jumat, ', ''), IF(h7=1, 'Sabtu, ', '')) AS hari_terpilih 
+  FROM node_role_week nw INNER JOIN node_role nr ON nr.id = nw.id_role 
+  WHERE nw.id_node = $id_node "; 
+  // $param["id_node"] = $id_node; 
+  $sHtmlTabelNRW = bikinTabelSQL2($sSQL,$sUrl_nrw);  
+}
+
 ?>
 <!-- Popup  Form -->
 <div class="popup" id="popup">
@@ -43,7 +79,7 @@ $sURL_Action = "../web/fungsi/addNodeRoleWeek";
     <tr><td>Awal Eksekusi</td><td>
       <div class="input-group bootstrap-timepicker" >
         <input id="timepicker1" type="text" class="input-small" name="mulai" 
-          style="width: 90px;">
+          style="width: 90px;" value="<?=$mulai;?>">
         <i class="glyphicon glyphicon-time input-group-addon"></i>Waktu mulai 
       </div>
     </td></tr>
@@ -61,7 +97,7 @@ $sURL_Action = "../web/fungsi/addNodeRoleWeek";
     </td></tr>
     <tr><td>Batas Waktu</td><td>
       <div class="input-group bootstrap-timepicker">
-          <input id="timepicker2" type="text" class="input-small" name="selesai" style="width: 90px;" >
+          <input id="timepicker2" type="text" class="input-small" name="selesai" style="width: 90px;" value="<?=$selesai;?>">
           <i class="glyphicon glyphicon-time input-group-addon"></i>Batas mulai
       </div>
     </td></tr>
@@ -69,13 +105,13 @@ $sURL_Action = "../web/fungsi/addNodeRoleWeek";
   <table>  
     <input type="checkbox" onclick="toggleAllDays()" title="Pilih Semua" > Pilih Semua Hari
     <tr>
-        <td title="Minggu" class="center-text"><input type="checkbox" name="h1" onchange="updateSelectedDays()" title="Minggu"></td> 
-        <td title="Senin"  class="center-text"><input type="checkbox" name="h2" onchange="updateSelectedDays()" title="Senin" ></td>  
-        <td title="Selasa" class="center-text"><input type="checkbox" name="h3" onchange="updateSelectedDays()" title="Selasa"></td>  
-        <td title="Rabu"   class="center-text"><input type="checkbox" name="h4" onchange="updateSelectedDays()" title="Rabu"  ></td>  
-        <td title="Kamis"  class="center-text"><input type="checkbox" name="h5" onchange="updateSelectedDays()" title="Kamis" ></td>  
-        <td title="Jum'at" class="center-text"><input type="checkbox" name="h6" onchange="updateSelectedDays()" title="Jum'at"></td>  
-        <td title="Sabtu"  class="center-text"><input type="checkbox" name="h7" onchange="updateSelectedDays()" title="Sabtu" ></td>  
+        <td title="Minggu" class="center-text"><input <?php if($h1==1) echo 'checked="true"' ;?> type="checkbox" name="h1" onchange="updateSelectedDays()" title="Minggu"></td> 
+        <td title="Senin"  class="center-text"><input <?php if($h2==1) echo 'checked="true"' ;?> type="checkbox" name="h2" onchange="updateSelectedDays()" title="Senin" ></td>  
+        <td title="Selasa" class="center-text"><input <?php if($h3==1) echo 'checked="true"' ;?> type="checkbox" name="h3" onchange="updateSelectedDays()" title="Selasa"></td>  
+        <td title="Rabu"   class="center-text"><input <?php if($h4==1) echo 'checked="true"' ;?> type="checkbox" name="h4" onchange="updateSelectedDays()" title="Rabu"  ></td>  
+        <td title="Kamis"  class="center-text"><input <?php if($h5==1) echo 'checked="true"' ;?> type="checkbox" name="h5" onchange="updateSelectedDays()" title="Kamis" ></td>  
+        <td title="Jum'at" class="center-text"><input <?php if($h6==1) echo 'checked="true"' ;?> type="checkbox" name="h6" onchange="updateSelectedDays()" title="Jum'at"></td>  
+        <td title="Sabtu"  class="center-text"><input <?php if($h7==1) echo 'checked="true"' ;?> type="checkbox" name="h7" onchange="updateSelectedDays()" title="Sabtu" ></td>  
     </tr> 
     <tr>
       <td class="center-text" title="Minggu">H1</td> 
@@ -90,13 +126,15 @@ $sURL_Action = "../web/fungsi/addNodeRoleWeek";
   <table><tr><td>Jadwal Terpilih</td><td>
   <div id="selectedDays">--</div></td></tr></table> 
   <br>
+  <input type="hidden" name="sUrl_nrw" value="<?=$_SERVER['PHP_SELF']?>"> 
+  <input type="hidden" name="id_nrw" value="<?=$id_nrw;?>"> 
   <div>
     <input type="submit" value="simpan">
   </div>
 </form>
 
 <br><label id="sNamaNode2">Jadwal Mingguan <?=$sNamaNode;?></label>
-<div id="sHtmlTabelNRW"></div> 
+<div id="sHtmlTabelNRW"><?=$sHtmlTabelNRW;?></div> 
 
 <script src="//code.jquery.com/jquery-1.10.1.min.js"></script>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -159,7 +197,12 @@ function showDetailAktuator(id_key){
       ketLabel.style.cursor = 'pointer'; 
       document.getElementById('sNamaNode').textContent ='Jadwal Node ' + data.nama;
       document.getElementById('sNamaNode2').textContent = 'Jadwal Mingguan ' + data.nama;
-      showOpsiAktuator();
+      document.getElementById('id_role').selectedIndex = 0;
+      const now = new Date();
+      const currentTime = now.toTimeString().split(' ')[0];
+      document.getElementById('timepicker1').value = currentTime;
+      document.getElementById('timepicker2').value = currentTime;  
+      toggleAllDays();
       loadTabelNRweek(id_key);
       document.getElementById('id_aktuator').title = data.nama + ' ' + data.ketNode; //== pause ====
       sMemAktuator ='<table><tr><td>' + data.nama +' ' + data.chip + '</td><td>' + data.ketNode 
@@ -237,7 +280,7 @@ function updateSelectedDays() {
     // document.getElementById("selectedDays").innerHTML =   selectedDays.join(", ") ;
     document.getElementById("selectedDays").innerHTML = "<label>" + selectedDays.join(", ") + "</label>";
 }
-
+ 
 $('#timepicker1').timepicker({
   defaultTime: 'current',
   showInputs: false, 
@@ -261,7 +304,8 @@ function loadTabelNRweek(id_node){
   var sHtmlTabel="";
   var sUrlData="../web/fungsi/tabelNRweek";
   const data = {
-    id_node: id_node
+    id_node: id_node,
+    sUrl_nrw: '<?=$sUrl_nrw?>'
   };  
   fetch(sUrlData, {
     method: 'POST',

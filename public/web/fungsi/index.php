@@ -63,6 +63,9 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'addNodeRoleWeek':    //menambahkan daftar NodeRole WeeK
       addNodeRoleWeek($data);
       break; 
+    case 'UpdateNRW':    //menambahkan daftar NodeRole WeeK
+      UpdateNRW($data);
+      break; 
     case 'addNode':    //menambahkan   Node 
       addNode($data);
       break; 
@@ -91,18 +94,22 @@ die("t o");
 
 //====================fungsi fungsi=========================
 //====================fungsi fungsi=========================
-
-function tabelNRweek($data){
-  global $cUmum; 
-  $id_node = intval($data->id_node);
-  $sSQL =  "SELECT nr.keterangan AS nrole, CONCAT(mulai, ' ', selesai) AS jadwal,
+function bikintabelNRweek($id_node,$sUrl_nrw){
+  global $cUmum;  
+  $sSQL =  "SELECT nw.id id_nrw,  CONCAT(mulai, ' ', selesai) AS jadwal, nr.keterangan AS nrole,
   CONCAT(IF(h1=1, 'Minggu, ', ''),IF(h2=1, 'Senin, ', ''), IF(h3=1, 'Selasa, ', ''),
          IF(h4=1, 'Rabu, ', ''), IF(h5=1, 'Kamis, ', ''), IF(h6=1, 'Jumat, ', ''), IF(h7=1, 'Sabtu, ', '')) AS hari_terpilih 
   FROM node_role_week nw INNER JOIN node_role nr ON nr.id = nw.id_role 
   WHERE nw.id_node = $id_node "; 
-  // $param["id_node"] = $id_node;
-  $sHtmlTabel = bikinTabelSQL($sSQL);
-  // $sHtmlTabel = bikinTabelSQL($sSQL,$param);
+  // $param["id_node"] = $id_node; 
+  $sHtmlTabel = bikinTabelSQL2($sSQL,$sUrl_nrw); 
+  return $sHtmlTabel;
+}
+
+function tabelNRweek($data){ //ambil tabel nr week
+  $id_node = intval($data->id_node);
+  $sUrl = $data->sUrl_nrw;
+  $sHtmlTabel = bikintabelNRweek($id_node,$sUrl);
   $rspData['tabel'] = $sHtmlTabel;
   die(json_encode($rspData));
 } 
@@ -202,10 +209,41 @@ function addNodeRole1($data){ //menambahkan NodeRole Standart field dari data Po
 
 }
 
+function UpdateNRW($data){ //menambahkan NodeRole Standart field dari data Post minimalis
+  global $cUmum;  
+  global $userID ;
+  
+  $param['id_nrw']=intval($data->id_nrw);
+  $param['id_role']=intval($data->id_role);
+  $param['id_role']=intval($data->id_role);
+  $param['id_node']=intval($data->id_node); 
+  $sMulai = date('H:i:s', strtotime($data->mulai)); // Mengonversi waktu ke format yang sesuai untuk kolom TIME
+  $sSelesai = date('H:i:s', strtotime($data->selesai)); // Mengonversi waktu ke format yang sesuai untuk kolom TIME
+  $param['updater']=$userID; 
+  $param['h1']=(isset($data->h1) && $data->h1 =="on" )? 1 : 0 ;
+  $param['h2']=(isset($data->h2) && $data->h2 =="on" )? 1 : 0 ;
+  $param['h3']=(isset($data->h3) && $data->h3 =="on" )? 1 : 0 ;
+  $param['h4']=(isset($data->h4) && $data->h4 =="on" )? 1 : 0 ;
+  $param['h5']=(isset($data->h5) && $data->h5 =="on" )? 1 : 0 ;
+  $param['h6']=(isset($data->h6) && $data->h6 =="on" )? 1 : 0 ;
+  $param['h7']=(isset($data->h7) && $data->h7 =="on" )? 1 : 0 ;   
+    
+  $sql = "UPDATE node_role_week SET id_node = :id_node, id_role= :id_role, mulai=TIME_FORMAT('$sMulai', '%H:%i:%s'), 
+  selesai=TIME_FORMAT('$sSelesai', '%H:%i:%s'),  updater=:updater, h1=:h1, h2=:h2, h3=:h3, h4=:h4, h5=:h5, h6=:h6, h7=:h7
+   where id=:id_nrw";
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sql,$param); 
+  $sUrl = $data->sUrl_nrw;
+  $sUrl .="?id_nrw=$param[id_nrw]";
+  if($iRecAff > 0) splashBerhasil("$iRecAff record Jadwal, Berhasil ditambahkan",$sUrl);
+  splashBerhasil("ada kesalahan tambah data");  
+
+}
+
 function addNodeRoleWeek($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum;  
   global $userID ;
-
+ 
   $param['id_role']=intval($data->id_role);
   $param['id_node']=intval($data->id_node); 
   $sMulai = date('H:i:s', strtotime($data->mulai)); // Mengonversi waktu ke format yang sesuai untuk kolom TIME
@@ -224,7 +262,8 @@ function addNodeRoleWeek($data){ //menambahkan NodeRole Standart field dari data
   :updater, :h1, :h2, :h3, :h4, :h5, :h6, :h7);";
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sql,$param); 
-  if($iRecAff > 0) splashBerhasil("$iRecAff record Jadwal, Berhasil ditambahkan",1);
+  $sUrl = $data->sUrl_nrw;
+  if($iRecAff > 0) splashBerhasil("$iRecAff record Jadwal, Berhasil ditambahkan",$sUrl);
   splashBerhasil("ada kesalahan tambah data");  
 
 }
