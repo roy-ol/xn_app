@@ -29,7 +29,7 @@ echo '<div style="text-align: right;">'.  $_SESSION['username'] . " (L" . $_SESS
             <li class="submenu"><a href="nr_week.php">NodeRole Mingguan</a></li>
             <li class="submenu"><a href="nr_date.php">NodeRole Tanggal</a></li>
         </ul></li> 
-        <li><a href="xt_aktuator.php">XT ExeTest Katuator</a></li>
+        <li><a href="xt_aktuator.php">XT ExeTest Aktuator</a></li>
         <li><a href="test.php">..</a></li> 
         <li><a href="pwd_update.php">Password Update</a></li> 
         <li><a href="logout.php">Logout</a></li>
