@@ -32,6 +32,69 @@ $id_level =  intval($_SESSION['id_level']);
  * @brief membuat tampilan tabel dari query sql dengan Key dan link target tujuan
  * @param $sqlQuery Select dg kolom pertama adalah key yang hidden 
  *          sekaligus nama keynya untuk kirim ke url link target
+ * @param $sLink tujuan url dengan  nilai sKey pola httacces folder web/page
+ */
+function bikinTabelSQL3($sqlQuery, $sLink = null) {
+    // Menggunakan kelas umum untuk eksekusi query
+    global $cUmum ;
+    $sKunci = "id";
+    // Query SQL
+    $hasil = $cUmum->ambilData($sqlQuery);
+    $result = $hasil->fetchAll(PDO::FETCH_ASSOC); 
+
+    if (empty($result)) {
+        return '<p>Tidak ada data yang ditemukan.</p>';
+    }
+
+    // Buat tampilan tabel
+        $tableHTML = '<table class="table table-striped table-bordered"><thead><tr>';
+    $iKolom = 0 ;
+    // Membuat header tabel dari nama kolom hasil query
+    foreach(array_keys($result[0]) as $columnName) {
+        if($iKolom == 0 && $sLink !== null){  //=== kolom pertama kalau jadi kunci link tidak ditampilkan
+            $iKolom++;
+            $sKunci = $columnName ;
+            continue; 
+        }  
+        $tableHTML .= '<th>'.$columnName.'</th>';
+        $iKolom++; 
+    }
+    
+    $tableHTML .= '</thead></tr>'; 
+    // Membuat baris tabel dari hasil query
+    foreach($result as $row) {
+        $tableHTML .= '<tr>'; 
+        $iKolom = 0 ;
+        $keyVal = 0;
+        foreach($row as $value) {
+            if($iKolom == 0 && $sLink !== null){  //=== kolom pertama kalau jadi kunci link tidak ditampilkan
+                $iKolom++;
+                $keyVal = intval($value);
+                continue;
+            }
+            if($iKolom == 1 && $sLink !== null){
+                $iKolom++; //<a href="index.php?key1=value1&key2=value2">edit</a>
+                $sDataCell1 = '<a href="'.$sLink.'$$'.$sKunci.'$$'.$keyVal.'">'.$value.'</a>' ; //berisi link dan key
+                $tableHTML .= '<td>'.$sDataCell1.'</td>';
+                continue;
+            }
+            $tableHTML .= '<td>'.$value.'</td>';
+            $iKolom++;
+        } 
+        $tableHTML .= '</tr>';
+    }
+
+    // Menutup tabel
+    $tableHTML .= '</table>';
+
+    return $tableHTML;
+}
+
+
+/**
+ * @brief membuat tampilan tabel dari query sql dengan Key dan link target tujuan
+ * @param $sqlQuery Select dg kolom pertama adalah key yang hidden 
+ *          sekaligus nama keynya untuk kirim ke url link target
  * @param $sLink tujuan url dengan  nilai sKey kemggunakan metode GET
  */
 function bikinTabelSQL2($sqlQuery, $sLink = null) {

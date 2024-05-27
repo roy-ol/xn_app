@@ -6,9 +6,21 @@
 session_start();
 
 // Cek apakah pengguna sudah login atau belum
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    header("Location: dashboard.php"); // Redirect ke halaman dashboard jika sudah login
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) { // cek login dan lanjut disini bila sudah login
+  
+  if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder ini RewriteRule ^(.*)$ index.php?kode=$1 [L]
+    // $urlRedirect = "/page/dashboard_home.php";
+    $kodeApiFile = $_GET['kode'];    
+    if(strlen($kodeApiFile) > 999){
+      $kodeApiFile = substr($kodeApiFile, 0, 999);
+    }
+    $urlRedirect ="page/$kodeApiFile";      
+    header("Location: $urlRedirect"); // Redirect ke halaman tujuan jika sudah login 
     exit;
+  }
+
+  header("Location: dashboard.php"); // Redirect ke halaman web/ dashboard jika sudah login 
+  exit;
 }
 
 // Cek apakah form login telah disubmit
@@ -57,4 +69,5 @@ if (isset($_POST['login'])) {
 }
 
 header("Location: login.php"); // Redirect ke halaman  login 
-?> 
+
+?>
