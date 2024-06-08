@@ -16,8 +16,14 @@ $sAddOnNavBar='
 </ul>'; 
 if(empty($val1)){$val1 = "";} 
 $cTemp->setTitle("Dashboard"); 
-$sTitle2 = "tes";
+$cTemp->setAddOnNavBarRight($sAddOnNavBar); 
 $cTemp->loadHeader();
+
+
+$id_Kebun=0;
+if(isset($_POST['idKebun'])) $id_Kebun = $_POST['idKebun']; 
+$_SESSION['idKebun'] = $id_Kebun;
+$kebunTerpilih=""; 
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -25,7 +31,9 @@ $cTemp->loadHeader();
   <!-- Main content -->
   <div class="content">
     <div class="container-fluid">
-      <p>Selamat datang di Dashboard!</p>
+      <p>Selamat datang di
+        <button id="pilihKebun" type="button" class="btn btn-default" onclick="pilihKebun()">pilih kebun</button>
+      </p>
       <div id="content_dashboard">
         <?=$val1 ?>
       </div>
@@ -34,7 +42,7 @@ $cTemp->loadHeader();
       <!-- card primary -->
       <div class="card card-primary card-outline">
         <div class="card-header">
-          <h3 class="card-title">Judul Card</h3>
+          <h3 class="card-title">Present State</h3>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
               <i class="fas fa-minus"></i>
@@ -46,12 +54,14 @@ $cTemp->loadHeader();
         </div>
 
         <div class="card-body">
-          <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-tampil">
-            Launch Default Modal
-          </button>
-          <!-- /.card -->
-          <!-- tombol klik untuk memanggil funsi js tampil() -->
-          <button type="button" class="btn btn-default" onclick="tampil()">tombol klik</button>
+          <table id="tblState" class="table table-bordered table-striped">
+            <?php
+               $sql = "SELECT c.chip,c.keterangan,hc.waktu,hc.hit FROM `hit_chip` hc, chip c 
+               where hc.id_chip=c.id and c.id_kebun=$id_Kebun"; 
+              $sHitTabel=isiTabelSQL($sql);
+              echo $sHitTabel;
+            ?>
+          </table>
         </div>
         <!-- /.content -->
       </div>
@@ -86,11 +96,17 @@ $cTemp->loadHeader();
         <h3 class="card-title">tabel data</h3>
       </div>
       <div class="card-body">
-        <table id="example1" class="table table-bordered table-striped">
+        <table id="aktLog" class="table table-bordered table-striped">
           <?php
-          $sql = "SELECT nr.keterangan NodeRole, nr.relay rl,nr.exeval xVal, CONCAT('V1:',nr.exe_v1 , ' V2:', 
-          nr.exe_v2) Val, CONCAT('Ref:',nr.reff_node, ' Nil:' , nr.nilai_1) Ref,nr.updated
-            FROM `node_role` nr WHERE nr.id_perusahaan = $id_perusahaan LIMIT 99";
+          $sql = "SELECT CONCAT(n.nama,'\n', DATE(l.created)) Node , CONCAT('R:',l.relay ,'\n', l.exeval) 'Relay Val', 
+          CONCAT(TIME(l.created),'\n',  COALESCE(TIME(l.waktu),'-- : -- : --')) 'Start Fin' , CONCAT(l.exe_v1,'\n', l.exe_v2) 'V1 V2',  
+          TIMEDIFF(l.waktu, l.created) Durasi,l.id FROM log_eksekutor l 
+            JOIN node n ON l.id_node = n.id
+            JOIN chip c ON n.id_chip = c.id
+            JOIN kebun k ON c.id_kebun = k.id
+            WHERE k.id_perusahaan = $id_perusahaan
+            ORDER BY l.id DESC 
+            LIMIT 100;" ;
           $sHitTabel=isiTabelSQL($sql);
           echo $sHitTabel;
           ?>
@@ -102,7 +118,8 @@ $cTemp->loadHeader();
 
 <script>
   $(function () {
-    $("#example1").DataTable({
+    $("#aktLog").DataTable({
+      "order": [5, 'desc'],
       "responsive": true,
       "lengthChange": false,
       "autoWidth": false,
