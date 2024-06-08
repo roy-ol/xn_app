@@ -7,7 +7,7 @@ if( 1 == 0 ){ //dummy param agar dikenali ide
 }  
 if(empty($val1)){$val1 = "";} 
  
-$cTemp->setHeaderCap("Node Role Form"); 
+$cTemp->setTitle("Node Role Form"); 
 $cTemp->loadHeader();
 ?>
 
@@ -34,24 +34,6 @@ $cTemp->loadHeader();
     padding: 20px;
     border-radius: 8px;
     width: 300px;
-  }
-
-  /* CSS untuk mengatur tata letak tombol di tengah */
-  .center-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 9vh;
-  }
-
-  /* Styling untuk tombol */
-  .btn-submit {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
   }
 </style>
 
@@ -111,175 +93,173 @@ $cTemp->loadHeader();
     echo '</script>';
   }
 ?>
-  <form action="<?=$sURL_Action?>" method="post" id="nr_form">
-    <input type="hidden" name="id_memo" value=<?=$id_memo;?>>
-    <input type="hidden" name="id_role" value=<?=$id_role;?>>
-    <table>
-      <tr>
-        <td><label for="keterangan">NodeRole :</label></td>
-        <td>
-          <input type="text" id="keterangan" value="<?=$keterangan;?>" name="keterangan" title="Keterangan Role"
-            required></td>
-      </tr>
-      <tr>
-        <td><label for="pola">Pola:</label></td>
-        <td>
-          <select id="pola" name="pola" value=<?=$pola;?> onchange="showKetDetail(this.value)">
-            <option value=0> - - - pilih pola - - - - </option>
-            <?php  
-              $sSqlOp1 = "select id, pola from nrpola";
-              bikinOption($sSqlOp1, $pola,"pola");
-            ?>
-          </select>
-          <label id="lblMemPola" for="pola" onclick="tampilMemoPola()"> </label>
-
-        </td>
-      </tr>
-      <tr>
-        <td><label for="relay">relay</label></td>
-        <td><input type="number" value=<?=$relay;?> id="relay" name="relay" required></td>
-      </tr>
-      <tr>
-        <td><label for="exeval">Exe Val:</label></td>
-        <td><input type="number" value=<?=$exeval;?> id="exeval" name="exeval" required></td>
-      </tr>
-      <tr>
-        <td><label for="val1">Value 1:</label></td>
-        <td><input type="number" value=<?=$exe_v1;?> id="val1" name="val1"></td>
-      </tr>
-      <tr>
-        <td><label for="val2">Value 2:</label></td>
-        <td><input type="number" value=<?=$exe_v2;?> id="val2" name="val2"></td>
-      </tr>
-
-      <tr>
-        <td><label for="reff_node">reff_node</label></td>
-        <td><input type="number" value=<?=$reff_node;?> id="reff_node" name="reff_node"></td>
-      </tr>
-      <tr>
-        <td><label for="nilai_1">nilai_1</label></td>
-        <td><input type="number" value=<?=$nilai_1;?> id="nilai_1" name="nilai_1"></td>
-      </tr>
-      <tr>
-        <td><label for="repeater">repeater</label></td>
-        <td>
-          <?php
-        if($repeater == 1){ 
-          echo '<label><input type="radio" name="repeater" value=0 > Off</label>';
-          echo '<label><input type="radio" name="repeater" value=1 checked> On</label></td></tr>';  
-        }else{
-          echo '<label><input type="radio" name="repeater" value=0 checked> Off</label>';
-          echo '<label><input type="radio" name="repeater" value=1> On</label></td></tr>';
-        }
-      ?>
-
-      <tr>
-        <td><label for="memo">Memo : </label></td>
-        <td><textarea id="memo" name="memo" maxlength="2000" style="height:auto;"><?=$memo;?></textarea></td>
-      </tr>
-    </table>
-    <div class="center-button">
-      <a class="btn btn-app" onclick="submitForm()">
-        <i class="fas fa-save"></i> <?=$btnCap?>
-      </a>
-
+  <br>
+  <div class="card card-primary">
+    <div class="card-header">
+      <h3 class="card-title"> Node Role Form</h3>
     </div>
-  </form>
-  <!-- Popup  Form -->
-  <div class="popup" id="popup">
-    <div class="popup-content">
-      <label id="popup_memo"></label><br><br>
-      <button onclick="hidePopup()">Tutup</button>
+    <div class="card-body">
+      <form action="<?=$sURL_Action?>" method="post" id="nr_form">
+        <input type="hidden" name="id_memo" value=<?=$id_memo;?>>
+        <input type="hidden" name="id_role" value=<?=$id_role;?>>
+        <!-- bikin tabel posisi tengah -->
+        <table align="center">
+          <tr>
+            <td><label for="keterangan">NodeRole :</label></td>
+            <td>
+              <input type="text" id="keterangan" value="<?=$keterangan;?>" name="keterangan" title="Keterangan Role"
+                required>
+            </td>
+          </tr>
+          <tr>
+            <td><label for="pola">Pola:</label></td>
+            <td>
+              <select id="pola" name="pola" title="pilih pola" value=<?=$pola;?> onchange="showKetDetail(this.value)">
+                <option value=0> - - - pilih pola - - - - </option>
+                <?php  
+                $sSqlOp1 = "select id, pola from nrpola";
+                bikinOption($sSqlOp1, $pola,"pola");
+                ?>
+              </select>
+              <label id="lblMemPola" for="pola" onclick="tampilMemoPola()" title="Memo"> </label>
+
+            </td>
+          </tr>
+          <tr>
+            <td><label for="relay">relay</label></td>
+            <td><input type="number" value=<?=$relay;?> id="relay" name="relay" required></td>
+          </tr>
+          <tr>
+            <td><label for="exeval">Exe Val:</label></td>
+            <td><input type="number" value=<?=$exeval;?> id="exeval" name="exeval" required></td>
+          </tr>
+          <tr>
+            <td><label for="val1">Value 1:</label></td>
+            <td><input type="number" value=<?=$exe_v1;?> id="val1" name="val1"></td>
+          </tr>
+          <tr>
+            <td><label for="val2">Value 2:</label></td>
+            <td><input type="number" value=<?=$exe_v2;?> id="val2" name="val2"></td>
+          </tr>
+
+          <tr>
+            <td><label for="reff_node">reff_node</label></td>
+            <td><input type="number" value=<?=$reff_node;?> id="reff_node" name="reff_node"></td>
+          </tr>
+          <tr>
+            <td><label for="nilai_1">nilai_1</label></td>
+            <td><input type="number" value=<?=$nilai_1;?> id="nilai_1" name="nilai_1"></td>
+          </tr>
+          <tr>
+            <td><label for="repeater">repeater</label></td>
+            <td>
+              <?php
+              if($repeater == 1){ 
+                echo '<label><input type="radio" name="repeater" value=0 > Off</label>';
+                echo '<label><input type="radio" name="repeater" value=1 checked> On</label>';  
+              }else{
+                echo '<label><input type="radio" name="repeater" value=0 checked> Off</label>';
+                echo '<label><input type="radio" name="repeater" value=1> On</label>';
+              }
+              ?>
+            </td>
+          </tr>
+          <tr>
+            <td><label for="memo">Memo : </label></td>
+            <td><textarea id="memo" name="memo" maxlength="2000" style="height:auto;"><?=$memo;?></textarea></td>
+          </tr>
+        </table>
+        <div style="display: flex; justify-content: center;">
+          <a class="btn btn-app" onclick="submitForm()">
+            <i class="fas fa-save"></i> <?=$btnCap?>
+          </a>
+        </div>
+      </form>
     </div>
   </div>
-  <br><br><br>
+  <br>
 
-  <?php
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Node Role List</h3>
+      <div class="card-tools">
+        <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+          <i class="fas fa-minus"></i>
+        </button>
+        <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <table id="dataTable1" class="table table-bordered table-striped">
+        <?php 
+        $sql = "SELECT nr.keterangan NodeRole, nr.relay rl,nr.exeval xVal, CONCAT('V1:',nr.exe_v1 , ' V2:', 
+        nr.exe_v2) Val, CONCAT('Ref:',nr.reff_node, ' Nil:' , nr.nilai_1) Ref,nr.updated
+          FROM `node_role` nr WHERE nr.id_perusahaan = $id_perusahaan LIMIT 18";
+        $sHitTabel=isiTabelSQL($sql);
+        echo $sHitTabel;
+        ?>
+      </table>
+    </div>
+  </div>
 
-$sql = "SELECT nr.keterangan NodeRole, nr.relay rl,nr.exeval xVal, CONCAT('V1:',nr.exe_v1 , ' V2:', 
-nr.exe_v2) Val, CONCAT('Ref:',nr.reff_node, ' Nil:' , nr.nilai_1) Ref,nr.updated
-  FROM `node_role` nr WHERE nr.id_perusahaan = $id_perusahaan ";
-
-
-$sHitTabel=bikinTabelSQL3($sql);
-echo $sHitTabel;
-
-?>
+  <div class="modal" id="modal_1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">modal_1</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     var sMemoPola = "Ket";
 
-    function tampilMemoPola() {
-      // if(sMemoPola.length() < 2){
-      if (sMemoPola === null || sMemoPola.length < 2) {
-        sMemoPola = "Tidak ada Keterangan khusus untuk pola ini ";
-      }
-      showPopup();
-      // alert(sMemoPola); //webview standar tidak bisa menampilkan alert 
-    }
-
-    // Fungsi untuk menampilkan popup
-    function showPopup() {
-      document.getElementById('popup_memo').textContent = sMemoPola;
-      document.getElementById('popup').style.display = 'block';
-    }
-
-    // Fungsi untuk menyembunyikan popup
-    function hidePopup() {
-      document.getElementById('popup').style.display = 'none';
-    }
-
-
-    // Fungsi untuk buka link
-    function bukaLink() {
-      window.location.href = "dashboard.php";
-    }
-
-    // Menutup modal ketika pengguna mengklik di luar modal
-    window.onclick = function (event) {
-      var modal = document.getElementById("myModal");
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-
     function showKetDetail(id_pola) {
-      // Buat objek data dengan ID pola
-      const data = {
-        idPola: id_pola
-      };
+      $.ajax({
+        type: 'POST',
+        url: '../fungsi/ketPola',
+        dataType: 'json',
+        data: {
+          'idPola': id_pola
+        },
+        success: function (rsp_data) {
+          $('#lblMemPola').html('\u25A5'); // .textContent = '\u25A5'; // '□'
+          //javascript merubah title komponen <select id="pola" name="pola" title="Pola"> menjadi "Memo Pola"
+          $("#pola").attr("title", rsp_data.keterangan);
 
-      // Kirim permintaan AJAX dengan metode POST
-      fetch('../fungsi/ketPola', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        })
-        .then(response => {
-          console.log("Status respons:", response.status);
-          return response.json();
-        })
-        .then(data => {
-          // Tampilkan balon info dengan keterangan pola 
-          const ketPolaLabel = document.getElementById('lblMemPola');
-          ketPolaLabel.textContent = '\u25A5';
-          // ketPolaLabel.textContent = '\u25BA'; 
-          ketPolaLabel.style.cursor = 'pointer';
+          $('#modal_1 .modal-title').html(rsp_data.pola);
+          $('#modal_1 .modal-body').html('<h5>' + rsp_data.keterangan + '</h5>' + rsp_data.memo);
+        }
+      });
+    }
 
-          document.getElementById('pola').title = data.keterangan;
-          // alert(data.memo); 
-          sMemoPola = data.memo;
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+    function tampilMemoPola() {
+      $('#modal_1').modal('show');
     }
 
     function submitForm() {
       document.getElementById('nr_form').submit();
     }
-  </script>
 
-</div>
+
+    $(function () {
+      $("#dataTable1").DataTable({
+        "responsive": true,
+        "lengthChange": false,
+        "autoWidth": false,
+        "order": [5, 'desc'],
+        "buttons": ["copy", "excel", "pdf", "colvis"]
+      }).buttons().container().appendTo('#dataTable1_wrapper .col-md-6:eq(0)');
+    });
+  </script>

@@ -1,26 +1,37 @@
 <?php
 class cTemplate{
-  public $sHeaderCap; 
+  public $sTitle="XmartNode"; 
   public $sNamaFile;
   public $val1;
   public $val2;
   public $val3;
+  public  $sAddOnNavBarLeft="";  
+  public  $sAddOnNavBarRight=""; 
 
-
-  public function __construct($sHeaderCap){
-    $this->sHeaderCap = $sHeaderCap;  
+  public function __construct($sTitle = "XmartNode"){
+    $this->sTitle = $sTitle;  
   }
   // public function __construct($sNamaFile){
   //   $this->sNamaFile = $sNamaFile;  
   // }
 
-  public function setHeaderCap($sHeaderCap){
-    $this->sHeaderCap = $sHeaderCap;
+  public function setTitle($sTitle){
+    $this->sTitle = $sTitle;
   }
-  
+
+  public function setAddOnNavBarLeft($sAdOnNavBar){
+    $this->sAddOnNavBarLeft = $sAdOnNavBar;
+  }
+
+  //set AddOnNavBarRight
+  public function setAddOnNavBarRight($sAdOnNavBar){
+    $this->sAddOnNavBarRight = $sAdOnNavBar;
+  }
+
   public function loadHeader(){
-    $sHeaderCap = $this->sHeaderCap;
-    $sHeaderCap = (empty($sHeaderCap)) ? "XmartNode" : $sHeaderCap; 
+    $sTitle = $this->sTitle;
+    $sAddOnNavBarLeft = $this->sAddOnNavBarLeft;
+    $sAddOnNavBarRight = $this->sAddOnNavBarRight;  
     include_once "../template/header.php";
   }
 
@@ -41,4 +52,3 @@ class cTemplate{
 
 }
 ?>
-

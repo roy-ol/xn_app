@@ -293,7 +293,7 @@ function getInfoRole($idRole){
 function getInfoPola($idPola){
   global $cUmum;
   // Query untuk mengambil detail pola
-  $sql = "SELECT p.keterangan, p.id, m.memo FROM nrpola p 
+  $sql = "SELECT p.keterangan, p.id, m.memo, p.pola FROM nrpola p 
     LEFT JOIN memo m ON m.id = p.id_memo 
     WHERE p.id = :id_pola ";  
   $rData = $cUmum->ambil1Row($sql,["id_pola" => $idPola]); 

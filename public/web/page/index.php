@@ -14,7 +14,10 @@ if( 1 == 0){
 // echo "<pre>";
 // print_r($_GET);
 // echo "</pre>"; 
-if(!isset($_GET['kode'])){  // dari htaccess folder ini: RewriteRule ^(.*)$ index.php?kode=$1 [L] 
+
+require_once "../template/cTemplate.php";
+if(!isset($_GET['kode'])){  // dari htaccess folder ini: RewriteRule ^(.*)$ index.php?kode=$1 [L]   
+  $cTemp = new cTemplate("dashboard");	 
   include_once "../template/header.php";
   include_once "dashboard.php";      
   include_once "../template/footer.php"; 
@@ -28,7 +31,9 @@ $val3 = "";
 $sKode = $_GET['kode'];
 if(strlen($sKode) > 999){
   $sKode = substr($sKode, 0, 999);
-}
+} 
+
+
 $arrKode = explode("$$", $sKode);
 $iJumData=count($arrKode);
 if($iJumData>0) $sNamaFile = $arrKode[0]; 
@@ -43,9 +48,14 @@ if($iJumData>3) $val3 = $arrKode[3];
 // $cTemp->setHeaderCap("cap: " . $sNamaFile);
 // $cTemp->tampil();
 
-require_once "../template/cTemplate.php";
+$sFilePHP = $sNamaFile . ".php";
+//periksa apakah ada file PHP $sFilePHP
+if(!file_exists($sFilePHP)){
+  $sFilePHP = "dashboard.php";
+  $sNamaFile = "dashboard";
+} 
 $cTemp = new cTemplate($sNamaFile); 
-include_once "$sNamaFile.php";
+include_once "$sFilePHP";
  
 $cTemp->loadFooter(); 
 ?>

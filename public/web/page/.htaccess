@@ -6,3 +6,12 @@ RewriteCond %{REQUEST_FILENAME} !-f
 # RewriteRule ^(.*)/(.*)$ index.php?file2=$1&val1=$2 [L]
 RewriteRule ^(.*)$ index.php?kode=$1 [L] 
 
+<FilesMatch "\.php$">
+Order deny,allow
+Deny from all
+</FilesMatch>
+ 
+<FilesMatch "^index\.php$">
+Order deny,allow
+Allow from all
+</FilesMatch>

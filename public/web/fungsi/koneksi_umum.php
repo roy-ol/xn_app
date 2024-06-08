@@ -5,8 +5,17 @@
 require_once __DIR__ . '../../../../app/init_class.php';
 session_start();
 
-// Simpan URL halaman saat ini
-$_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
+// Cek apakah pengguna sudah login atau belum
+if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
+    // Simpan URL halaman permintaan saat ini
+    $_SESSION['last_page'] = $_SERVER['REQUEST_URI']; 
+    $sDir = 'login.php';
+    if(!file_exists($sDir)) $sDir = '../login.php';
+    if(!file_exists($sDir)) $sDir = '../../login.php';
+    // echo $sDir;
+    header("Location: $sDir"); // Redirect ke halaman login jika belum login
+    exit;
+}
  
 $cUmum = new cUmum();
 $cUser = new cUser();
@@ -14,11 +23,6 @@ $cUser = new cUser();
 //     $cUser = new cUser();
 // }  
 
-// Cek apakah pengguna sudah login atau belum
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: index.php"); // Redirect ke halaman login jika belum login
-    exit;
-}
 
 $userID=intval($_SESSION['userID']);
 $cUser->loadUserByID($userID);
@@ -27,6 +31,68 @@ $sNamaPerus = $cUser->getNamaPerusahaan();
 $id_level =  intval($_SESSION['id_level']);
 
 //================fungsi fungsi umum web php koneksi dll   
+
+/**
+ * @brief membuat tampilan tabel dari query sql dengan Key dan link target tujuan
+ *        mengisi tHead dan isi tr
+ * @param $sqlQuery Select dg kolom pertama adalah key yang hidden 
+ *          sekaligus nama keynya untuk kirim ke url link target
+ * @param $sLink tujuan url dengan  nilai sKey pola httacces folder web/page
+ */
+function isiTabelSQL($sqlQuery, $sLink = null) {
+    // Menggunakan kelas umum untuk eksekusi query
+    global $cUmum ;
+    $sKunci = "id";
+    // Query SQL
+    $hasil = $cUmum->ambilData($sqlQuery);
+    $result = $hasil->fetchAll(PDO::FETCH_ASSOC); 
+
+    if (empty($result)) {
+        return '<p>Tidak ada data yang ditemukan.</p>';
+    }
+
+    // Buat tampilan tabel
+    $tableHTML = '<thead><tr>';
+    $iKolom = 0 ;
+    // Membuat header tabel dari nama kolom hasil query
+    foreach(array_keys($result[0]) as $columnName) {
+        if($iKolom == 0 && $sLink !== null){  //=== kolom pertama kalau jadi kunci link tidak ditampilkan
+            $iKolom++;
+            $sKunci = $columnName ;
+            continue; 
+        }  
+        $tableHTML .= '<th>'.$columnName.'</th>';
+        $iKolom++; 
+    }
+    $tableHTML .= '</thead></tr>'; 
+    
+    // Membuat baris tabel dari hasil query
+    foreach($result as $row) {
+        $tableHTML .= '<tr>'; 
+        $iKolom = 0 ;
+        $keyVal = 0;
+        foreach($row as $value) {
+            if($iKolom == 0 && $sLink !== null){  //=== kolom pertama kalau jadi kunci link tidak ditampilkan
+                $iKolom++;
+                $keyVal = intval($value);
+                continue;
+            }
+            if($iKolom == 1 && $sLink !== null){
+                $iKolom++; //<a href="index.php?key1=value1&key2=value2">edit</a>
+                $sDataCell1 = '<a href="'.$sLink.'$$'.$sKunci.'$$'.$keyVal.'">'.$value.'</a>' ; //berisi link dan key
+                $tableHTML .= '<td>'.$sDataCell1.'</td>';
+                continue;
+            }
+            $tableHTML .= '<td>'.$value.'</td>';
+            $iKolom++;
+        } 
+        $tableHTML .= '</tr>';
+    }
+ 
+
+    return $tableHTML;
+}
+
 
 /**
  * @brief membuat tampilan tabel dari query sql dengan Key dan link target tujuan
