@@ -39,7 +39,7 @@
                <i class="fas fa-angle-left right"></i>
              </p>
            </a>
-           <ul class="nav nav-treeview">
+           <ul class="nav nav-treeview" style="display: block;">
              <li class="nav-item">
                <a href="../node_role" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
