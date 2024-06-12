@@ -6,6 +6,31 @@ if( 1 == 0 ){ //dummy param agar dikenali ide
     $cTemp = new cTemplate($sNamaFile); 
 }
 
+
+$id_Kebun=(isset($_SESSION['idKebun'])) ? $_SESSION['idKebun'] :  0;
+$id_Kebun_awal = $id_Kebun; 
+if($val1 > 0){
+  $id_Kebun =  intval($val1);
+  $_SESSION['idKebun'] = $id_Kebun;
+  // echo $id_Kebun;
+  // exit;
+}  
+
+$sSqlKebun="SELECT k.id, k.nama FROM kebun k
+JOIN perusahaan p ON k.id_perusahaan = p.id where p.id = $id_perusahaan 
+AND k.id = $id_Kebun";
+if( $id_Kebun < 1 ){
+  $sSqlKebun="SELECT k.id, k.nama FROM kebun k
+  JOIN perusahaan p ON k.id_perusahaan = p.id where p.id = $id_perusahaan 
+  ORDER BY k.id DESC LIMIT 1";
+}
+
+$arrKebun = $cUmum->ambil1Row($sSqlKebun);
+$id_Kebun = $arrKebun['id'];
+if($id_Kebun_awal != $id_Kebun) $_SESSION['idKebun'] = $id_Kebun;
+$kebunTerpilih = $arrKebun['nama']; 
+
+
 $sAddOnNavBar='
 <ul class="navbar-nav">
   <li class="nav-item">
@@ -18,12 +43,6 @@ if(empty($val1)){$val1 = "";}
 $cTemp->setTitle("Dashboard"); 
 $cTemp->setAddOnNavBarRight($sAddOnNavBar); 
 $cTemp->loadHeader();
-
-
-$id_Kebun=0;
-if(isset($_POST['idKebun'])) $id_Kebun = $_POST['idKebun']; 
-$_SESSION['idKebun'] = $id_Kebun;
-$kebunTerpilih=""; 
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -31,11 +50,11 @@ $kebunTerpilih="";
   <!-- Main content -->
   <div class="content">
     <div class="container-fluid">
-      <p>Selamat datang di
-        <button id="pilihKebun" type="button" class="btn btn-default" onclick="pilihKebun()">pilih kebun</button>
+      <p>Kebun Aktif :
+        <button id="pilihKebun" type="button" class="btn btn-success"
+          onclick="pilihKebun()"><?=$kebunTerpilih;?></button>
       </p>
       <div id="content_dashboard">
-        <?=$val1 ?>
       </div>
     </div><!-- /.container-fluid -->
     <div class="col-md-12" id="content_dashboard">
@@ -56,8 +75,8 @@ $kebunTerpilih="";
         <div class="card-body">
           <table id="tblState" class="table table-bordered table-striped">
             <?php
-               $sql = "SELECT c.chip,c.keterangan,hc.waktu,hc.hit FROM `hit_chip` hc, chip c 
-               where hc.id_chip=c.id and c.id_kebun=$id_Kebun"; 
+               $sql = "SELECT  CONCAT(c.chip,' ',hc.hit) 'Chip Hit',INSERT(c.keterangan, 11, 0, ' ') AS keterangan,hc.waktu 
+               FROM `hit_chip` hc, chip c WHERE hc.id_chip=c.id AND c.id_kebun=$id_Kebun"; 
               $sHitTabel=isiTabelSQL($sql);
               echo $sHitTabel;
             ?>
@@ -68,21 +87,29 @@ $kebunTerpilih="";
       <!-- /.content-wrapper -->
     </div>
 
-    <div class="modal" id="modal-tampil">
+    <div class="modal" id="modKebun">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Default Modal</h4>
+            <h4 class="modal-title">Pilih Kebun</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <p>One fine body&hellip;</p>
+            <select id="kebunId" name="kebunId" title="pilih kebun">
+              <option value=0> - - - pilih Kebun - - - - </option>
+              <?php            
+                $sSQL = "SELECT k.id,p.nama as prs,k.nama,substr(k.keterangan,1,27) as keterangan
+                FROM kebun k, perusahaan p where p.id = k.id_perusahaan and p.id = $id_perusahaan 
+                  ORDER BY k.id DESC LIMIT 50"; 
+                bikinOption($sSQL, $id_Kebun,"nama"," : ","prs", " - " ,"keterangan");
+              ?>
+            </select>
           </div>
           <div class="modal-footer justify-content-between">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" onclick="setKebun()">Save changes</button>
           </div>
         </div>
         <!-- /.modal-content -->
@@ -106,7 +133,7 @@ $kebunTerpilih="";
             JOIN kebun k ON c.id_kebun = k.id
             WHERE k.id_perusahaan = $id_perusahaan
             ORDER BY l.id DESC 
-            LIMIT 100;" ;
+            LIMIT 50;" ;
           $sHitTabel=isiTabelSQL($sql);
           echo $sHitTabel;
           ?>
@@ -128,8 +155,14 @@ $kebunTerpilih="";
 
   });
 
-  function tampil() {
+  function pilihKebun() {
     //menampilkan modal-tampil
-    $('#modal-tampil').modal('show');
+    $('#modKebun').modal('show');
+  }
+
+  function setKebun() {
+    var id = $('#kebunId').val();
+    var url = 'dashboard$$' + id;
+    window.location.replace(url);
   }
 </script>

@@ -24,9 +24,7 @@ if(!isset($_GET['kode'])){  // dari htaccess folder ini: RewriteRule ^(.*)$ inde
   exit;    
 }
  
-$val1 = "";
-$val2 = "";
-$val3 = "";
+$val1 = "";$val2 = "";$val3 = "";$val4 = "";$val5 = "";
  
 $sKode = $_GET['kode'];
 if(strlen($sKode) > 999){
@@ -40,7 +38,8 @@ if($iJumData>0) $sNamaFile = $arrKode[0];
 if($iJumData>1) $val1 = $arrKode[1]; 
 if($iJumData>2) $val2 = $arrKode[2]; 
 if($iJumData>3) $val3 = $arrKode[3]; 
-
+if($iJumData>4) $val4 = $arrKode[4];
+if($iJumData>5) $val5 = $arrKode[5];
 // echo $iJumData ." data : $sNamaFile 1= $val1 2= $val2 3= $val3";
 // header("Location: $sNamaFile.php");
 // require_once "../template/cTemplate.php";

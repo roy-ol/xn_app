@@ -196,7 +196,7 @@ $cTemp->loadHeader();
         <?php 
         $sql = "SELECT nr.keterangan NodeRole, nr.relay rl,nr.exeval xVal, CONCAT('V1:',nr.exe_v1 , ' V2:', 
         nr.exe_v2) Val, CONCAT('Ref:',nr.reff_node, ' Nil:' , nr.nilai_1) Ref,nr.updated
-          FROM `node_role` nr WHERE nr.id_perusahaan = $id_perusahaan LIMIT 18";
+          FROM `node_role` nr WHERE nr.id_perusahaan = $id_perusahaan LIMIT 50";
         $sHitTabel=isiTabelSQL($sql);
         echo $sHitTabel;
         ?>

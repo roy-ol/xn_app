@@ -31,7 +31,7 @@
              </p>
            </a>
          </li>
-         <li class="nav-item">
+         <li class="nav-item menu-open">
            <a href="#" class="nav-link">
              <i class="nav-icon fas fa-table"></i>
              <p>
@@ -39,7 +39,7 @@
                <i class="fas fa-angle-left right"></i>
              </p>
            </a>
-           <ul class="nav nav-treeview" style="display: block;">
+           <ul class="nav nav-treeview">
              <li class="nav-item">
                <a href="../node_role" class="nav-link">
                  <i class="far fa-circle nav-icon"></i>
@@ -54,10 +54,40 @@
              </li>
            </ul>
          </li>
+         <li class="nav-item menu-open">
+           <a href="#" class="nav-link">
+             <i class="nav-icon far fa-calendar-alt"></i>
+             <p>Role Schedule
+               <i class="fas fa-angle-left right"></i>
+             </p>
+           </a>
+           <ul class="nav nav-treeview">
+             <li class="nav-item">
+               <a href="../nr_jadwal_list" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>Schedule List</p>
+               </a>
+             </li>
+             <!-- noderole mingguan -->
+             <li class="nav-item">
+               <a href="../nr_week" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>NodeRole Mingguan</p>
+               </a>
+             </li>
+             <!-- noderole tanggal  -->
+             <li class="nav-item">
+               <a href="../nr_date" class="nav-link">
+                 <i class="far fa-circle nav-icon"></i>
+                 <p>NodeRole Tanggal</p>
+               </a>
+             </li>
+           </ul>
+         </li>
          <li class="nav-item">
            <!-- menu untuk XT Execution Test -->
            <a href="xt_aktuator" class="nav-link">
-             <i class="nav-icon fas fa-table"></i>
+             <i class="nav-icon fas fa-play"></i>
              <p>
                XT Execution Test
                <span class="right badge badge-danger">XT</span>
