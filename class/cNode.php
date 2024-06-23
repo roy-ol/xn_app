@@ -26,7 +26,7 @@ class cNode extends cKoneksi{
     parent::dieJson(["f"=>0]);  //hasil sama
   }
 
-  function dieJsonNoneCheckUpdate(){ //flag 0 sekaligus cmemeriksa update
+  function dieJsonNoneCheckUpdate(){ //flag 0 sekaligus memeriksa update
     $this->dieJsonOK(["f"=>0],true);
   }
 
@@ -50,12 +50,11 @@ class cNode extends cKoneksi{
    * @param array $param ex. $respons["t"] = date('Y-m-d H:i:s'); 
    */
   function dieJsonOK($param=[],$perluCekUpdate = false){     
-    $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses
-    // $arResp = array_merge($respons,$param); 
+    $respons = ["f" => 9];    // 9 =  flag umum/general untuk status atau proses berhasil atau sukses 
     $arResp = array_merge($respons,$param); 
     if($perluCekUpdate){ 
-      if($this->cekUpdate()) $arResp["f"]=7 ; 
-      // if($this->cekUpdate()) $arResp = ["f" => 7] ; //ada update abaikan semua jawaban lain
+      $iCek = $this->cekUpdate(); //flag sesuai hasil bila ada update
+      if($iCek > 0) $arResp["f"]=  $iCek; ; 
     }   
     parent::dieJson($arResp); 
   }
@@ -63,11 +62,11 @@ class cNode extends cKoneksi{
   /**
    * @brief rutin mengecek apakah ada update firmware untuk langsung dieOkTime dengan status 7 jika update
    */
-  function cekUpdate(){
-    $sSQL="SELECT * FROM chip WHERE id= $this->chipID AND flag=7 "; 
-    $rHasil=$this->ambil1Row($sSQL);
-    // return ($rHasil >= 1)? $this->dieJsonOkTime( ["f" => 7] ) :  $rHasil;    
-    return ($rHasil !== false )? true : false ;
+  function cekUpdate(){ //cek keberadaan flag f = 7(binfir) / 10(jsonSetting)
+    $sSQL="SELECT flag FROM chip WHERE id= $this->chipID AND flag > 0 "; 
+    $nilaiHasil=$this->ambil1Data($sSQL);
+    if($nilaiHasil) return $nilaiHasil;
+    return 0;
   } 
 
   
@@ -215,6 +214,24 @@ class cNode extends cKoneksi{
     return $hasil;
   }
   
+  /**
+   * logging status config json dari schip
+   */
+  function log_json_config($sJsonConfig){   
+    if(!$this->statusNode){ return false; } //keluar bila status false
+    $q = "INSERT INTO memo(memo) VALUES(:sJsonConfig)";
+    $param = ["sJsonConfig"=>$sJsonConfig];
+
+    $iRecAff = $this->eksekusi($q,$param);
+    $id_memo = $this->ambil1Data("SELECT LAST_INSERT_ID();"); 
+
+    $q ="INSERT INTO chip_log(id_chip,keterangan,id_memo) VALUES(:chipID,:keterangan,:id_memo);  ";
+    $param = ["id_memo"=>$id_memo];   
+    $param["keterangan"] = "jsonConfig";      
+    $param["chipID"] = $this->chipID;
+    $iRecAff = $this->eksekusi($q,$param);  
+    return $iRecAff;
+  }
 
   /**
    * logging bila ada eksekusi aktuator
@@ -252,7 +269,7 @@ class cNode extends cKoneksi{
     $q = "UPDATE log_eksekutor SET flag = 9 WHERE id_node = :nodeID and  id = :id ";
     $param = ["id"=>$id_log_eksekutor];  
     $param += [":nodeID"=>$this->nodeID];  
-    $this->eksekusi($q,$param);   
+    return $this->eksekusi($q,$param);   //mengembalikan nilai yang di eksekusi
   }
 
 

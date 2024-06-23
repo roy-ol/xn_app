@@ -161,7 +161,7 @@ function bikinTabelSQL3($sqlQuery, $sLink = null) {
  * @brief membuat tampilan tabel dari query sql dengan Key dan link target tujuan
  * @param $sqlQuery Select dg kolom pertama adalah key yang hidden 
  *          sekaligus nama keynya untuk kirim ke url link target
- * @param $sLink tujuan url dengan  nilai sKey kemggunakan metode GET
+ * @param $sLink tujuan url dengan  nilai sKey menggunakan metode GET
  */
 function bikinTabelSQL2($sqlQuery, $sLink = null) {
     // Menggunakan kelas umum untuk eksekusi query

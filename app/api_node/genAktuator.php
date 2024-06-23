@@ -14,12 +14,13 @@ if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cNode seba
  */
 function cekLogEksekutor($data){ 
 global $cNode; 
-  //jika kiriman berupa report status sukses aktuator
+  //jika kiriman berupa report status sukses aktuator di eksekusi dengan id_log
   if(isset($data->id_log)){
     $id_log_eksekutor = $data->id_log;  //ambil data berupa object
     // $id_log_eksekutor = $data["id_log"]; //ambil data berupa array
-    $cNode->flag_eksekutor($id_log_eksekutor);
-    $cNode->dieJsonNoneCheckUpdate();
+    $iRowAffected = $cNode->flag_eksekutor($id_log_eksekutor);
+    $cNode->dieJsonOK(["row"=>$iRowAffected],true); //true = cek apakah ada update binfirupdate untuk dieksekusi
+    // $cNode->dieJsonOK(["f"=>0],true);
   }
 }
 
@@ -45,9 +46,10 @@ function cekReqExecutionTest($id_node){
     $respons['id_log']=intval($idInsert); // id log eksekutor yang baru dibuat di tabel log
     $respons['f']=20; //flag ada respons untuk aktuator action 
     // $respons['sleep']=$sleeptime ; //isian bila ada setting sleep berubah
-    $respons['exeval']=$exeval ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
-    $respons["exe_v1"]=$exe_v1 ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
-    $respons["relay"]=$relay ;//kode / relay
+    $respons['exeval']=intval($exeval) ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
+    $respons["exe_v1"]=intval($exe_v1); // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
+    $respons["exe_v2"]=intval($exe_v2); // 13-06-2024 nilai tambahan parameter
+    $respons["relay"]=intval($relay) ; //kode / relay
     
     $cNode->dieJsonOkTime($respons); 
   }

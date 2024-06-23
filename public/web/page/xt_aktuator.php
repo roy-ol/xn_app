@@ -201,7 +201,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
     $('#log_xt').DataTable({
       "responsive": true,
       "scrollX": true,
-      "order": [7, "desc"]
+      "order": [8, "desc"]
     });
   });
 

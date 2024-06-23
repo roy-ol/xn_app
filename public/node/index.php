@@ -40,8 +40,8 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
   switch ($kodeApiFile) { //======pause switch.  ===== case ada yang belum di tes=========
     case 'f':   //fungsi umum / default rutin dr node =========== // belum dibuat
       include_once '../../app/api_node/apixxxxxxx'; //next coding
-      break; 
-    case 'f1':    //flag Status node  OK : 11-03-2023
+      break;  
+    case 'f1':    //flag Status node  OK : 11-03-2023, f=10 pengiriman json config chip 16-06-2024(onDev) 
       include_once '../../app/api_node/apiFlagNode1.php';
       break;
     case 'f7':    //request url repo binary update OK : 2023-03-05

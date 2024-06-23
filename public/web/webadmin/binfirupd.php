@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>update firmware binary</title>
+  <title>update firmware binary</title>
 </head>
 
 <h2>Binary Firmware Update form</h2>
@@ -25,43 +26,46 @@ if(isset($_POST['assign_repo'])){
 }
 
 ?>
-<br><h3>Assign repo to chip</h3>
- 
+<br>
+<h3>Assign repo to chip</h3>
+
 
 <form action="?" method="post" enctype="multipart/form-data">
   <div class="form-group">
-      ID Chip
-      <select id="idChip" name="idChip">
-        <option value=0> - - - pilih Chip - - - - </option>;
-        <?php 
+    ID Chip
+    <select id="idChip" name="idChip">
+      <option value=0> - - - pilih Chip - - - - </option>;
+      <?php 
           $query = "select id,chip,keterangan from chip "; 
           bikinOption($query,0,"chip"," - ","keterangan"); 
         ?>
-      </select>
+    </select>
   </div>
   <div class="form-group">
-      ID Repo
-      <select id="idRepo" name="idRepo">
-        <option value=0> - - - - - - - pilih binary firmware update - - - - - - </option>;
-        <?php 
+    ID Repo
+    <select id="idRepo" name="idRepo">
+      <option value=0> - - - - - - - pilih binary firmware update - - - - - - </option>;
+      <?php 
           $query = "SELECT id,file_repo,build,left(keterangan,36) as keterangan from binfirupd "; 
           bikinOption($query,0,"file_repo"," (","build",") ","keterangan"); 
         ?>
-      </select>
+    </select>
   </div>
   <input type="submit" value="Submit Update" name="assign_repo">
 </form>
 <?php 
 $sSQL = "SELECT c.id, c.chip, c.keterangan,c.flag, c.updated, c.build, b.build as repo_build,b.updated upd, 
-    b.file_repo,b.keterangan as ket from chip c LEFT JOIN binfirupd b on c.id_repo = b.id";
+    b.file_repo,b.keterangan as ket from chip c LEFT JOIN binfirupd b on c.id_repo = b.id 
+    ORDER BY c.id DESC limit 54 ";
 $tabel = bikinTabelSQL($sSQL);
 echo "<br>Chip Repo<br>";
 echo $tabel; 
 ?>
 
- 
 
-<br><h3>Upload File Binary Update :</h3>
+
+<br>
+<h3>Upload File Binary Update :</h3>
 <?php 
 $targetDirectory = __DIR__ . '/../../repo/';  
 if(1 == 0 ) $cUmum = new cUmum();
@@ -141,44 +145,48 @@ if(isset($_POST['timestamp']) && isset($_POST['submit'])){
     
   // }
 }
-?>  
+?>
 
 <style>
-    .form-group {
-        display: block;
-        margin-bottom: 10px;
-    }
-    
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-    }
-    
-    /* Gaya CSS untuk input "timestamp" */
-    #timestamp {
-        display: inline-block;
-        width: auto;
-        white-space: nowrap;
-    }
-    
-    /* Mengatur lebar textarea secara responsif */
-    .form-group textarea {
-        width: 100%; /* Gunakan persentase atau vw sesuai preferensi */
-        max-width: 100%; /* Optional: untuk memastikan textarea tidak melebar lebih dari lebar layar */
-        padding: 8px; /* Optional: tambahkan padding sesuai kebutuhan */
-        box-sizing: border-box; /* Pastikan padding tidak mempengaruhi lebar total */
-    }
+  .form-group {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  /* Gaya CSS untuk input "timestamp" */
+  #timestamp {
+    display: inline-block;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  /* Mengatur lebar textarea secara responsif */
+  .form-group textarea {
+    width: 100%;
+    /* Gunakan persentase atau vw sesuai preferensi */
+    max-width: 100%;
+    /* Optional: untuk memastikan textarea tidak melebar lebih dari lebar layar */
+    padding: 8px;
+    /* Optional: tambahkan padding sesuai kebutuhan */
+    box-sizing: border-box;
+    /* Pastikan padding tidak mempengaruhi lebar total */
+  }
 </style>
 
 
 <form action="?" method="post" enctype="multipart/form-data">
   <div class="form-group">
-      <label for="fileToUpload">Pilih File:</label>
-      <input type="file" name="fileToUpload" id="fileToUpload" required> 
-      <input type="checkbox" name="replace_file" > Replace file
-    </div>
-    
-    <div class="form-group">Tipe
+    <label for="fileToUpload">Pilih File:</label>
+    <input type="file" name="fileToUpload" id="fileToUpload" required>
+    <input type="checkbox" name="replace_file"> Replace file
+  </div>
+
+  <div class="form-group">Tipe
     <select id="id_tipe" name="id_tipe">
       <option value=0> - - - pilih tipe - - - </option>
       <?php 
@@ -186,18 +194,18 @@ if(isset($_POST['timestamp']) && isset($_POST['submit'])){
         bikinOption($query,0,"nama"," ","keterangan"); 
       ?>
     </select>
-    </div>
-    <div class="form-group">
-    XN_build 
-    <input type="number" name="timestamp" id="timestamp" style="width: 100px; text-align: center;" > 
-    &nbsp; Versi <input type="number" name="versi" id="versi" value="1" style="width: 45px; text-align: center;">       
   </div>
-  
+  <div class="form-group">
+    XN_build
+    <input type="number" name="timestamp" id="timestamp" style="width: 100px; text-align: center;">
+    &nbsp; Versi <input type="number" name="versi" id="versi" value="1" style="width: 45px; text-align: center;">
+  </div>
+
   <div class="form-group">
     <label for="keterangan">Keterangan:</label>
     <textarea name="keterangan" id="keterangan" rows="2" required></textarea>
-  </div> 
-    <input type="submit" value="Upload dan Submit" name="submit">
+  </div>
+  <input type="submit" value="Upload dan Submit" name="submit">
 </form>
 
 
@@ -222,23 +230,24 @@ foreach ($files as $file) {
 
 
 <script>
-    document.getElementById('fileToUpload').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        
-        if (file) {
-            const timestamp = file.lastModified; // Mengambil timestamp terakhir kali dimodifikasi
-            const date = new Date(timestamp);
+  document.getElementById('fileToUpload').addEventListener('change', function (event) {
+    const file = event.target.files[0];
 
-            const year = String(date.getFullYear()).substr(-2); // Ambil 2 digit terakhir tahun
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Januari dimulai dari 0
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
+    if (file) {
+      const timestamp = file.lastModified; // Mengambil timestamp terakhir kali dimodifikasi
+      const date = new Date(timestamp);
 
-            const formattedTimestamp = `${year}${month}${day}${hours}${minutes}`;
-            document.getElementById('timestamp').value = formattedTimestamp;
-        }
-    });
+      const year = String(date.getFullYear()).substr(-2); // Ambil 2 digit terakhir tahun
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Januari dimulai dari 0
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+
+      const formattedTimestamp = `${year}${month}${day}${hours}${minutes}`;
+      document.getElementById('timestamp').value = formattedTimestamp;
+    }
+  });
 </script>
 </body>
+
 </html>

@@ -8,7 +8,9 @@ if(1==0) $cNode = new cNode();   //dummy if syntact hanya agar editor vsc mengen
 if(isset($data->b)){
   $iBuildVersion=$data->b ;  //indikasi / jawaban balik dari node cek build num
 } else{
-  ($cNode->cekUpdate() > 0)?$cNode->dieJsonOK(["f"=>7]) : $cNode->dieJsonNone(); //infokan keberadaan update/keluar
+  $iCekUpdate = $cNode->cekUpdate(); //cek apakah ada update
+  $param["f"] = $iCekUpdate; //indikasi / jawaban balik dari node cek update kembalikan nilai f
+  ($iCekUpdate > 0)?$cNode->dieJsonOK($param) : $cNode->dieJsonNone(); //infokan keberadaan update/keluar
 }
 
 //pause ===
@@ -28,9 +30,9 @@ if($rHasil){
     // if($cBuild != $iBuildVersion){ 
         if(isset($data->v)){ // ada versi app
           $versi = $data->v; 
-          $sSQL="update chip set flag=8, build = $iBuildVersion, versi=$versi where id=$cNode->chipID ";   
+          $sSQL="update chip set flag=0, build = $iBuildVersion, versi=$versi where id=$cNode->chipID ";   
         }else{ 
-          $sSQL="update chip set flag=8, build = $iBuildVersion where id=$cNode->chipID "; 
+          $sSQL="update chip set flag=0, build = $iBuildVersion where id=$cNode->chipID "; 
         }
         $cNode->eksekusi($sSQL);
         $cNode->dieJsonNone();

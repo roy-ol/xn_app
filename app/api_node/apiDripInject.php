@@ -76,10 +76,13 @@ if($arrData){
   $respons['id_log']=intval($idInsert); // id log eksekutor yang baru dibuat di tabel log
   $respons['f']=20; //flag ada respons untuk aktuator action 
   // $respons['sleep']=$sleeptime ; //isian bila ada setting sleep berubah
-  $respons['exeval']=$exeval ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
-  $respons["exe_v1"]=$exe_v1 ; // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
-  $respons["relay"]=$relay ;//kode / relay
-   
+  $respons['exeval']=intval($exeval) ; // bisa jadi nilai menit / nantinya ml liter setelah kalibrasi
+  $respons["exe_v1"]=intval($exe_v1); // 23-12-2023 nilai sebagai target EC larutan (ppm = * 500)
+  $respons["exe_v2"]=intval($exe_v2); // 13-06-2024 nilai tambahan parameter
+  $respons["relay"]=intval($relay) ; //kode / relay
+  // $respons["ref1"]=intval($ref_n1) ; // referensi 1 skala base Air
+  // $respons["ref2"]=intval($ref_n2) ; // referensi 2 skala ppm
+  
 
   $cNode->dieJsonOkTime($respons); 
 
