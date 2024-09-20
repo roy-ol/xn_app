@@ -25,7 +25,7 @@ echo $_SESSION['username'] . " lvl:" . $id_level;
   <a href="dashboard.php">Dashboard</a> &nbsp &nbsp &nbsp
   <a href="chip_log.php" title="flag chip / status chip / node">flag Chip</a> &nbsp &nbsp &nbsp
   <a href="binfirupd.php" title="binary firmware chip and flag update">binfirupd</a>&nbsp &nbsp &nbsp
-  <a href="xt_aktuator.php">XT ExeTest Katuator</a>&nbsp &nbsp &nbsp
+  <a href="xt_aktuator.php">XT ExeTest Aktuator</a>&nbsp &nbsp &nbsp
   <a href="node_baru.php">Node+edit </a> &nbsp &nbsp &nbsp
   <a href="chip_baru.php">+Chip</a> &nbsp &nbsp &nbsp
   <a href="kebun.php">+Kebun</a> &nbsp &nbsp &nbsp

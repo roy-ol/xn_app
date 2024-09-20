@@ -110,7 +110,9 @@ $tabel = bikinTabelSQL2($sSQL,"");
 echo $tabel; 
 
 echo "<br><br>";
-$sSQL = "SELECT c.id,c.chip,c.keterangan,cl.keterangan,cl.waktu , m.memo setting_json FROM chip_log cl JOIN chip c ON c.id = cl.id_chip JOIN memo m ON m.id = cl.id_memo ORDER BY cl.id DESC LIMIT 36; ";
+$sSQL = "SELECT c.id,c.chip, CONCAT(cl.keterangan,' - ',c.keterangan) keterangan,cl.waktu , m.memo setting_json 
+FROM chip_log cl JOIN chip c ON c.id = cl.id_chip JOIN memo m ON m.id = cl.id_memo 
+ORDER BY cl.id DESC LIMIT 54; ";
 $tabel = bikinTabelSQL2($sSQL,""); 
 echo $tabel; 
 ?>

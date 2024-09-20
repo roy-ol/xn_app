@@ -213,9 +213,11 @@ class cNode extends cKoneksi{
     $hasil = $this->eksekusi($q,$param);  
     return $hasil;
   }
-  
+   
   /**
    * logging status config json dari schip
+   * @param string $sJsonConfig isi json config dari schip
+   * @return int jumlah record terpengaruh
    */
   function log_json_config($sJsonConfig){   
     if(!$this->statusNode){ return false; } //keluar bila status false

@@ -41,7 +41,7 @@ require_once __DIR__ . '/menu.php';
 </head>
 <body>
     <h1>Modul system Chip XN </h1> 
-    <form action="update_node.php" method="POST">
+    <form action="../fungsi/addChip" method="POST">
         <div class="form-group">
           <label for="kebun">Kebun:</label>
           <select id="kebun" name="kebun">
@@ -64,11 +64,6 @@ require_once __DIR__ . '/menu.php';
             ?>
 
           </select>
-        </div>
-
-        <div class="form-group">
-            <label for="nama">Nama:</label>
-            <input type="text" id="nama" name="nama" placeholder="Nama Chip">
         </div>
 
         <div class="form-group">

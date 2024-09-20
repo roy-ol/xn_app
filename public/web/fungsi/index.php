@@ -66,6 +66,9 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'UpdateNRW':    //menambahkan daftar NodeRole WeeK
       UpdateNRW($data);
       break; 
+    case 'addChip':    //menambahkan   chip	
+      addChip($data);
+      break;
     case 'addNode':    //menambahkan   Node 
       addNode($data);
       break; 
@@ -118,6 +121,23 @@ function tabelNRweek($data){ //ambil tabel nr week
   $rspData['tabel'] = $sHtmlTabel;
   die(json_encode($rspData));
 } 
+ 
+/**
+ * Fungsi untuk menambahkan memo baru ke dalam table memo.
+ * 
+ * @param string $sMemo isi memo yang akan ditambahkan
+ * @return int id dari memo yang baru dibuat
+ */
+function addMemo($sMemo){
+  global $cUmum; 
+  $iRecAff1 = 0 ;  
+
+  $sql = "INSERT INTO memo(memo) values (:memo) ";
+  $paramMemo['memo']=$sMemo;
+  $cUmum->eksekusi($sql,$paramMemo);
+  $id_memo = $cUmum->ambil1Data("SELECT LAST_INSERT_ID();"); 
+  return $id_memo;
+}
 
 function updateNodeRole1($data){ //edit NodeRole Standart field dari data Post minimalis
   global $cUmum; 
@@ -304,6 +324,29 @@ function getInfoPola($idPola){
   // die('{"keterangan":"'. $sData . '"}');
 }
 
+
+function addChip($data){ //menambahkan NodeRole Standart field dari data Post minimalis
+  global $cUmum;   
+  $sSQL = "INSERT INTO `chip` ( `id_kebun`, `chip`, `id_tipe`, `keterangan`, `versi`, `build`, `id_memo`) 
+  VALUES (:id_kebun, :chip, :id_tipe, :keterangan, :versi, :build, :id_memo);";
+
+  $param["id_kebun"] = intval($data->kebun); 
+  $param["chip"] = $data->chip;
+  $param["id_tipe"] = intval($data->tipe);
+  $param["keterangan"] = $data->keterangan;
+  $param["versi"] = intval($data->versi);
+  $param["build"] = intval($data->build);
+ 
+  $param["id_memo"] =  addMemo($data->memo);
+
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param); 
+  // $urlBalik=__DIR__ . '../webadmin/node_baru.php';
+  // if($iRecAff > 0) splashBerhasil("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
+  if($iRecAff > 0) splashBerhasil("$iRecAff record Chip baru, Berhasil ditambahkan",1);
+  splashBerhasil("ada kesalahan tambah data");  
+
+}
 
 function addNode($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum;   
