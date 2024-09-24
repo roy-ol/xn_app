@@ -52,14 +52,43 @@ $cTemp->loadHeader();
       <p>Kebun Aktif :
         <button id="pilihKebun" type="button" class="btn btn-success"
           onclick="pilihKebun()"><?=$kebunTerpilih;?></button>
-      </p>
-      <div id="content_dashboard">
-      </div>
+      </p> 
     </div><!-- /.container-fluid -->
+    <div class="col-md-12" id="content_dashboard">
+      <!-- card primary -->
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h3 class="card-title">Present State</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+              <i class="fas fa-minus"></i>
+            </button>
+            <!-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+              <i class="fas fa-times"></i>
+            </button> -->
+          </div>
+        </div>
+
+        <div class="card-body">
+          <table id="tblState" class="table table-bordered table-striped">
+            <?php
+              $sql = "SELECT COALESCE(sl.waktu_node,sl.created) as waktu , n.nama,sl.nilai  FROM sensor_logger sl 
+                JOIN node n ON n.id = sl.id_node 
+                JOIN chip c ON c.id = n.id_chip
+                WHERE c.id_kebun = 8 AND n.flag > 0
+                ORDER BY sl.id DESC LIMIT 45;"; 
+              $sTabel=isiTabelSQL($sql);
+              echo $sTabel;
+            ?>
+          </table>
+        </div>
+        <!-- /.content -->
+      </div>
+      <!-- /.content-wrapper -->
+    </div>
+
   </div>
-  <!-- /.content -->
-
-
+  <!-- /.content --> 
 
   <div class="modal" id="modKebun">
     <div class="modal-dialog">

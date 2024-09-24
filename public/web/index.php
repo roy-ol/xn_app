@@ -19,7 +19,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) { // cek l
     exit;
   }
 
-  header("Location: dashboard.php"); // Redirect ke halaman web/ dashboard jika sudah login 
+  header("Location: dashboard"); // Redirect ke halaman web/ dashboard jika sudah login 
   exit;
 }
 
@@ -56,7 +56,7 @@ if (isset($_POST['login'])) {
           exit;
         } else {
           // Jika tidak ada URL halaman yang disimpan, arahkan ke halaman default
-          header("Location: dashboard.php"); // Redirect ke halaman dashboard setelah login berhasil
+          header("Location: dashboard"); // Redirect ke halaman dashboard setelah login berhasil
           exit;
         }
 
