@@ -75,7 +75,7 @@ $cTemp->loadHeader();
               $sql = "SELECT COALESCE(sl.waktu_node,sl.created) as waktu , n.nama,sl.nilai  FROM sensor_logger sl 
                 JOIN node n ON n.id = sl.id_node 
                 JOIN chip c ON c.id = n.id_chip
-                WHERE c.id_kebun = 8 AND n.flag > 0
+                WHERE c.id_kebun = $id_Kebun AND n.flag > 0
                 ORDER BY sl.id DESC LIMIT 45;"; 
               $sTabel=isiTabelSQL($sql);
               echo $sTabel;
