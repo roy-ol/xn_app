@@ -69,6 +69,9 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'addChip':    //menambahkan   chip	
       addChip($data);
       break;
+    case 'updateChip':    //update chip
+      updateChip($data);
+      break;
     case 'addNode':    //menambahkan   Node 
       addNode($data);
       break; 
@@ -122,22 +125,22 @@ function tabelNRweek($data){ //ambil tabel nr week
   die(json_encode($rspData));
 } 
  
-/**
- * Fungsi untuk menambahkan memo baru ke dalam table memo.
- * 
- * @param string $sMemo isi memo yang akan ditambahkan
- * @return int id dari memo yang baru dibuat
- */
-function addMemo($sMemo){
-  global $cUmum; 
-  $iRecAff1 = 0 ;  
+// /**
+//  * Fungsi untuk menambahkan memo baru ke dalam table memo.
+//  * 
+//  * @param string $sMemo isi memo yang akan ditambahkan
+//  * @return int id dari memo yang baru dibuat
+//  */
+// function addMemo($sMemo){
+//   global $cUmum; 
+//   $iRecAff1 = 0 ;  
 
-  $sql = "INSERT INTO memo(memo) values (:memo) ";
-  $paramMemo['memo']=$sMemo;
-  $cUmum->eksekusi($sql,$paramMemo);
-  $id_memo = $cUmum->ambil1Data("SELECT LAST_INSERT_ID();"); 
-  return $id_memo;
-}
+//   $sql = "INSERT INTO memo(memo) values (:memo) ";
+//   $paramMemo['memo']=$sMemo;
+//   $cUmum->eksekusi($sql,$paramMemo);
+//   $id_memo = $cUmum->ambil1Data("SELECT LAST_INSERT_ID();"); 
+//   return $id_memo;
+// }
 
 function updateNodeRole1($data){ //edit NodeRole Standart field dari data Post minimalis
   global $cUmum; 
@@ -179,8 +182,8 @@ function updateNodeRole1($data){ //edit NodeRole Standart field dari data Post m
    WHERE id = :id_role AND id_perusahaan = :id_perusahaan"; 
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sql,$paramNR);  
-  if($iRecAff > 0 || $iRecAff1 > 0) splashBerhasil("$iRecAff1 Memo, $iRecAff Node_Role, terupdate");
-  splashBerhasil("tidak ada perubahan data");  
+  if($iRecAff > 0 || $iRecAff1 > 0) splashTengah("$iRecAff1 Memo, $iRecAff Node_Role, terupdate");
+  splashTengah("tidak ada perubahan data");  
 
 }
 
@@ -218,8 +221,8 @@ function addNodeRole1($data){ //menambahkan NodeRole Standart field dari data Po
     :updater )";
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sql,$paramNR); 
-  if($iRecAff > 0) splashBerhasil("$iRecAff record Node_Role, Berhasil ditambahkan");
-  splashBerhasil("ada kesalahan tambah data");  
+  if($iRecAff > 0) splashTengah("$iRecAff record Node_Role, Berhasil ditambahkan");
+  splashTengah("ada kesalahan tambah data");  
 
 }
 
@@ -249,8 +252,8 @@ function UpdateNRW($data){ //menambahkan NodeRole Standart field dari data Post 
   $iRecAff = $cUmum->eksekusi($sql,$param); 
   $sUrl = $data->sUrl_nrw;
   $sUrl .="?id_nrw=$param[id_nrw]";
-  if($iRecAff > 0) splashBerhasil("$iRecAff record Jadwal, Berhasil ditambahkan",$sUrl);
-  splashBerhasil("ada kesalahan tambah data");  
+  if($iRecAff > 0) splashTengah("$iRecAff record Jadwal, Berhasil ditambahkan",$sUrl);
+  splashTengah("ada kesalahan tambah data");  
 
 }
 
@@ -277,8 +280,8 @@ function addNodeRoleWeek($data){ //menambahkan NodeRole Standart field dari data
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sql,$param); 
   $sUrl = $data->sUrl_nrw;
-  if($iRecAff > 0) splashBerhasil("$iRecAff record Jadwal, Berhasil ditambahkan",$sUrl);
-  splashBerhasil("ada kesalahan tambah data");  
+  if($iRecAff > 0) splashTengah("$iRecAff record Jadwal, Berhasil ditambahkan",$sUrl);
+  splashTengah("ada kesalahan tambah data");  
 
 }
 
@@ -335,18 +338,47 @@ function addChip($data){ //menambahkan NodeRole Standart field dari data Post mi
   $param["id_tipe"] = intval($data->tipe);
   $param["keterangan"] = $data->keterangan;
   $param["versi"] = intval($data->versi);
-  $param["build"] = intval($data->build);
- 
-  $param["id_memo"] =  addMemo($data->memo);
+  $param["build"] = intval($data->build); 
+  $param["id_memo"] = $cUmum->addMemo($data->memo);
 
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sSQL,$param); 
   // $urlBalik=__DIR__ . '../webadmin/node_baru.php';
-  // if($iRecAff > 0) splashBerhasil("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
-  if($iRecAff > 0) splashBerhasil("$iRecAff record Chip baru, Berhasil ditambahkan",1);
-  splashBerhasil("ada kesalahan tambah data");  
+  // if($iRecAff > 0) splashTengah("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
+  if($iRecAff > 0) splashTengah("$iRecAff record Chip baru, Berhasil ditambahkan",1);
+  splashTengah("ada kesalahan tambah data");  
 
 }
+ 
+function updateChip($data){
+  global $cUmum;   
+  $sSQL = "UPDATE `chip` SET `id_kebun` = :id_kebun, `chip` = :chip, `id_tipe` = :id_tipe, 
+  `keterangan` = :keterangan, `versi` = :versi, `build` = :build WHERE `chip`.`id` = :id_chip ";
+
+  $param["id_chip"] = intval($data->id_chip);
+  $param["id_kebun"] = intval($data->kebun); 
+  $param["chip"] = $data->chip;
+  $param["id_tipe"] = intval($data->tipe);
+  $param["keterangan"] = $data->keterangan;
+  $param["versi"] = intval($data->versi);
+  $param["build"] = intval($data->build); 
+  $sMemo = $data->memo;
+  $id_memo = intval($data->id_memo); 
+  if($id_memo < 1 && strlen($sMemo) > 1){
+    $id_memo = $cUmum->addMemo($sMemo);
+  }else{
+    $cUmum->updateMemo($sMemo, $id_memo);
+  }
+ 
+ 
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param);
+
+
+  if($iRecAff > 0) splashTengah("$iRecAff record chip terupdate",1);
+  splashTengah("ada kesalahan tambah data");
+
+  }
 
 function addNode($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum;   
@@ -362,9 +394,9 @@ function addNode($data){ //menambahkan NodeRole Standart field dari data Post mi
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sSQL,$param); 
   // $urlBalik=__DIR__ . '../webadmin/node_baru.php';
-  // if($iRecAff > 0) splashBerhasil("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
-  if($iRecAff > 0) splashBerhasil("$iRecAff record Node baru, Berhasil ditambahkan",1);
-  splashBerhasil("ada kesalahan tambah data");  
+  // if($iRecAff > 0) splashTengah("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
+  if($iRecAff > 0) splashTengah("$iRecAff record Node baru, Berhasil ditambahkan",1);
+  splashTengah("ada kesalahan tambah data");  
 
 }
 
@@ -383,9 +415,9 @@ function updateNode($data){ //menambahkan NodeRole Standart field dari data Post
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sSQL,$param); 
   // $urlBalik= __DIR__ . '../webadmin/node_baru.php';
-  if($iRecAff > 0) splashBerhasil("$iRecAff record update", 1);
-  // if($iRecAff > 0) splashBerhasil("$iRecAff record update",$urlBalik);
-  splashBerhasil("ada kesalahan tambah data");  
+  if($iRecAff > 0) splashTengah("$iRecAff record update", 1);
+  // if($iRecAff > 0) splashTengah("$iRecAff record update",$urlBalik);
+  splashTengah("ada kesalahan tambah data");  
   
 }
 
@@ -403,8 +435,8 @@ function addKebun($data){
   
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sSQL,$param);
-  if($iRecAff > 0) splashBerhasil("$iRecAff record baru, Berhasil ditambahkan",1);
-  splashBerhasil("ada kesalahan tambah data");  
+  if($iRecAff > 0) splashTengah("$iRecAff record baru, Berhasil ditambahkan",1);
+  splashTengah("ada kesalahan tambah data");  
 }
 
 function pwdUpdate($data,$userID){
@@ -415,7 +447,7 @@ function pwdUpdate($data,$userID){
   $rData = $cUmum->ambil1Row($sSQL,$param);
   $sPwdLama = $rData['pwd'];
   if(!password_verify($data->passwordLama, $sPwdLama)){
-    splashBerhasil("Password Lama tidak cocok",1);
+    splashTengah("Password Lama tidak cocok",1);
     return;
   }  
   $sSQL = "UPDATE users set pwd = :pwd where id = :id_user ";
@@ -424,8 +456,8 @@ function pwdUpdate($data,$userID){
 
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sSQL,$param);
-  if($iRecAff > 0) splashBerhasil("$iRecAff record baru, Berhasil di update",1);
-  splashBerhasil("ada kesalahan update data",1);  
+  if($iRecAff > 0) splashTengah("$iRecAff record baru, Berhasil di update",1);
+  splashTengah("ada kesalahan update data",1);  
 }
 
 function addUser($data){
@@ -443,8 +475,8 @@ function addUser($data){
 
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sSQL,$param);
-  if($iRecAff > 0) splashBerhasil("$iRecAff record baru, Berhasil ditambahkan",1);
-  splashBerhasil("ada kesalahan tambah data");  
+  if($iRecAff > 0) splashTengah("$iRecAff record baru, Berhasil ditambahkan",1);
+  splashTengah("ada kesalahan tambah data");  
 }
 
 function addPerusahaan($data){ //menambahkan NodeRole Standart field dari data Post minimalis
@@ -462,9 +494,9 @@ function addPerusahaan($data){ //menambahkan NodeRole Standart field dari data P
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sSQL,$param); 
   // $urlBalik=__DIR__ . '../webadmin/node_baru.php';
-  // if($iRecAff > 0) splashBerhasil("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
-  if($iRecAff > 0) splashBerhasil("$iRecAff record baru, Berhasil ditambahkan",1);
-  splashBerhasil("ada kesalahan tambah data");  
+  // if($iRecAff > 0) splashTengah("$iRecAff record Node baru, Berhasil ditambahkan",$urlBalik);
+  if($iRecAff > 0) splashTengah("$iRecAff record baru, Berhasil ditambahkan",1);
+  splashTengah("ada kesalahan tambah data");  
 
 }
 

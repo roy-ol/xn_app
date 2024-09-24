@@ -34,93 +34,112 @@ require_once __DIR__ . '/menu.php';
         resize: vertical;
         overflow-y: auto;
     }
-</style>
- 
-    </style>
-    
+</style>     
 </head>
+
 <body>
+
+<?php
+ 
+$id_chip=0;
+$id_kebun=0;
+$chip="";
+$id_tipe=0;
+$keterangan="";
+$versi=0;
+$build=0;
+$id_memo=0;
+$sMemo = "";
+if(isset($_GET['id_chip'])) {
+    $id_chip = $_GET['id_chip'];
+    $sSQL = "select * from chip where id= :id_chip" ;
+    $param["id_chip"] = $id_chip; 
+    $fetch = $cUmum->ambil1Row($sSQL,$param);
+    if($fetch){
+        $fetch = json_encode($fetch);
+        $fetch = json_decode($fetch); //dijadikan object biar bisa akses pakai ->
+        $id_kebun = $fetch->id_kebun;
+        $chip = $fetch->chip;
+        $id_tipe = $fetch->id_tipe;
+        $keterangan = $fetch->keterangan;
+        $versi = $fetch->versi;
+        $build = $fetch->build;
+        $id_memo = $fetch->id_memo;
+        $sMemo = $cUmum->getMemo($id_memo);
+        $sURL_Action = "../fungsi/updateChip"; 
+        $act = "Simpan Perubahan";
+    }
+
+}else{
+    $sURL_Action = "../fungsi/addChip"; 
+    $act = "Tambahkan Chip";
+}    
+?>
     <h1>Modul system Chip XN </h1> 
-    <form action="../fungsi/addChip" method="POST">
+    <form action="<?=$sURL_Action;?>" method="POST">
+        <input type="hidden" name="id_chip" value=<?=$id_chip;?>>
+        <input type="hidden" name="id_memo" value=<?=$id_memo;?>>        
         <div class="form-group">
           <label for="kebun">Kebun:</label>
           <select id="kebun" name="kebun">
-
-            <?php
-            // Query SELECT
-            $query = "SELECT k.nama AS kebun, k.id AS kebunid, p.nama AS perusahaan FROM kebun k 
-            JOIN perusahaan p ON k.id_perusahaan = p.id";
-
-            $result = $cUmum->ambilData($query);
-
-            // Memeriksa apakah query berhasil dijalankan
-            if ($result) {
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    echo '<option value="' . $row['kebunid'] . '">' . $row['kebun'] . ' - ' . $row['perusahaan'] . '</option>';
-                }
-            } else {
-                echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];
-            }
-            ?>
-
+          <option value=0> - - - pilih Kebun - - - </option>
+            <?php 
+            $query = "SELECT k.id, k.nama AS kebun,  p.nama AS perusahaan FROM kebun k 
+                JOIN perusahaan p ON k.id_perusahaan = p.id"; 
+            bikinOption($query, $id_kebun,"kebun"," ", "perusahaan"); 
+            ?> 
           </select>
         </div>
 
         <div class="form-group">
             <label for="chip">Chip:</label>
-            <input type="text" id="chip" name="chip" placeholder="Chip">
+            <input type="text" id="chip" name="chip" placeholder="Chip" value="<?=$chip;?>">
         </div>
 
         <div class="form-group">
           <label for="tipe">Tipe:</label>
-          <select id="tipe" name="tipe" style="width: 100%">
-
-            <?php
-            // Query SELECT
+          <select id="tipe" name="tipe" style="width: 100%"> 
+          <option value=0>--- tipe chip ---</option>
+            <?php 
             $query = "SELECT id, nama, kelompok, keterangan FROM tipe";
-
-            $result = $cUmum->ambilData($query);
-
-            // Memeriksa apakah query berhasil dijalankan
-            if ($result) {
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                    echo '<option value="' . $row['id'] . '">' .  $row['id'] . '='. $row['nama'] . ' K' .$row['kelompok']. ' ' . $row['keterangan'] . '</option>';
-                }
-            } else {
-                echo "Error: " . $query . "<br>" . $conn->errorInfo()[2];
-            }
-            ?>
-
+            bikinOption($query, $id_tipe,"nama"," ", "kelompok"," ", "keterangan"); 
+            ?>   
           </select>
         </div>
 
         <div class="form-group">
             <label for="keterangan">Keterangan:</label>
-            <input type="text" id="keterangan" name="keterangan" placeholder="Keterangan">
+            <input type="text" id="keterangan" name="keterangan" placeholder="Keterangan" value="<?=$keterangan; ?>">
         </div>
 
         <div class="form-group">
             <label for="versi">Versi:</label>
-            <input type="text" id="versi" name="versi" placeholder="Versi">
+            <input type="text" id="versi" name="versi" placeholder="Versi" value=<?=$versi; ?>>
         </div>
 
         <div class="form-group">
             <label for="build">Build:</label>
-            <input type="text" id="build" name="build" placeholder="Build">
+            <input type="text" id="build" name="build" placeholder="Build" value=<?=$build; ?>>
+
         </div>
 
         <div class="form-group">
             <label for="memo">Memo:</label>
-            <textarea id="memo" name="memo" placeholder="Memo"></textarea>
+            <textarea id="memo" name="memo" placeholder="Memo"><?=$sMemo; ?></textarea>
         </div>
         
         <div class="form-tombol">
-        <button type="submit">Simpan</button>
+        <button type="submit"><?=$act; ?></button>
       </div>
   </form>
 
 <?php 
-echo bikinTabelSQL("select * from chip order by id desc limit 36");
+// echo bikinTabelSQL("select * from chip order by id desc limit 36");
+
+$sSQL = "SELECT id as id_chip, chip.* FROM chip ORDER BY id DESC LIMIT 36";
+$tabel = bikinTabelSQL2($sSQL,"");
+echo "<br>Chip";
+echo $tabel; 
 ?>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -129,7 +148,7 @@ echo bikinTabelSQL("select * from chip order by id desc limit 36");
     $(document).ready(function() {
         $('#kebun').select2({
             placeholder: 'Pilih Kebun',
-            allowClear: true,
+            allowClear: true, 
             maximumSelectionLength: 1
         });
         $('#tipe').select2({

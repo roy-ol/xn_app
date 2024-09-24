@@ -39,7 +39,7 @@ require_once __DIR__ . '/menu.php';
 <?php 
 $id_role = 0 ;
 $id_node = 0 ;
-splashBerhasil("on Developing",1);
+splashTengah("on Developing",1);
 ?>
 <h2>Jadwal Mingguan</h2>
 

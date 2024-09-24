@@ -138,7 +138,7 @@ function bikinTabelSQL3($sqlQuery, $sLink = null) {
                 $keyVal = intval($value);
                 continue;
             }
-            if($iKolom == 1 && $sLink !== null){
+            if($iKolom == 1 && $sLink !== null){ //== 
                 $iKolom++; //<a href="index.php?key1=value1&key2=value2">edit</a>
                 $sDataCell1 = '<a href="'.$sLink.'$$'.$sKunci.'$$'.$keyVal.'">'.$value.'</a>' ; //berisi link dan key
                 $tableHTML .= '<td>'.$sDataCell1.'</td>';
@@ -281,9 +281,14 @@ function bikinOption($sqlQuery,$iTerpilih=0, $sTampil,$sp1="",$sTampil1="",$sp2=
       }
   } else { echo "Error: " . $sqlQuery . "<br>" . $cUmum->getPDO()->errorInfo()[2];}
 }
-
-
-function splashBerhasil($sPesan = "Berhasil", $sLinkRedirect=null, $iMillisSplash = 3339){ 
+ 
+/**
+ * Tampilkan pesan di tengah layar dan redirect ke $sLinkRedirect setelah $iMillisSplash milidetik
+ * @param string $sPesan pesan yang ingin ditampilkan
+ * @param string $sLinkRedirect jika null maka akan kembali ke halaman sebelumnya, jika lebih dari 0 maka akan kembali ke halaman sebelumnya sebanyak $sLinkRedirect
+ * @param int $iMillisSplash waktu dalam milidetik
+ */
+function splashTengah($sPesan = "Berhasil", $sLinkRedirect=null, $iMillisSplash = 3339){ 
     if($sLinkRedirect == null){
         // $sLinkRedirect = "window.location.href";
         $sLinkRedirect = "window.history.go(-2)";

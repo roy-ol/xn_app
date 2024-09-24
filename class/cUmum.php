@@ -2,7 +2,48 @@
 // require_once __DIR__ . '/../app/init_class.php';
 
 class cUmum extends cKoneksi{ 
+
+  function __construct(){      
+    parent::__construct();
+  }
   
+  
+  /**
+   * Menambahkan memo baru ke dalam table memo.
+   *
+   * @param string $sMemo isi memo yang akan ditambahkan
+   * @return int id dari memo yang baru dibuat
+   */
+  function addMemo($sMemo){ 
+    $iRecAff1 = 0 ;  
+  
+    $sql = "INSERT INTO memo(memo) values (:memo) ";
+    $paramMemo['memo']=$sMemo;
+    parent::eksekusi($sql,$paramMemo);
+    $id_memo = parent::ambil1Data("SELECT LAST_INSERT_ID();"); 
+    return $id_memo;
+  }
+  
+  /**
+   * Mengupdate memo yang ada di dalam table memo berdasarkan idmemo yang diberikan.
+   *
+   * @param int $id_memo id dari memo yang diupdate
+   * @param string $sMemo isi memo yang akan diupdate
+   *
+   * @return int jumlah record yang terupdate
+   */
+  function updateMemo($sMemo,$id_memo){    
+    $sql = "UPDATE memo set memo= :memo where id=$id_memo ; ";
+    $paramMemo['memo']=$sMemo;
+    return parent::eksekusi($sql,$paramMemo); 
+  }
+
+  function getMemo($id_memo){  
+    if($id_memo < 1) return "";
+    $sql = "SELECT memo FROM memo where id=$id_memo ; ";
+    return parent::ambil1Data($sql);
+  }
+
   //fungsi curl POST data JSON ke url luar server
   function url_postjson($url,$dataJson){
     $ch = curl_init();

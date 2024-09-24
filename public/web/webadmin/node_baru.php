@@ -12,7 +12,8 @@ require_once __DIR__ . '/menu.php';
 
 <body>
   <h2>Node Form</h2>
-  <?php
+
+<?php
 
 $idChip =  0;
 $sub_node =  1;
@@ -98,7 +99,7 @@ if(isset($_GET['id_node'])) {
   </form>
 
 
-  <?php
+<?php
 $sSQL = "SELECT node.id AS id_node,node.* FROM node ORDER BY id DESC LIMIT 36";
 $tabel = bikinTabelSQL2($sSQL,"");
 echo "<br>ListNode";
