@@ -93,6 +93,12 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'pwdUpdate':    //update password
       pwdUpdate($data,$userID);
       break; 
+    case 'qbank': //pelayanan QueryBank
+      qbank($data);
+      break;
+    case 'test': //pelayanan QueryBank
+      test($data);
+      break;
     default: // OK : 2023-03-05 
       die("failcode");
       break;
@@ -106,6 +112,18 @@ die("t o");
 
 //====================fungsi fungsi=========================
 //====================fungsi fungsi=========================
+function test($data){ 
+  $data='{
+    "name": "Tiger Nixon",
+    "position": "System Architect",
+    "salary": "$320,800",
+    "start_date": "2011/04/25",
+    "office": "Edinburgh",
+    "extn": "5421"
+  }';
+  die($data);
+}
+
 function bikintabelNRweek($id_node,$sUrl_nrw){ 
   $sSQL =  "SELECT nw.id id_nrw,  CONCAT(mulai, ' ', selesai) AS jadwal, nr.keterangan AS nrole,
   CONCAT(IF(h1=1, 'Minggu, ', ''),IF(h2=1, 'Senin, ', ''), IF(h3=1, 'Selasa, ', ''),
@@ -353,8 +371,9 @@ function addChip($data){ //menambahkan NodeRole Standart field dari data Post mi
 function updateChip($data){
   global $cUmum;   
   $sSQL = "UPDATE `chip` SET `id_kebun` = :id_kebun, `chip` = :chip, `id_tipe` = :id_tipe, 
-  `keterangan` = :keterangan, `versi` = :versi, `build` = :build WHERE `chip`.`id` = :id_chip ";
+  `keterangan` = :keterangan, `versi` = :versi, `build` = :build, `id_memo` = :id_memo WHERE `chip`.`id` = :id_chip ";
 
+  $iRecAff = 0 ;
   $param["id_chip"] = intval($data->id_chip);
   $param["id_kebun"] = intval($data->kebun); 
   $param["chip"] = $data->chip;
@@ -366,16 +385,16 @@ function updateChip($data){
   $id_memo = intval($data->id_memo); 
   if($id_memo < 1 && strlen($sMemo) > 1){
     $id_memo = $cUmum->addMemo($sMemo);
+    if($id_memo > 0) $iRecAff++;
   }else{
-    $cUmum->updateMemo($sMemo, $id_memo);
+    $iRecAff = $cUmum->updateMemo($sMemo, $id_memo);
   }
+  $param["id_memo"] = $id_memo;
  
- 
-  $iRecAff = 0 ;
-  $iRecAff = $cUmum->eksekusi($sSQL,$param);
+  $iRecAff += $cUmum->eksekusi($sSQL,$param);
 
 
-  if($iRecAff > 0) splashTengah("$iRecAff record chip terupdate",1);
+  if($iRecAff > 0) splashTengah("$iRecAff record chip,memo terupdate",1);
   splashTengah("ada kesalahan tambah data");
 
   }
@@ -459,7 +478,7 @@ function pwdUpdate($data,$userID){
   if($iRecAff > 0) splashTengah("$iRecAff record baru, Berhasil di update",1);
   splashTengah("ada kesalahan update data",1);  
 }
-
+ 
 function addUser($data){
   global $cUmum;     
   $sSQL = "INSERT INTO users (id_level, id_perusahaan, fullname, username, pwd, flag_active,email)
@@ -498,6 +517,27 @@ function addPerusahaan($data){ //menambahkan NodeRole Standart field dari data P
   if($iRecAff > 0) splashTengah("$iRecAff record baru, Berhasil ditambahkan",1);
   splashTengah("ada kesalahan tambah data");  
 
+}
+
+function qbank($data){ 
+  global $cUmum; 
+  
+  $sParams = array();
+  foreach ($data as $key => $value) {
+    if($key == 'iQbID') continue;
+    $sParams[$key]=$value;  
+  } 
+  // die(var_dump($sParams));
+  $parID["iQbID"]=$data->iQbID;
+  $sSQL =$cUmum->ambil1Data("select query from qbank where id = :iQbID",$parID); 
+  // $sTabelData=isiTabelSQL($sSQL,null,$sParams);
+  // die($sTabelData);
+
+  $rHasil= $cUmum->ambilData($sSQL,$sParams);
+  $sJsonData = $rHasil->fetchAll(PDO::FETCH_ASSOC);
+
+  $sJsonData = json_encode($sJsonData);
+  die($sJsonData);  
 }
 
 ?>

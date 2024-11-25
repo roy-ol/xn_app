@@ -39,17 +39,17 @@ $id_level =  intval($_SESSION['id_level']);
  *          sekaligus nama keynya untuk kirim ke url link target
  * @param $sLink tujuan url dengan  nilai sKey pola httacces folder web/page
  */
-function isiTabelSQL($sqlQuery, $sLink = null) {
+function isiTabelSQL($sqlQuery, $sLink = null,$params = null) {
     // Menggunakan kelas umum untuk eksekusi query
     global $cUmum ;
     $sKunci = "id";
     // Query SQL
-    $hasil = $cUmum->ambilData($sqlQuery);
+    $hasil = $cUmum->ambilData($sqlQuery,$params);
     $result = $hasil->fetchAll(PDO::FETCH_ASSOC); 
 
     if (empty($result)) {
         return '<p>Tidak ada data yang ditemukan.</p>';
-    }
+    } 
 
     // Buat tampilan tabel
     $tableHTML = '<thead><tr>';

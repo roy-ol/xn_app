@@ -20,7 +20,10 @@ class cUmum extends cKoneksi{
     $sql = "INSERT INTO memo(memo) values (:memo) ";
     $paramMemo['memo']=$sMemo;
     parent::eksekusi($sql,$paramMemo);
-    $id_memo = parent::ambil1Data("SELECT LAST_INSERT_ID();"); 
+    // $id_memo = parent::ambil1Data("SELECT LAST_INSERT_ID();"); 
+    $id_memo = parent::ambil_pdo_lastInsertID();
+    // die("id_memo = $id_memo");
+
     return $id_memo;
   }
   

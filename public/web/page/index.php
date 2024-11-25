@@ -28,7 +28,7 @@ if(!isset($_GET['kode'])){  // dari htaccess folder ini: RewriteRule ^(.*)$ inde
 }else{  
   $sKode = $_GET['kode'];
   if(strlen($sKode) > 999){
-    $sKode = substr($sKode, 0, 999);
+    $sKode = substr($sKode, 0, 999); //mencegah looping browser parameter kepanjangan
   }  
   $arrKode = explode("$$", $sKode);
   $iJumData=count($arrKode);

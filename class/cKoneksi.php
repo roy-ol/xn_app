@@ -26,9 +26,12 @@ class cKoneksi{
     return $r->rowCount(); 
   }
  
+ 
   /**
-   * non Fetch, hanya query mengembalikan hasil pdo
-   * ambil semua data / multirow array assoc
+   * @brief mengembalikan objek PDOStatement dari query sql, belum fetch
+   * @param $sQuery sql nya dengan pdo :namavariabel
+   * @param $parameters variabel sql pdo->prepare
+   * @return PDOStatement
    */
   function ambilData($sQuery,$parameters=null){  // bila ada parameters array untuk execute 
     $r = $this->pdo->prepare($sQuery);  
@@ -44,6 +47,7 @@ class cKoneksi{
     ($parameters)?$r->execute($parameters):$r->execute();
     return $r->fetch($fetch_method) ; //diambil data row pertama meskipun banyak data row terambil 
   }
+  
    
   function ambil1Data($sQuery,$parameters=null){  // query satu data param array bila diperlukan 
     $hasil = 0; // hasilnya 1Row data langsung ambil 

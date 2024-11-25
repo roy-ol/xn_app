@@ -27,9 +27,14 @@ if( $id_Kebun < 1 ){
 }
 
 $arrKebun = $cUmum->ambil1Row($sSqlKebun);
-$id_Kebun = $arrKebun['id'];
-if($id_Kebun_awal != $id_Kebun) $_SESSION['idKebun'] = $id_Kebun;
-$kebunTerpilih = $arrKebun['nama']; 
+if($arrKebun && is_array($arrKebun)){
+  $id_Kebun = $arrKebun['id'];
+  $kebunTerpilih = $arrKebun['nama']; 
+}else{
+  $id_Kebun = $id_Kebun_awal;
+  $_SESSION['idKebun'] = $id_Kebun;
+  $kebunTerpilih = "Pilih Kebun";
+} 
 
 
 $sAddOnNavBar='

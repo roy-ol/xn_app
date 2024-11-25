@@ -104,6 +104,16 @@
             </p>
           </a>
         </li>
+        <li class="nav-item">
+          <!-- menu untuk Query Bank -->
+          <a href="q_bank" class="nav-link">
+            <i class="nav-icon fas fa-search"></i>
+            <p>
+              Query Bank
+              <span class="right badge badge-danger">QB</span>
+            </p>
+          </a>
+        </li>
       </ul>
     </nav>
     <!-- /.sidebar-menu -->
