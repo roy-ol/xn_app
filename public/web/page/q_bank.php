@@ -219,7 +219,7 @@ $cTemp->loadHeader();
       if(isAdaTable > 0){         
         $("#t_data").DataTable({ 
           "responsive": true,
-          dom:'Bfrtip',
+          dom:'Bflrtip',
           // "lengthChange": false,
           // "autoWidth": false, 
         });
