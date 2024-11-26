@@ -114,6 +114,7 @@ $cTemp->loadHeader();
         </table> 
       </div> 
   </div>
+  <!-- test area bawah --> 
 
 <!-- /.content-wrapper -->
 </div>
@@ -179,8 +180,11 @@ $cTemp->loadHeader();
         "responsive": true, 
         "autoWidth": false, 
         // dom: 'Bfrtip',
-        dom: 'Bfltip',    //Button Findsearch lengtOfData table info pagination
-      }); 
+      "buttons": ["copy", "excel", "pdf", "colvis"]
+      // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('.col-md-6:eq(0)');
+      //   dom: 'Bfltip',    //Button Findsearch lengtOfData table info pagination
+      // }); 
       // alert($.fn.dataTable.version); //1.11.4
   }
 
@@ -219,11 +223,12 @@ $cTemp->loadHeader();
       if(isAdaTable > 0){         
         $("#t_data").DataTable({ 
           "responsive": true,
-          dom:'Bflrtip',
-          // "lengthChange": false,
-          // "autoWidth": false, 
-        });
+        // dom: 'Bfrtip',
+        "buttons": ["copy", "excel", "pdf", "colvis"]
+        // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('.col-md-6:eq(0)');  
       }
-    }); 
+    });
   });
+ 
 </script>
