@@ -35,7 +35,8 @@ class cTemplate{
     include_once "../template/header.php";
   }
 
-  public function loadFooter(){
+  public function loadFooter($start_loading_halaman_pemanggil){
+    $start_loading_halaman=$start_loading_halaman_pemanggil;
     include_once "../template/footer.php";
   }
 

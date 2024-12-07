@@ -17,7 +17,7 @@ if($val1 > 0){
 $sSqlKebun="SELECT k.id, k.nama FROM kebun k
 JOIN perusahaan p ON k.id_perusahaan = p.id where p.id = $id_perusahaan 
 AND k.id = $id_Kebun";
-if( $id_Kebun < 1 ){
+if( $id_Kebun == 0 ){
   $sSqlKebun="SELECT k.id, k.nama FROM kebun k
   JOIN perusahaan p ON k.id_perusahaan = p.id where p.id = $id_perusahaan 
   ORDER BY k.id DESC LIMIT 1";
@@ -33,6 +33,50 @@ if($arrKebun && is_array($arrKebun)){
   $kebunTerpilih = "Pilih Kebun";
 } 
 
+//===================================== ambil data node untuk gauge ================= 
+$sSqlNode="SELECT sl.id_node,COALESCE(sl.waktu_node,sl.created) waktu,sl.nilai,n.nama,n.keterangan ,
+  s.display,s.min,s.max,s.yellow_from, s.yellow_to,s.red_from,s.red_to,s.minor_tick
+  FROM sensor_logger sl
+  INNER JOIN node n ON sl.id_node = n.id
+  INNER JOIN chip c ON c.id = n.id_chip
+  INNER JOIN satuan s ON s.id = n.id_satuan
+  INNER JOIN (SELECT id_node, MAX(id) AS max_id 
+      FROM sensor_logger GROUP BY id_node) AS max_ids 
+      ON sl.id_node = max_ids.id_node AND sl.id = max_ids.max_id
+  WHERE c.id_kebun = :idKebun AND n.flag > 1 ";
+
+$sDataNode=$cUmum->ambilData($sSqlNode,["idKebun"=>$id_Kebun])->fetchAll(PDO::FETCH_ASSOC); 
+$sDiv='';
+$sDrawChart='';
+$iKol=1;
+foreach($sDataNode as $key => $value){
+  if($iKol > 7){
+    $iKol=1;
+    $sDiv .= '</div><div class="row">';
+  }
+  $sDiv .= '<div class="col-lg-2 col-4" title="'.$value['keterangan'].'=>'.$value['waktu'].'"> 
+  <div id="chart_div_'.$value['id_node'].'"></div>    
+  <p id="ket_'.$value['id_node'].'" class="text-center" title="'.$value['waktu'].'" >'.$value['nama'].'</p>
+  </div>';
+  $iKol++;
+
+  $sDrawChart .="var data".$value['id_node']." = google.visualization.arrayToDataTable([
+     ['Label', 'Value'],
+     ['".$value['display']."', ".$value['nilai']."],
+   ]);
+   var options".$value['id_node']. " = {
+     min: ".$value['min'].", max: ".$value['max'].", 
+     yellowFrom: ".$value['yellow_from'].", yellowTo: ".$value['yellow_to'].", 
+    //  greenFrom:".$value['yellow_to'].", greenTo: ".$value['red_from'].",
+     redFrom: ".$value['red_from'].", redTo: ".$value['red_to'].",
+     minorTicks: ".$value['minor_tick']."
+   }; 
+   var chart".$value['id_node']." = new google.visualization.Gauge(document.getElementById('chart_div_".$value['id_node']."'));
+   chart".$value['id_node'].".draw(data".$value['id_node'].", options".$value['id_node'].");
+  ";
+}
+   
+//================================template load halaman========================================
 $sAddOnNavBar=' 
   <li class="nav-item">
       <a class="nav-link" data-widget="fullscreen" href="#" role="button">
@@ -43,9 +87,11 @@ if(empty($val1)){$val1 = "";}
 $cTemp->setTitle("Dashboard"); 
 $cTemp->setAddOnNavBarRight($sAddOnNavBar); 
 $cTemp->loadHeader();
+//=============================================================================================
 ?>
 
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Main content -->
@@ -55,6 +101,13 @@ $cTemp->loadHeader();
         <button id="pilihKebun" type="button" class="btn btn-success"
           onclick="pilihKebun()"><?=$kebunTerpilih;?></button>
       </p> 
+      
+      <div class="row" id="div_gauge">
+        <?=$sDiv?>
+         <!-- ========================================= di isi gauge ================== --> 
+         <!-- ========================================= di isi gauge ================== -->
+      </div>
+       
     </div><!-- /.container-fluid -->
     <div class="col-md-12" id="content_dashboard">
       <!-- card primary -->
@@ -67,71 +120,17 @@ $cTemp->loadHeader();
             </button>
             <!-- <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
               <i class="fas fa-times"></i>
-            </button> -->
+            </button> -->            
           </div>
-        </div>
-        <div class="col-6 col-md-3 text-center">
-          <script src="../../adminlte/plugins/jquery-knob/jquery.knob.min.js"></script>
-          <div style="display:inline;width:120px;height:120px;">
-            <canvas width="120" height="120"></canvas>
-            <input type="text" class="knob" value="100" data-skin="tron" data-thickness="0.2" 
-            data-anglearc="250" data-angleoffset="-125" data-width="120" data-height="120" 
-            data-fgcolor="#00c0ef" style="width: 64px; height: 40px; position: absolute; 
-            vertical-align: middle; margin-top: 40px; margin-left: -92px; border: 0px; background: none; 
-            font: bold 24px Arial; text-align: center; color: rgb(0, 192, 239); padding: 0px; 
-            appearance: none;">
-          </div>
-          <div class="knob-label">data-angleArc="250"</div>
+        </div> 
+        
+        <div class="card-body">
+          ini area card body
+
         </div>
 
-        <!-- test isi gaouge -->
-         
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-   <script type="text/javascript">
-      google.charts.load('current', {'packages':['gauge']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-
-        var data = google.visualization.arrayToDataTable([
-          ['Label', 'Value'],
-          ['Memory', 10],
-          ['CPU', 40],
-          ['CPU2', 60],
-          ['Network', 80]
-        ]);
-
-        var options = {
-          width: 400, height: 120,
-          redFrom: 70, redTo: 100,
-          yellowFrom:10, yellowTo: 30, 
-          minorTicks: 5
-        };
-
-        var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
-
-        chart.draw(data, options);
-
-        setInterval(function() {
-          data.setValue(0, 1, 40 + Math.round(60 * Math.random()));
-          chart.draw(data, options);
-        }, 3600);
-        setInterval(function() {
-          data.setValue(1, 1, 40 + Math.round(60 * Math.random()));
-          chart.draw(data, options);
-        }, 2700);
-        setInterval(function() {
-          data.setValue(2, 1, 60 + Math.round(20 * Math.random()));
-          chart.draw(data, options);
-        }, 1800);
-        setInterval(function() {
-          data.setValue(3, 1, 60 + Math.round(20 * Math.random()));
-          chart.draw(data, options);
-        }, 8100);
-      }
-    </script> 
-    <div id="chart_div" style="width: 400px; height: 120px;"></div> 
-        <!-- test isi gaouge -->
+           
+        <!-- test isi gaouge --> 
 
         <div class="card-body">
           <table id="tblState" class="table table-bordered table-striped">
@@ -140,17 +139,18 @@ $cTemp->loadHeader();
                 JOIN node n ON n.id = sl.id_node 
                 JOIN chip c ON c.id = n.id_chip
                 WHERE c.id_kebun = $id_Kebun AND n.flag > 0
-                ORDER BY sl.id DESC LIMIT 45;"; 
+                ORDER BY sl.id DESC LIMIT 45 "; 
+              //  $sTabel=isiTabelSQL($sSqlNodeAktif,"",["idKebun"=>$id_Kebun]);
               $sTabel=isiTabelSQL($sql);
               echo $sTabel;
             ?>
-          </table>
+          </table> 
         </div>
-        <!-- /.content -->
-      </div>
-      <!-- /.content-wrapper -->
+      </div> <!-- /.card-primary -->
+        <!-- /.content -->         
     </div>
-
+    <!-- /.content-wrapper -->
+  </div>
   <!-- /.content --> 
 
   <div class="modal" id="modKebun">
@@ -176,16 +176,40 @@ $cTemp->loadHeader();
         <div class="modal-footer justify-content-between">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary" onclick="setKebun()">Save changes</button>
-           </div>
+        </div>
       </div>
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
   </div>
+  <!-- /.modal --> 
 </div>
 
-
+ 
 <script>
+  google.charts.load('current', {'packages':['gauge']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    <?php echo $sDrawChart; ?> 
+
+ 
+    // setInterval(function() {
+    //   data.setValue(0, 0, 'Nama' + Math.round(15 * Math.random()));
+    //   chart.draw(data, options);
+    // }, 1000);
+    // setInterval(function() {
+    //   data.setValue(0, 1, 40 + Math.round(45 * Math.random()));
+    //   chart.draw(data, options);
+    // }, 3600);
+    // setInterval(function() {
+    //   data2.setValue(0, 1, 40 + (54 * Math.random()));
+    //   chart2.draw(data2, options2);
+    // }, 1260); 
+
+  }
+
+  
   function pilihKebun() {
     //menampilkan modal-tampil
     $('#modKebun').modal('show');
@@ -197,58 +221,8 @@ $cTemp->loadHeader();
     window.location.replace(url);
   }
  
-  $(function () { 
-    $('.knob').knob({ 
-      draw: function () {
-
-        // "tron" case
-        if (this.$.data('skin') == 'tron') {
-
-          var a   = this.angle(this.cv)  // Angle
-            ,
-              sa  = this.startAngle          // Previous start angle
-            ,
-              sat = this.startAngle         // Start angle
-            ,
-              ea                            // Previous end angle
-            ,
-              eat = sat + a                 // End angle
-            ,
-              r   = true
-
-          this.g.lineWidth = this.lineWidth
-
-          this.o.cursor
-          && (sat = eat - 0.3)
-          && (eat = eat + 0.3)
-
-          if (this.o.displayPrevious) {
-            ea = this.startAngle + this.angle(this.value)
-            this.o.cursor
-            && (sa = ea - 0.3)
-            && (ea = ea + 0.3)
-            this.g.beginPath()
-            this.g.strokeStyle = this.previousColor
-            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false)
-            this.g.stroke()
-          }
-
-          this.g.beginPath()
-          this.g.strokeStyle = r ? this.o.fgColor : this.fgColor
-          this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false)
-          this.g.stroke()
-
-          this.g.lineWidth = 2
-          this.g.beginPath()
-          this.g.strokeStyle = this.o.fgColor
-          this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false)
-          this.g.stroke()
-
-          return false
-        }
-      }
-    }
-  )
+  $(function () {  
+    $('#tblState').DataTable();
 
   });
 </script>

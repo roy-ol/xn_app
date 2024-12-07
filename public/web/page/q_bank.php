@@ -1,6 +1,6 @@
 <?php   
 if( 1 == 0 ){ //dummy param agar dikenali ide
-    $val1 = "";$val2 = "";$val3 = ""; 
+    $val1 = "";$val2 = "";$val3 = "";  $id_perusahaan=0;
     $cUmum = new cUmum();
     $cUser = new cUser();
     $cTemp = new cTemplate($sNamaFile); 
@@ -8,6 +8,8 @@ if( 1 == 0 ){ //dummy param agar dikenali ide
 if(empty($val1)){$val1 = 0;} 
 
 //=========================== load identitas Query terpilih °° ==============
+$id_Kebun=(isset($_SESSION['idKebun'])) ? $_SESSION['idKebun'] :  0;
+
 $sParams="";
 $sMemo="";
 $sNama="Query Bank";
@@ -31,7 +33,10 @@ if(intval($iQbID) > 0) {
   if(strlen($sParams) > 0){
     $sParams = explode("$$",$sParams);
     $iParams = count($sParams);
-  } 
+  }  
+  // $sMemo = nl2br($sMemo);
+  $sSqlQB = str_replace("[idkebun]",$id_Kebun,$sSqlQB);
+  $sSqlQB = str_replace("[idPerusahaan]",$id_perusahaan,$sSqlQB);
 }
 
 //==================== Template load Halaman =========================
@@ -59,9 +64,7 @@ $cTemp->loadHeader();
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <h5><i class="icon fas fa-info"></i><?=$sKeterangan?></h5>
         <p><?=$sMemo?></p>
-      </div> 
-      <div>
-      </div>
+      </div>  
     </div><!-- /.container-fluid -->
   </div>
   <div class="card">
@@ -90,33 +93,24 @@ $cTemp->loadHeader();
       }  
       ?> 
     </div> 
-      <div class="card-body">
-        <table id="t_data" class="table table-bordered table-striped">
-          <?php  
-            $iValPal=0;
-            $paramSQL = null;
-            $isAdaTabel = 0;
-            if($iParams == 0 && strlen($sSqlQB) > 0){
-               
-              // $sValParams=explode("#$",$val2);
-              // $iValPal=count($sValParams);
-              // for ($i=0; $i < $iValPal; $i++) {  
-              //   $sKunciParam="p" . $i;
-                // $paramSQL = [$sKunciParam=>$sValParams[$i]];   
-              //   $paramSQL[$sKunciParam]=str_replace("'","''",$sValParams[$i]);         
-              // } 
-              // echo isiTabelSQL($sSqlQB . " limit 10"	,null,$paramSQL); 
-              echo isiTabelSQL($sSqlQB ,null,$paramSQL); 
-              $isAdaTabel = 1 ;
-            } 
- 
-          ?>
-        </table> 
-      </div> 
+    <div class="card-body">
+      <table id="t_data" class="table table-bordered table-striped">
+        <?php  
+          $iValPal=0;
+          $paramSQL = null;
+          $isAdaTabel = 0;
+          if($iParams == 0 && strlen($sSqlQB) > 0){ 
+            echo isiTabelSQL($sSqlQB ,null,$paramSQL); 
+            $isAdaTabel = 1 ;
+          } 
+
+        ?>
+      </table> 
+    </div> 
   </div>
   <!-- test area bawah --> 
 
-<!-- /.content-wrapper -->
+  <!-- /.content-wrapper -->
 </div>
 
 <!-- modal qbank -->
@@ -182,9 +176,7 @@ $cTemp->loadHeader();
         // dom: 'Bfrtip',
       "buttons": ["copy", "excel", "pdf", "colvis"]
       // "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('.col-md-6:eq(0)');
-      //   dom: 'Bfltip',    //Button Findsearch lengtOfData table info pagination
-      // }); 
+    }).buttons().container().appendTo('.col-md-6:eq(0)'); 
       // alert($.fn.dataTable.version); //1.11.4
   }
 

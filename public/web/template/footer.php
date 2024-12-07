@@ -1,6 +1,12 @@
 <!-- Main Footer -->
+<?php 
+$elapsed_time = microtime(true) - $start_loading_halaman; //true== memberikan waktu dalam format float, yaitu detik dan mikrodetik.
+//tampilan elapsed 4 digit 
+$elapsed_time = round($elapsed_time, 4); 
+$elapsed_time = date("H:i:s") . " Load:" . $elapsed_time; 
+?>
 <footer class="main-footer">
-  <strong>XmartNode &copy; 2024 </strong></label> <label id="elapsed-time"> durasi</label>
+  <label><?= $elapsed_time ?>s </label> <label id="elapsed-time"> durasi</label>  <label>XmartNode &copy; 2024 </label>
 </footer>
 
 </div>

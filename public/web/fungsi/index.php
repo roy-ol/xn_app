@@ -401,11 +401,12 @@ function updateChip($data){
 
 function addNode($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum;   
-  $sSQL = "INSERT INTO `node` (`id_chip`, `sub_node`, `id_pola`, `nama`, `keterangan`,`flag`)
-  VALUES (:id_chip, :sub_node, :id_pola, :nama, :keterangan, :flag)" ;
+  $sSQL = "INSERT INTO `node` (`id_chip`, `sub_node`, `id_pola`,`id_satuan`, `nama`, `keterangan`,`flag`)
+  VALUES (:id_chip, :sub_node, :id_pola, :id_satuan, :nama, :keterangan, :flag)" ;
   $param["id_chip"] = intval($data->id_chip);
   $param["sub_node"] = intval($data->sub_node);
   $param["id_pola"] = intval($data->id_pola);
+  $param["id_satuan"] = intval($data->id_satuan);
   $param["nama"] = $data->nama;
   $param["keterangan"] = $data->keterangan;
   $param["flag"] = intval($data->flag); 
@@ -421,12 +422,13 @@ function addNode($data){ //menambahkan NodeRole Standart field dari data Post mi
 
 function updateNode($data){ //menambahkan NodeRole Standart field dari data Post minimalis
   global $cUmum;   
-  $sSQL = "UPDATE `node` set `id_chip`=:id_chip, sub_node=:sub_node, id_pola= :id_pola, nama= :nama ,
-   keterangan = :keterangan, flag =:flag where id = :id_node " ;
+  $sSQL = "UPDATE `node` set `id_chip`=:id_chip, sub_node=:sub_node, id_pola= :id_pola,id_satuan= :id_satuan,
+   nama= :nama, keterangan = :keterangan, flag =:flag where id = :id_node " ;
   $param["id_node"] = intval($data->id_node);
   $param["id_chip"] = intval($data->id_chip);
   $param["sub_node"] = intval($data->sub_node);
   $param["id_pola"] = intval($data->id_pola);
+  $param["id_satuan"] = intval($data->id_satuan);
   $param["nama"] = $data->nama;
   $param["keterangan"] = $data->keterangan;
   $param["flag"] = intval($data->flag); 

@@ -4,6 +4,9 @@ if( 1 == 0){
   $cUmum = new cUmum();
   $cUser = new cUser();
 }
+//membuat perhitungan waktu loading halaman
+$start_loading_halaman = microtime(true);
+ 
  
 // // Cek apakah pengguna sudah login atau belum
 // if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
@@ -55,5 +58,5 @@ if(!file_exists($sFilePHP)){
 $cTemp = new cTemplate($sNamaFile); 
 include_once "$sFilePHP";
  
-$cTemp->loadFooter(); 
+$cTemp->loadFooter($start_loading_halaman); 
 ?>

@@ -18,9 +18,10 @@ require_once __DIR__ . '/menu.php';
 $idChip =  0;
 $sub_node =  1;
 $id_pola =   0;
+$id_satuan =   0;
 $nama =  "";
 $keterangan = "";
-$flag =  1; 
+$flag =  3; 
 $id_node =0;
 
 if(isset($_GET['id_node'])) {
@@ -35,6 +36,7 @@ if(isset($_GET['id_node'])) {
         $idChip =$hasil->id_chip;
         $sub_node = $hasil->sub_node; 
         $id_pola =$hasil->id_pola;
+        $id_satuan =$hasil->id_satuan;
         $nama = $hasil->nama;
         $keterangan =$hasil->keterangan ;
         $flag =$hasil->flag ;
@@ -76,6 +78,17 @@ if(isset($_GET['id_node'])) {
         </td>
       </tr>
       <tr>
+        <td style="width: 10%;"><label for="id_satuan">Satuan Display</label></td>
+        <td><select id="id_satuan" name="id_satuan">
+            <option value=0> - - - pilih id satuan - - - </option>
+            <?php 
+                    $query = "SELECT id,display,nama,keterangan FROM satuan;"; 
+                    bikinOption($query,$id_satuan, "display", " (","nama"," ","keterangan",")"); 
+                ?>
+          </select>
+        </td>
+      </tr>
+      <tr>
         <td style="width: 10%;"><label for="nama">Nama_Node:</label></td>
         <td><input type="text" id="nama" name="nama" value="<?=$nama;?>"></td>
       </tr>
@@ -91,7 +104,7 @@ if(isset($_GET['id_node'])) {
       </tr>
       <tr>
         <td style="width: 10%;"><label for="flagC">Flag:</label></td>
-        <td>0 = disActive, 1=show, 2=hide, 3=no graph </td>
+        <td>0 = disActive, 1=hide, 2=no graph, 3=show</td>
       </tr>
     </table>
     <br>
@@ -100,7 +113,9 @@ if(isset($_GET['id_node'])) {
 
 
 <?php
-$sSQL = "SELECT node.id AS id_node,node.* FROM node ORDER BY id DESC LIMIT 36";
+$sSQL = "SELECT node.id AS id_node,node.*,s.display
+  FROM node LEFT JOIN satuan s ON s.id = node.id_satuan  
+  ORDER BY id DESC LIMIT 36";
 $tabel = bikinTabelSQL2($sSQL,"");
 echo "<br>ListNode";
 echo $tabel; 
