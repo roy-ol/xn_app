@@ -34,8 +34,8 @@ if($arrKebun && is_array($arrKebun)){
 } 
 
 //===================================== ambil data node untuk gauge ================= 
-$sSqlNode="SELECT sl.id_node,COALESCE(sl.waktu_node,sl.created) waktu,sl.nilai,n.nama,n.keterangan ,
-  s.display,s.min,s.max,s.yellow_from, s.yellow_to,s.red_from,s.red_to,s.minor_tick
+$sSqlNode="SELECT sl.id_node,DATE_FORMAT(COALESCE(sl.waktu_node,sl.created),'%d%b`%H:%i:%s') waktu,sl.nilai,
+  n.nama,n.keterangan,  s.display,s.min,s.max,s.yellow_from, s.yellow_to,s.red_from,s.red_to,s.minor_tick
   FROM sensor_logger sl
   INNER JOIN node n ON sl.id_node = n.id
   INNER JOIN chip c ON c.id = n.id_chip
@@ -49,14 +49,17 @@ $sDataNode=$cUmum->ambilData($sSqlNode,["idKebun"=>$id_Kebun])->fetchAll(PDO::FE
 $sDiv='';
 $sDrawChart='';
 $iKol=1;
+// <p id="ket2_'.$value['id_node'].'" class="text-center" >'.$value['nama'].'</p>
 foreach($sDataNode as $key => $value){
   if($iKol > 7){
     $iKol=1;
     $sDiv .= '</div><div class="row">';
   }
-  $sDiv .= '<div class="col-lg-2 col-4" title="'.$value['keterangan'].'=>'.$value['waktu'].'"> 
+  $sDiv .= '<div class="col-lg-2 col-4 card"  title="'.$value['keterangan'].'"> 
+  <div class="card-header text-center"><h5>'.$value['nama'].'</h5></div>
   <div id="chart_div_'.$value['id_node'].'"></div>    
-  <p id="ket_'.$value['id_node'].'" class="text-center" title="'.$value['waktu'].'" >'.$value['nama'].'</p>
+  <p id="ket_'.$value['id_node'].'" class="text-center" >'.$value['waktu'].'</p>
+  <!-- <p id="ket2_'.$value['id_node'].'" class="text-center" >'.$value['waktu'].'</p> -->
   </div>';
   $iKol++;
 
@@ -103,9 +106,7 @@ $cTemp->loadHeader();
       </p> 
       
       <div class="row" id="div_gauge">
-        <?=$sDiv?>
-         <!-- ========================================= di isi gauge ================== --> 
-         <!-- ========================================= di isi gauge ================== -->
+        <?=$sDiv?> 
       </div>
        
     </div><!-- /.container-fluid -->
@@ -135,14 +136,25 @@ $cTemp->loadHeader();
         <div class="card-body">
           <table id="tblState" class="table table-bordered table-striped">
             <?php
-              $sql = "SELECT COALESCE(sl.waktu_node,sl.created) as waktu , n.nama,sl.nilai  FROM sensor_logger sl 
-                JOIN node n ON n.id = sl.id_node 
-                JOIN chip c ON c.id = n.id_chip
-                WHERE c.id_kebun = $id_Kebun AND n.flag > 0
-                ORDER BY sl.id DESC LIMIT 45 "; 
-              //  $sTabel=isiTabelSQL($sSqlNodeAktif,"",["idKebun"=>$id_Kebun]);
-              $sTabel=isiTabelSQL($sql);
-              echo $sTabel;
+            $sql = "SELECT CONCAT(n.nama,'\n', DATE(l.created)) Node , CONCAT('R:',l.relay ,'\n', l.exeval) 'Relay Val', 
+            CONCAT(TIME(l.created),'\n',  COALESCE(TIME(l.waktu),'-- : -- : --')) 'Start Fin' , CONCAT(l.exe_v1,'\n', l.exe_v2) 'V1 V2',  
+            TIMEDIFF(l.waktu, l.created) Durasi,l.id FROM log_eksekutor l 
+              JOIN node n ON l.id_node = n.id
+              JOIN chip c ON n.id_chip = c.id
+              JOIN kebun k ON c.id_kebun = k.id
+              WHERE k.id_perusahaan = $id_perusahaan
+              ORDER BY l.id DESC 
+              LIMIT 50;" ;
+            $sHitTabel=isiTabelSQL($sql);
+            echo $sHitTabel;
+              // $sql = "SELECT COALESCE(sl.waktu_node,sl.created) as waktu , n.nama,sl.nilai  FROM sensor_logger sl 
+              //   JOIN node n ON n.id = sl.id_node 
+              //   JOIN chip c ON c.id = n.id_chip
+              //   WHERE c.id_kebun = $id_Kebun AND n.flag > 0
+              //   ORDER BY sl.id DESC LIMIT 45 "; 
+              // //  $sTabel=isiTabelSQL($sSqlNodeAktif,"",["idKebun"=>$id_Kebun]);
+              // $sTabel=isiTabelSQL($sql);
+              // echo $sTabel;
             ?>
           </table> 
         </div>
