@@ -510,7 +510,9 @@ function addPerusahaan($data){ //menambahkan NodeRole Standart field dari data P
   $param["alamat"] = $data->alamat;
   $param["kota"] = $data->kota;
   $param["telp"] = $data->telp;
-  $param["dirut"] = $data->dirut; 
+  $param["dirut"] = $data->dirut;  
+  $param["flag"] = intval($data->flag);
+
  
   $iRecAff = 0 ;
   $iRecAff = $cUmum->eksekusi($sSQL,$param); 
