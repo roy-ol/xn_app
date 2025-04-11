@@ -12,3 +12,17 @@
 
 <link rel="stylesheet" href="../../adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="../../adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+ 
+<!-- daterange picker -->
+<link rel="stylesheet" href="../../adminlte/plugins/daterangepicker/daterangepicker.css">
+
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="../../adminlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+ 
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="../../adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+<!-- Select2 -->
+<link rel="stylesheet" href="../../adminlte/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="../../adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+ 

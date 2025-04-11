@@ -32,7 +32,7 @@
         </li>
         <li class="nav-item">
           <a href="../dev_log" class="nav-link">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <i class="nav-icon fas fa-chart-line"></i>
             <p>
               Dev_Log
               <span class="right badge badge-danger">D2</span>
@@ -43,10 +43,11 @@
         <!-- noderole -->
         <li class="nav-item menu-open">
           <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-table"></i>
+            <!-- <i class="nav-icon far fa-circle"></i> -->
             <p>
               Node Role
               <i class="fas fa-angle-left right"></i>
+              <span class="right badge badge-danger">NR</span>
             </p>
           </a>
           <ul class="nav nav-treeview">
@@ -66,30 +67,33 @@
         </li>
         <li class="nav-item menu-open">
           <a href="#" class="nav-link">
-            <i class="nav-icon far fa-calendar-alt"></i>
+            <!-- <i class="nav-icon far fa-circle"></i> -->
             <p>Role Schedule
               <i class="fas fa-angle-left right"></i>
+              <span class="right badge badge-danger">RS</span>
             </p>
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
               <a href="../nr_jadwal_list" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
+                <i class="far fa-calendar-alt nav-icon"></i>
                 <p>Schedule List</p>
+              </a>
+            </li>
+            <!-- noderole jadwal tanggal  -->
+            <li class="nav-item">
+              <a href="../nr_date" class="nav-link">
+                <!-- <i class="far fa-circle nav-icon"></i> -->
+                <i class="fas fa-calendar-day nav-icon"></i>
+                <p>NodeRole Tanggal</p>
               </a>
             </li>
             <!-- noderole mingguan -->
             <li class="nav-item">
               <a href="../nr_week" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
+                <!-- <i class="far fa-circle nav-icon"></i> -->
+                <i class="fas fa-clock nav-icon"></i>
                 <p>NodeRole Mingguan</p>
-              </a>
-            </li>
-            <!-- noderole tanggal  -->
-            <li class="nav-item">
-              <a href="../nr_date" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>NodeRole Tanggal</p>
               </a>
             </li>
           </ul>

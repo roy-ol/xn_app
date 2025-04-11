@@ -20,3 +20,18 @@
 <script src="../../adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../../adminlte/dist/js/adminlte.min.js"></script>
+
+<!-- InputMask -->
+<script src="../../adminlte/plugins/moment/moment.min.js"></script>
+<script src="../../adminlte/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="../../adminlte/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Select2 -->
+<script src="../../adminlte/plugins/select2/js/select2.full.min.js"></script>
+<!-- date-range-picker -->
+<script src="../../adminlte/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="../../adminlte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+
+ 
