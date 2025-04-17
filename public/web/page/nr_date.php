@@ -115,7 +115,7 @@ if($val1 == "id" && $val2 > 0){
                   $sSql = "SELECT nr.id as nrd, nr.tanggal,nr.mulai,nr.selesai,r.keterangan as rule, m.memo keterangan
                   FROM node_role_date nr 
                   JOIN node_role r ON nr.id_role = r.id 
-                  JOIN memo m ON m.id = r.id_memo
+                  LEFT JOIN memo m ON m.id = r.id_memo
                   WHERE nr.id_node=$id_node ORDER BY tanggal,mulai";
                   $sTabelJadwal=isiTabelSQL($sSql,"../page/nr_date");
                   echo $sTabelJadwal;
