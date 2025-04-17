@@ -234,9 +234,36 @@ class cNode extends cKoneksi{
     $iRecAff = $this->eksekusi($q,$param);  
     return $iRecAff;
   }
+ 
+  /**
+   * @brief cek apakah ada id_log eksekutor jika repeater = 1 untuk hari ini
+   * @param int $id_nr_date id tanggal dalam numerical representation (NR)
+   * @param int $id_nr_week id minggu dalam numerical representation (NR)
+   */
+  function cekRepeaterEksekutor($id_nr_date=null, $id_nr_week=null){   
+    if(!$this->statusNode){ return false; } //keluar bila status false
+    if($id_nr_date > 0 ){
+      $q = "SELECT id_log FROM log_eksekutor 
+      WHERE id_nr_date = :id_nr_date  
+      AND id_node = :id_node";
+      $param = ["id_nr_date"=>$id_nr_date];   
+      $param["id_node"] = $this->nodeID;
+      $id_log = $this->ambil1Data($q,$param);  
+      return $id_log;
+    }
+
+ 
+  }
 
   /**
    * logging bila ada eksekusi aktuator
+   * @param int $id_nr_date id tanggal dalam numerical representation (NR)
+   * @param int $id_nr_week id minggu dalam numerical representation (NR)
+   * @param int $relay nilai relay yang di execute
+   * @param int $exeval nilai execute eval yang di execute
+   * @param int $exe_v1 nilai execute v1 yang di execute
+   * @param int $exe_v2 nilai execute v2 yang di execute
+   * @return int id log yang di generate
    */
   function log_eksekutor($id_nr_date, $id_nr_week, $relay, $exeval, $exe_v1, $exe_v2){  //false atau format ex. '2022-05-26 02:28:34'
     if(!$this->statusNode){ return false; } //keluar bila status false
@@ -244,20 +271,16 @@ class cNode extends cKoneksi{
     $q =" INSERT INTO `log_eksekutor`
     (`id_nr_date`, `id_nr_week`, `id_node`, `relay`, `exeval`, `exe_v1`, `exe_v2`) VALUES 
     (:id_nr_date, :id_nr_week, :id_node, :relay, :exeval, :exe_v1, :exe_v2) ";
-  
-  // $param = ["id_nr_week"=>''];   
-  // $param += ["id_nr_date"=>''];   
-    $param = ["id_nr_week"=> $id_nr_week];   
-    $param += ["id_nr_date"=> $id_nr_date];    
-    // $param["id_nr_week"] = $id_nr_week;   
-    // $param["id_nr_date"] = $id_nr_date;   
-    // if($id_nr_week !== null ) $param["id_nr_week"] = $id_nr_week;   
-    // if($id_nr_date !== null ) $param["id_nr_date"] = $id_nr_date;   
-    $param += ["id_node"=>$this->nodeID];  
-    $param += ["relay"=>$relay];  
-    $param += ["exeval"=>$exeval];  
-    $param += ["exe_v1"=>$exe_v1];  
-    $param += ["exe_v2"=>$exe_v2];  
+   
+    $param = [
+      "id_nr_week" => $id_nr_week,
+      "id_nr_date" => $id_nr_date,
+      "id_node" => $this->nodeID,
+      "relay" => $relay,
+      "exeval" => $exeval,
+      "exe_v1" => $exe_v1,
+      "exe_v2" => $exe_v2
+    ];
     
     // var_dump($param);
     $this->eksekusi($q,$param);   

@@ -111,11 +111,12 @@ if($val1 == "id" && $val2 > 0){
               <table class="table table-bordered">
                 
                   <?php
-                  // Query untuk menampilkan data yang sudah ada
-                  $sSql = "SELECT nr.id as nrd, nr.tanggal,nr.mulai,nr.selesai,r.keterangan as sRole
+                  // Query untuk menampilkan data jadwal yang sudah ada dari satu node
+                  $sSql = "SELECT nr.id as nrd, nr.tanggal,nr.mulai,nr.selesai,r.keterangan as rule, m.memo keterangan
                   FROM node_role_date nr 
                   JOIN node_role r ON nr.id_role = r.id 
-                  WHERE nr.id_node=$id_node";
+                  JOIN memo m ON m.id = r.id_memo
+                  WHERE nr.id_node=$id_node ORDER BY tanggal,mulai";
                   $sTabelJadwal=isiTabelSQL($sSql,"../page/nr_date");
                   echo $sTabelJadwal;
                   ?>

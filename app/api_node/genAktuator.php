@@ -8,6 +8,35 @@ if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cNode seba
 }  
 
 /**
+ * @brief Cek apakah sudah ada log eksekutor untuk idNode dan noderole id tertentu
+ *       pada hari ini (berdasarkan tanggal CURDATE()).
+ * @param int $id_nrw id node role week
+ * @param int $id_nrd id node role date
+ * @return int id log eksekutor atau 0 jika tidak ada
+ */
+function cekFlagEksekutor($id_nrd,$id_nrw){
+  global $cNode;
+  $id_log = 0;
+
+  $sql="SELECT le.id FROM log_eksekutor le 
+  JOIN node_role_week nrw ON nrw.id = le.id_nr_week 
+  JOIN node_role nr ON nr.id = nrw.id_role 
+  WHERE DATE(le.created) = CURDATE() AND  nr.repeater = 0
+  AND le.id_node = :id_node "; 
+  if($id_nrw > 0){
+    $sql .= " AND le.id_nr_date= :id_nr_date";
+    $param["id_nr_date"]=$id_nrd;
+  }elseif($id_nrd > 0){
+    $sql .= " AND le.id_nr_week= :id_nr_week";
+    $param["id_nr_week"]=$id_nrw;
+  }
+
+  $param["id_node"] = $cNode->nodeID;  
+  $id_log = $cNode->ambil1Data($sql,$param); 
+  return $id_log;
+}
+
+/**
  * @brief memeriksa apakah request aktuator ini ada data id_log 
  *      untuk mengupdate tabel / flag status log ekeskutor
  * @param $data hasil decode json dari dataDataPost request aktuator
@@ -25,7 +54,9 @@ global $cNode;
 }
 
 /**
+ * @brief memeriksa apakah ada permintaan eksekusi aktuator testing 
  * @brief node_xt ============= execution test============
+ * @param $id_node
  */ 
 function cekReqExecutionTest($id_node){
   global $cNode;

@@ -3,9 +3,10 @@ session_start();
 
 // Cek apakah pengguna sudah login atau belum
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+  echo "<meta http-equiv='refresh' content='9; url=dashboard'>";
   echo "<h3>Status login masih aktif </h3><br> user : " . $_SESSION['username'] .
-    "<br><H4>lanjut ke <a href='dashboard.php'>dashboard</a> atau<br>
-    <a href='logout.php'>Logout</a> untuk login ulang</h4>" ;
+    "<br><H4>lanjut / dialihkan setelah 9 detik kembali ke <a href='dashboard'>dashboard</a>
+    <br> atau <a href='logout.php'>Logout</a> untuk login ulang</h4>";
   exit;
 } 
 ?>

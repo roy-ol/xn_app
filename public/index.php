@@ -4,8 +4,8 @@ $sDefHTML = "<html><head><title>403 Forbidden</title></head><body><h1>Forbidden<
 if($_SERVER['REQUEST_METHOD']=='POST'){ 
 	//Getting values  
 	$sDataDataPost=file_get_contents('php://input');	
-} elseif($_SERVER['REQUEST_METHOD']=='GET'){ 
-  $sDefHTMLisi = "forbidden _8"; 
+} elseif($_SERVER['REQUEST_METHOD']=='GET'){  //GET tanpa kode di alihkan ke halaman login
+  header("Location: web/login.php"); exit(); $sDefHTMLisi = "forbidden _8"; 
   $sDefHTML .= $sDefHTMLisi . $sDefHTMLtutup;
   die($sDefHTML); 
 }else{

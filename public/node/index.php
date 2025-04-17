@@ -110,39 +110,7 @@ function hitLogChip(){
   $sql = "UPDATE hit_chip SET hit = hit+1 WHERE id_chip=$cNode->chipID ";
   $cNode->eksekusi($sql);
 }
-
-
-//pause========= atau di buang =================
-//=============================================
-
-
-
-
-//===old to delete .. ?
-function logAktuator0($chip='', $noRelay=1, $exetime = 0){ 
-  global $con;
-  $sql = "INSERT INTO log_aktuator(chip,no_relay,exetime) VALUES ('$chip', $noRelay, $exetime)
-      ON DUPLICATE KEY UPDATE exetime =  $exetime, waktu=now()";
-  // $r = mysqli_query($con,$sql);
-}
-
  
-function logAktuator2($idNode, $relay=1, $exetime = 0){  //log aktuator 5 data terakhir
-  global $cNode; 
-  $rData=$cNode->ambilData("SELECT count(id) jum, COALESCE(max(hit),0) max, COALESCE(min(hit),0) min 
-      FROM `log_aktuator2` WHERE id_node= $idNode ");
-  $jum=$rData['jum'];
-  $max=$rData['max'];
-  $min=$rData['min'];
-  if ($jum < 5) {  // batas Record yang disimpan di log aktuator tiap id_node
-    $sql = "insert into log_aktuator2(id_node,relay,exetime,hit) values($idNode ,";
-    $sql .= " $relay , $exetime , " . ($max + 1) . ")" ; 
-  }else{
-    $sql = "update log_aktuator2 set relay=$relay, exetime = $exetime, hit = " . ($max + 1);
-    $sql .= " where id_node = $idNode and hit = $min" ;  
-  } 
-  $r = $cNode->eksekusi($sql);
-}
-
+ 
   
 ?>
