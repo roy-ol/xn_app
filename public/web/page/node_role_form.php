@@ -192,12 +192,12 @@ $cTemp->loadHeader();
           <input type="hidden" name="reff_node" value=<?=$reff_node;?>>
           
           <div class="form-row">
-            <label class="form-label-left" for="keterangan">NodeRole :</label>
+            <label class="form-label-left" for="keterangan">NodeRule :</label>
             <div class="form-input">
               <input type="text" id="keterangan" value="<?=$keterangan;?>" name="keterangan" 
-              title="Nama node_role / keterangan / identifikasi role ini" placeholder="Keterangan NodeRole" required>
+              title="Nama node_role / keterangan / identifikasi rule ini" placeholder="Keterangan NodeRole" required>
             </div>
-            <div class="form-label-right">Keterangan Role untuk identifikasi</div>
+            <div class="form-label-right">Keterangan Rule untuk identifikasi</div>
           </div>
           
           <div class="form-row">

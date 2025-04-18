@@ -42,7 +42,7 @@ $arrData = $cNode->ambil1Row($sSQL,$param);
 if($arrData){ // ada order id_nrd
   $status = "1";
   $id_nrd = $arrData["id_nrd"];
-  if(cekFlagEksekutor($id_nrd,0) > 0) $cNode->dieJsonNoneTime(); // ada log eksekutor pada hari ini
+  if(cekLogEksekutor_r0($id_nrd,0) > 0) $cNode->dieJsonNoneTime(); // ada log eksekutor pada hari ini
 }else{ //===========3 - Hari(NR_week)============== // mingguan  
   $sSQL = "SELECT nr.*,nrw.id as id_nrw
   FROM node_role_week nrw, node_role nr
@@ -61,7 +61,7 @@ if($arrData){ // ada order id_nrd
   if($arrData){ // ada order id_nrw
     $status = "2";
     $id_nrw = $arrData["id_nrw"];
-    if(cekFlagEksekutor(0,$id_nrw) > 0) $cNode->dieJsonNoneTime(); // ada log eksekutor pada hari ini
+    if(cekLogEksekutor_r0(0,$id_nrw) > 0) $cNode->dieJsonNoneTime(); // ada log eksekutor pada hari ini
   }  
 } 
 

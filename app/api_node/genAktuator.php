@@ -8,30 +8,33 @@ if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cNode seba
 }  
 
 /**
- * @brief Cek apakah sudah ada log eksekutor untuk idNode dan noderole id tertentu
+ * @brief Cek apakah sudah ada log eksekutor untuk idNode dan noderole repeater 0 id tertentu
  *       pada hari ini (berdasarkan tanggal CURDATE()).
  * @param int $id_nrw id node role week
  * @param int $id_nrd id node role date
  * @return int id log eksekutor atau 0 jika tidak ada
  */
-function cekFlagEksekutor($id_nrd,$id_nrw){
+function cekLogEksekutor_r0($id_nrd,$id_nrw){
   global $cNode;
-  $id_log = 0;
-
-  $sql="SELECT le.id FROM log_eksekutor le 
-  JOIN node_role_week nrw ON nrw.id = le.id_nr_week 
-  JOIN node_role nr ON nr.id = nrw.id_role 
-  WHERE DATE(le.created) = CURDATE() AND  nr.repeater = 0
-  AND le.id_node = :id_node "; 
-  if($id_nrw > 0){
-    $sql .= " AND le.id_nr_date= :id_nr_date";
-    $param["id_nr_date"]=$id_nrd;
-  }elseif($id_nrd > 0){
-    $sql .= " AND le.id_nr_week= :id_nr_week";
-    $param["id_nr_week"]=$id_nrw;
-  }
-
+  $id_log = 0; 
+  
   $param["id_node"] = $cNode->nodeID;  
+  if($id_nrd > 0){ 
+    $param["id_nr_date"]=$id_nrd;
+    $sql="SELECT le.id FROM log_eksekutor le 
+      JOIN node_role_date nrd ON nrd.id = le.id_nr_date
+      JOIN node_role nr ON nr.id = nrd.id_role
+      WHERE  DATE(le.created) = CURDATE() AND  nr.repeater = 0
+      AND le.id_node = :id_node  AND le.id_nr_date= :id_nr_date"; 
+  }elseif($id_nrw > 0){    
+    $param["id_nr_week"]=$id_nrw;
+    $sql="SELECT le.id FROM log_eksekutor le 
+      JOIN node_role_week nrw ON nrw.id = le.id_nr_week
+      JOIN node_role nr ON nr.id = nrw.id_role
+      WHERE  DATE(le.created) = CURDATE() AND  nr.repeater = 0
+      AND le.id_node = :id_node  AND le.id_nr_week= :id_nr_week";
+  } 
+
   $id_log = $cNode->ambil1Data($sql,$param); 
   return $id_log;
 }

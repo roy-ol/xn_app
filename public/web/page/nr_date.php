@@ -12,54 +12,102 @@ $cTemp->loadHeader();
 
 $id_node = 0;
 $id_role = 0;
-$id_nrd = 0 ;
+$id_nrd = 0;
 $tanggal = "";
 $jam_mulai = "";
 $jam_selesai = "";
-$KetNode="Node Aktuator";
+$KetNode = "Node Aktuator";
 $id_perusahaan = $_SESSION['id_perusahaan'];
+$error_messages = [];
 
 //periksa apakah ada post data
 if (isset($_POST['id_node'])) {
-  $id_node = $_POST['id_node'];
-  $id_role = $_POST['id_role'];
-  $tanggal = $_POST['tanggal'];
-  $jam_mulai = $_POST['jam_mulai'];
-  $jam_selesai = $_POST['jam_selesai'];  
-  $param["id_node"] = $id_node;  
-  $param["id_role"] = $id_role;  
-  //rubah format tanggal agar masuk ke database
-  $tanggal = date('Y-m-d', strtotime($tanggal));
-  $param["tanggal"] = $tanggal;  
-  $jam_mulai = date('H:i:s', strtotime($jam_mulai));
-  $param["jam_mulai"] = $jam_mulai;  
-  $jam_selesai = date('H:i:s', strtotime($jam_selesai));
-  $param["jam_selesai"] = $jam_selesai;  
-  $param["updater"] = $cUser->userID();
-
-  $id_nrd = $_POST['id_nrd']; 
-  if($id_nrd > 0){
-    $sSQL = "UPDATE node_role_date 
-    SET id_node=:id_node,id_role=:id_role,tanggal=:tanggal,
-    mulai=:jam_mulai,selesai=:jam_selesai, updater=:updater
-     WHERE id = :id";
-    $param["id"] = $id_nrd;  
-    $cUmum->eksekusi($sSQL,$param);
+  // Validasi input
+  $id_node = intval($_POST['id_node'] ?? 0);
+  $id_role = intval($_POST['id_role'] ?? 0);
+  $tanggal = trim($_POST['tanggal'] ?? '');
+  $jam_mulai = trim($_POST['jam_mulai'] ?? '');
+  $jam_selesai = trim($_POST['jam_selesai'] ?? '');
+  $id_nrd = intval($_POST['id_nrd'] ?? 0);
+  
+  // Validasi data
+  if ($id_node <= 1) {
+    $error_messages[] = "Node harus dipilih";
   }
-  else{
-    $sSQL = "INSERT INTO node_role_date (id_node,id_role,tanggal,mulai,selesai,updater) 
-    VALUES (:id_node,:id_role,:tanggal,:jam_mulai,:jam_selesai,:updater)";
-    $cUmum->eksekusi($sSQL,$param);
+  
+  if ($id_role <= 1) {
+    $error_messages[] = "Role harus dipilih";
   }
-   
-  $id_role = 0;
-  $id_nrd = 0 ;
-  $tanggal = "";
-  $jam_mulai = "";
-  $jam_selesai = "";
-  $val1="id";
-  $val2=$id_node;
+  
+  if (empty($tanggal)) {
+    $error_messages[] = "Tanggal harus diisi";
+  } elseif (!DateTime::createFromFormat('Y-m-d', $tanggal)) {
+    $error_messages[] = "Format tanggal tidak valid";
+  }
+  
+  if (empty($jam_mulai)) {
+    $error_messages[] = "Jam mulai harus diisi";
+  } elseif (!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/', $jam_mulai)) {
+    $error_messages[] = "Format jam mulai tidak valid (HH:MM)";
+  }
+  
+  if (empty($jam_selesai)) {
+    $error_messages[] = "Jam selesai harus diisi";
+  } elseif (!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/', $jam_selesai)) {
+    $error_messages[] = "Format jam selesai tidak valid (HH:MM)";
+  }
+  
+  // Validasi jam selesai harus setelah jam mulai
+  if (!empty($jam_mulai) && !empty($jam_selesai)) {
+    $time_start = strtotime($jam_mulai);
+    $time_end = strtotime($jam_selesai);
+    
+    if ($time_end <= $time_start) {
+      $error_messages[] = "Jam selesai harus setelah jam mulai";
+    }
+  }
+  
+  // Jika tidak ada error, proses data
+  if (empty($error_messages)) {
+    $param = [
+      "id_node" => $id_node,
+      "id_role" => $id_role,
+      "tanggal" => date('Y-m-d', strtotime($tanggal)),
+      "jam_mulai" => date('H:i:s', strtotime($jam_mulai)),
+      "jam_selesai" => date('H:i:s', strtotime($jam_selesai)),
+      "updater" => $cUser->userID()
+    ];
+    
+    try {
+      if ($id_nrd > 0) {
+        $sSQL = "UPDATE node_role_date 
+                SET id_node=:id_node, id_role=:id_role, tanggal=:tanggal,
+                mulai=:jam_mulai, selesai=:jam_selesai, updater=:updater
+                WHERE id = :id";
+        $param["id"] = $id_nrd;
+        $cUmum->eksekusi($sSQL, $param);
+        $success_message = "Data berhasil diperbarui";
+      } else {
+        $sSQL = "INSERT INTO node_role_date (id_node, id_role, tanggal, mulai, selesai, updater) 
+                VALUES (:id_node, :id_role, :tanggal, :jam_mulai, :jam_selesai, :updater)";
+        $cUmum->eksekusi($sSQL, $param);
+        $success_message = "Data berhasil disimpan";
+      }
+      
+      // Reset form setelah sukses
+      $id_role = 0;
+      $id_nrd = 0;
+      $tanggal = "";
+      $jam_mulai = "";
+      $jam_selesai = "";
+      $val1 = "id";
+      $val2 = $id_node;
+    } catch (Exception $e) {
+      $error_messages[] = "Terjadi kesalahan saat menyimpan data: " . $e->getMessage();
+    }
+  }
 }
+
 
 if($val1 == "nrd" && $val2 > 0){
   $sSQL = "SELECT id,id_node,id_role,tanggal,mulai,selesai from node_role_date WHERE id = :id";
@@ -84,7 +132,29 @@ if($val1 == "id" && $val2 > 0){
 
 ?>
 
+<!-- Tambahkan ini di bagian atas content-wrapper untuk menampilkan pesan error/sukses -->
 <div class="content-wrapper">
+  <?php if (!empty($error_messages)): ?>
+    <div class="container-fluid">
+      <div class="alert alert-danger">
+        <ul>
+          <?php foreach ($error_messages as $error): ?>
+            <li><?= htmlspecialchars($error) ?></li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    </div>
+  <?php endif; ?>
+  
+  <?php if (!empty($success_message)): ?>
+    <div class="container-fluid">
+      <div class="alert alert-success">
+        <?= htmlspecialchars($success_message) ?>
+      </div>
+    </div>
+  <?php endif; ?>  
+
+  <!-- Main content -->
   <section class="content">
     <div class="container-fluid">
       <div class="form-group">
@@ -112,7 +182,7 @@ if($val1 == "id" && $val2 > 0){
                 
                   <?php
                   // Query untuk menampilkan data jadwal yang sudah ada dari satu node
-                  $sSql = "SELECT nr.id as nrd, nr.tanggal,nr.mulai,nr.selesai,r.keterangan as rule, m.memo keterangan
+                  $sSql = "SELECT nr.id as nrd, nr.tanggal,nr.mulai,nr.selesai,r.keterangan rule, m.memo ket_rule
                   FROM node_role_date nr 
                   JOIN node_role r ON nr.id_role = r.id 
                   LEFT JOIN memo m ON m.id = r.id_memo
@@ -143,21 +213,21 @@ if($val1 == "id" && $val2 > 0){
                 <input type="hidden" name="id_node" value=<?=$id_node;?>>
                 <input type="hidden" name="id_nrd" value=<?=$id_nrd;?>> 
                 <div class="form-group">
-                  <label>Role</label>
-                  <select id="id_role" name="id_role"  class="form-control" >
+                  <label>Role</label> 
+                  <select id="id_role" name="id_role" class="form-control" required>
                     <option value=0>--pilih Role--</option>
                     <?php  
                       $sSqlOp1 = "SELECT nr.id, nr.keterangan FROM node_role nr 
                       WHERE nr.id_perusahaan =" . $id_perusahaan;
                       bikinOption($sSqlOp1, $id_role,"keterangan");
                     ?>
-                  </select> 
+                  </select>  
                 </div>
                 
                 <div class="form-group">
-                  <label>Tanggal</label>
+                  <label>Tanggal</label> 
                   <input type="date" name="tanggal" class="form-control" 
-                    value= "<?=htmlspecialchars($tanggal); ?>" /> 
+                    value="<?=htmlspecialchars($tanggal); ?>" required />
                 </div>
                 
                 <div class="row align-items-end">
@@ -165,8 +235,9 @@ if($val1 == "id" && $val2 > 0){
                     <div class="form-group">
                       <label>Batas Jam Mulai</label> 
                       <div class="input-group date" id="timepicker0" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#timepicker0" 
-                        value="<?=htmlspecialchars($jam_mulai); ?>" name="jam_mulai"/>                        
+                      <input type="text" class="form-control datetimepicker-input" data-target="#timepicker0" 
+                        value="<?=htmlspecialchars($jam_mulai); ?>" name="jam_mulai" required 
+                        pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" title="Format jam (HH:MM)"/>                        -->
                         <div class="input-group-append" data-target="#timepicker0" data-toggle="datetimepicker">
                           <div class="input-group-text"><i class="far fa-clock"></i></div>
                         </div>
@@ -177,9 +248,10 @@ if($val1 == "id" && $val2 > 0){
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Batas Jam Selesai</label>
-                      <div class="input-group date" id="timepicker1" data-target-input="nearest">
+                      <div class="input-group date" id="timepicker1" data-target-input="nearest">   
                         <input type="text" class="form-control datetimepicker-input" data-target="#timepicker1" 
-                        value="<?=htmlspecialchars($jam_selesai); ?>"  name="jam_selesai"/>                        
+                          value="<?=htmlspecialchars($jam_selesai); ?>" name="jam_selesai" required 
+                          pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" title="Format jam (HH:MM)"/>                     -->
                         <div class="input-group-append" data-target="#timepicker1" data-toggle="datetimepicker">
                           <div class="input-group-text"><i class="far fa-clock"></i></div>
                         </div>
@@ -223,6 +295,48 @@ if($val1 == "id" && $val2 > 0){
     // const kode = 'id'; // Ganti dengan kode yang sesuai
     window.location.href = `../nr_date$$id$$${id}`; 
   }
- 
+// Validasi form sebelum submit
+document.querySelector('form').addEventListener('submit', function(e) {
+  const idRole = document.getElementById('id_role').value;
+  const tanggal = document.querySelector('[name="tanggal"]').value;
+  const jamMulai = document.querySelector('[name="jam_mulai"]').value;
+  const jamSelesai = document.querySelector('[name="jam_selesai"]').value;
+  const errorMessages = [];
+  
+  if (idRole == 0) {
+      errorMessages.push('Role harus dipilih');
+  }
+  
+  if (!tanggal) {
+      errorMessages.push('Tanggal harus diisi');
+  }
+  
+  if (!jamMulai) {
+      errorMessages.push('Jam mulai harus diisi');
+  } else if (!/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(jamMulai)) {
+      errorMessages.push('Format jam mulai tidak valid (HH:MM)');
+  }
+  
+  if (!jamSelesai) {
+      errorMessages.push('Jam selesai harus diisi');
+  } else if (!/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(jamSelesai)) {
+      errorMessages.push('Format jam selesai tidak valid (HH:MM)');
+  }
+  
+  if (jamMulai && jamSelesai) {
+      const start = new Date('1970-01-01T' + jamMulai + ':00');
+      const end = new Date('1970-01-01T' + jamSelesai + ':00');
+      
+      if (end <= start) {
+          errorMessages.push('Jam selesai harus setelah jam mulai');
+      }
+  }
+  
+  if (errorMessages.length > 0) {
+      e.preventDefault();
+      alert('Error:\n' + errorMessages.join('\n'));
+      return false;
+  }
+});
 
 </script>
