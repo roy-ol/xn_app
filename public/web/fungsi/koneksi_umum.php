@@ -31,6 +31,105 @@ $sNamaPerus = $cUser->getNamaPerusahaan();
 $id_level =  intval($_SESSION['id_level']);
 
 //================fungsi fungsi umum web php koneksi dll   
+ 
+
+/**
+ * @brief membuat tampilan tabel dari query sql dengan Key dan link target tujuan
+ *        tambahan flag untuk kolom key dan icon, harus ada id kolom key
+ * @param $sqlQuery Select dg kolom pertama adalah key yang hidden 
+ *          sekaligus nama keynya untuk kirim ke url link target, kunci ID dikolom 1
+ * @param $params parameter untuk query sql
+ * @param $custom parameter custom untuk isiTabelSQL2
+ *        - isHideKunci = true/false, jika true maka kolom key tidak ditampilkan
+ *        - sKunci = nama kolom key, default 'id'
+ *        - sLink = link target tujuan, default null
+ *        - jsFlagOnClick = javascript yang akan dijalankan ketika icon flag di klik
+ *        - sKeyFlag = nama kolom flag, jika null maka tidak ada kolom flag
+ *        - key1, sIcon1, key2, sIcon2, key3, sIcon3 = parameter untuk icon flag
+ * @return string tabel html
+ */
+ function isiTabelSQL2($sqlQuery, $params = null,$custom=null) {   
+    global $cUmum; // Menggunakan kelas umum untuk eksekusi query    
+    // Query SQL
+    $hasil = $cUmum->ambilData($sqlQuery, $params);
+    $result = $hasil->fetchAll(PDO::FETCH_ASSOC); 
+
+    if (empty($result)) {
+        return '<p>Tidak ada data yang ditemukan.</p>';
+    }  
+    $isHideKunci = $custom['isHideKunci'] ?? false; //kunci id tidak ditampilkan ? default harus di kolom 1
+    $sKunci = $custom['sKunci'] ?? 'id';
+    $sLink = $custom['sLink'] ?? null; 
+    $jsFlagOnClick = $custom['jsFlagOnClick'] ?? null;
+    $sKeyFlag = $custom['sKeyFlag'] ?? null; //==kolom kunci flag
+    $key1 = $custom['key1'] ?? null; //==kolom kunci flag 1
+    $sIcon1 = $custom['sIcon1'] ?? null;//==icon flag 1
+    $key2 = $custom['key2'] ?? null;
+    $sIcon2 = $custom['sIcon2'] ?? null;
+    $key3 = $custom['key3'] ?? null;
+    $sIcon3 = $custom['sIcon3'] ?? null; 
+
+    // Buat tampilan tabel
+    $tableHTML = '<thead><tr>';
+    // var_dump($custom);
+
+    $iKolomFlag = 0;   //==kolom kunci flag 
+    $iKolom=0;
+    // Membuat header tabel dari nama kolom hasil query 
+    foreach(array_keys($result[0]) as $columnName) {  
+      if($columnName == $sKeyFlag){  //==kolom kunci flag
+        $iKolomFlag = $iKolom;  
+      } 
+      $iKolom++; 
+      if($isHideKunci && $iKolom == 1) continue;
+      $tableHTML .= '<th>'.$columnName.'</th>';
+    } 
+    $tableHTML .= '</tr></thead>'; 
+    
+    // var_dump($result);
+    // Membuat baris tabel dari hasil query
+    foreach($result as $row) {
+        $tableHTML .= '<tr>'; 
+        $iKolom = 0;
+        $keyVal = 0;
+        foreach($row as $value) {
+          if($iKolom == 0){
+            $keyVal = intval($value);
+            if(!$isHideKunci){
+              $sDataCell1 = '<a href="'.$sLink.'$$'.$sKunci.'$$'.$keyVal.'">'.$value.'</a>'; //berisi link dan key
+              $tableHTML .= '<td>'.$sDataCell1.'</td>';
+            }
+            $iKolom++;
+            continue;
+          }
+          if($iKolom == 1 && $sLink !== null && $isHideKunci){
+            $sDataCell1 = '<a href="'.$sLink.'$$'.$sKunci.'$$'.$keyVal.'">'.$value.'</a>'; //berisi link dan key
+            $tableHTML .= '<td>'.$sDataCell1.'</td>';
+            $iKolom++;  
+            continue;
+          } 
+          if($iKolom == $iKolomFlag){  //==kolom kunci flag, cek isi untuk icon flag pilihan ditampilkan
+            $fl_value = $value;
+            // $fl_value = intval($value);
+            $sIconFlag = ($fl_value == $key1)? $sIcon1 : $value;
+            $sIconFlag = ($fl_value == $key2) ? $sIcon2 : $sIconFlag;
+            $sIconFlag = ($fl_value == $key3)? $sIcon3 : $sIconFlag; 
+             
+            if($jsFlagOnClick !== null){
+              $sIconFlag = '<i class="flag-action-icon"  style="cursor:pointer;" onclick="'.
+              $jsFlagOnClick.'('.$keyVal.', this)">'.$sIconFlag.'</i>';
+            } 
+            $tableHTML .= '<td>'.$sIconFlag.'</td>';
+            $iKolom++;
+            continue;
+          } 
+          $tableHTML .= '<td>'.$value.'</td>';
+          $iKolom++;   
+        }   
+        $tableHTML .= '</tr>';
+    } 
+    return $tableHTML;
+}
 
 /**
  * @brief membuat tampilan tabel dari query sql dengan Key dan link target tujuan

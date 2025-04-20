@@ -36,19 +36,27 @@ if($arrKebun && is_array($arrKebun)){
   $kebunTerpilih = "Pilih Kebun";
 } 
 
+//==================== Template load Halaman =========================
+$sAddOnNavBar=' 
+<li class="nav-item">
+<div class="nav-link">Device Log, Kebun '.$kebunTerpilih.'</div>
+</li>
+';
+$cTemp->setAddOnNavBarLeft($sAddOnNavBar); 
 
 $sAddOnNavBar='
 <ul class="navbar-nav">
-  <li class="nav-item">
-      <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-          <i class="fas fa-expand-arrows-alt"></i>
-      </a>
-  </li>
+<li class="nav-item">
+<a class="nav-link" data-widget="fullscreen" href="#" role="button">
+<i class="fas fa-expand-arrows-alt"></i>
+</a>
+</li>
 </ul>'; 
 if(empty($val1)){$val1 = "";} 
 $cTemp->setTitle("Device Log"); 
 $cTemp->setAddOnNavBarRight($sAddOnNavBar); 
 $cTemp->loadHeader();
+//======================================================================== 
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -126,21 +134,31 @@ $cTemp->loadHeader();
 
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">tabel data</h3>
+        <h3 class="card-title">Device Log, <?php echo $kebunTerpilih; ?></h3>
       </div>
       <div class="card-body">
         <table id="aktLog" class="table table-bordered table-striped">
           <?php
-          $sql = "SELECT CONCAT(n.nama,'\n', DATE(l.created)) Node , CONCAT('R:',l.relay ,'\n', l.exeval) 'Relay Val', 
+          $sql = "SELECT l.id,  CONCAT(n.nama,'\n', DATE(l.created)) Node ,  l.flag Aksi, CONCAT('R:',l.relay ,'\n', l.exeval) 'Relay Val', 
           CONCAT(TIME(l.created),'\n',  COALESCE(TIME(l.waktu),'-- : -- : --')) 'Start Fin' , CONCAT(l.exe_v1,'\n', l.exe_v2) 'V1 V2',  
-          TIMEDIFF(l.waktu, l.created) Durasi,l.id FROM log_eksekutor l 
+          TIMEDIFF(l.waktu, l.created) Durasi FROM log_eksekutor l 
             JOIN node n ON l.id_node = n.id
             JOIN chip c ON n.id_chip = c.id
             JOIN kebun k ON c.id_kebun = k.id
             WHERE k.id_perusahaan = $id_perusahaan
             ORDER BY l.id DESC 
-            LIMIT 50;" ;
-          $sHitTabel=isiTabelSQL($sql);
+            LIMIT 50;" ; 
+          $custom=[ 
+            "isHideKunci" => true,
+            "sKunci" => 'id',
+            "sLink" => null, 
+            "jsFlagOnClick" => 'resetFlag',
+            "sKeyFlag" => 'Aksi',
+            "key1"=>0, "sIcon1"=>'🟠',
+            "key2"=>9, "sIcon2"=>'🔄', 
+            "key3"=>11, "sIcon3"=>'🟢▶'
+          ];
+          $sHitTabel=isiTabelSQL2($sql, null,$custom);
           echo $sHitTabel;
           ?>
         </table>
@@ -149,10 +167,36 @@ $cTemp->loadHeader();
   </div>
 </div>
 
-<script>
+<script> 
+  function resetFlag(id,element) { 
+    if(confirm(`Apakah Anda yakin ingin mereset log eksekutor ID ${id}?\n\nPerhatian: `
+    + `Proses ini memungkinkan eksekusi ulang meskipun repeater off.`)) {
+        // Create AJAX request
+        $.ajax({
+            url: "../fungsi/reset_log_eksekutor",
+            method: "POST", 
+            dataType: 'json', 
+            data: { 'id_le': id }, 
+            success: function (response) {
+                if (response.status === "success") {
+                    // Update the UI if successful
+                    element.style.color = "green";
+                    element.innerHTML = "✓ resetted"; 
+                    alert("Flag berhasil diupdate");
+                } else {
+                    alert("Gagal mengupdate flag: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Gagal mengupdate flag: " + error);
+            }    
+        });
+    }
+  }
+   
   $(function () {
     $("#aktLog").DataTable({
-      "order": [5, 'desc'],
+      "order": [0, 'desc'],
       "responsive": true,
       "lengthChange": false,
       "autoWidth": false,

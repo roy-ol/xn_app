@@ -126,7 +126,7 @@ $cTemp->loadHeader();
         </div> 
         
         <div class="card-body">
-          ini area card body
+          <!-- ini area card body -->
 
         </div>
 
@@ -138,7 +138,7 @@ $cTemp->loadHeader();
             <?php
             $sql = "SELECT CONCAT(n.nama,'\n', DATE(l.created)) Node , CONCAT('R:',l.relay ,'\n', l.exeval) 'Relay Val', 
             CONCAT(TIME(l.created),'\n',  COALESCE(TIME(l.waktu),'-- : -- : --')) 'Start Fin' , CONCAT(l.exe_v1,'\n', l.exe_v2) 'V1 V2',  
-            TIMEDIFF(l.waktu, l.created) Durasi,l.id FROM log_eksekutor l 
+            TIMEDIFF(l.waktu, l.created) Durasi,l.id_nr_date idd, l.id_nr_week idw FROM log_eksekutor l 
               JOIN node n ON l.id_node = n.id
               JOIN chip c ON n.id_chip = c.id
               JOIN kebun k ON c.id_kebun = k.id
@@ -234,7 +234,14 @@ $cTemp->loadHeader();
   }
  
   $(function () {  
-    $('#tblState').DataTable();
+    $('#tblState').DataTable({
+      "order": [0, 'desc'],
+      "responsive": true,
+      "lengthChange": false,
+      "autoWidth": false,
+      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
 
   });
 </script>

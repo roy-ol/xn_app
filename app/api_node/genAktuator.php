@@ -24,14 +24,14 @@ function cekLogEksekutor_r0($id_nrd,$id_nrw){
     $sql="SELECT le.id FROM log_eksekutor le 
       JOIN node_role_date nrd ON nrd.id = le.id_nr_date
       JOIN node_role nr ON nr.id = nrd.id_role
-      WHERE  DATE(le.created) = CURDATE() AND  nr.repeater = 0
+      WHERE  DATE(le.created) = CURDATE() AND le.flag < 11 AND  nr.repeater = 0
       AND le.id_node = :id_node  AND le.id_nr_date= :id_nr_date"; 
   }elseif($id_nrw > 0){    
     $param["id_nr_week"]=$id_nrw;
     $sql="SELECT le.id FROM log_eksekutor le 
       JOIN node_role_week nrw ON nrw.id = le.id_nr_week
       JOIN node_role nr ON nr.id = nrw.id_role
-      WHERE  DATE(le.created) = CURDATE() AND  nr.repeater = 0
+      WHERE  DATE(le.created) = CURDATE() AND le.flag < 11  AND  nr.repeater = 0
       AND le.id_node = :id_node  AND le.id_nr_week= :id_nr_week";
   } 
 

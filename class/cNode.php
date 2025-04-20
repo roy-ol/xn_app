@@ -291,7 +291,7 @@ class cNode extends cKoneksi{
    * update flag menjadi 9 atau sudah terlaksana dari tabel eksekutor berdasarkan ID
    */
   function flag_eksekutor($id_log_eksekutor){
-    $q = "UPDATE log_eksekutor SET flag = 9 WHERE id_node = :nodeID and  id = :id ";
+    $q = "UPDATE log_eksekutor SET flag = 9, waktu = NOW() WHERE id_node = :nodeID and  id = :id ";
     $param = ["id"=>$id_log_eksekutor];  
     $param += [":nodeID"=>$this->nodeID];  
     return $this->eksekusi($q,$param);   //mengembalikan nilai yang di eksekusi

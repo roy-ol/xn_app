@@ -87,6 +87,9 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'tabelNRweek':    //ambil tabel nr week
       tabelNRweek($data);
       break; 
+    case 'reset_log_eksekutor':
+      reset_log_eksekutor($data);
+      break;
     case 'addUser':    //menambahkan   User 
       addUser($data);
       break; 
@@ -122,6 +125,32 @@ function test($data){
     "extn": "5421"
   }';
   die($data);
+}
+
+
+function reset_log_eksekutor($data){
+  global $cUmum;    
+  $param["id_le"] = intval($data->id_le); 
+  // var_dump($param);
+  
+  $sql="UPDATE log_eksekutor SET flag = 11, waktu=waktu WHERE flag < 11 AND id = :id_le"; 
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sql,$param);  
+  
+  header('Content-Type: application/json'); // Penting!
+  if ($iRecAff < 1) {
+    $response = [
+        'status' => 'fail',
+        'message' => 'Data sudah / tidak berubah'
+    ]; 
+  }else{
+    $response = [
+        'status' => 'success',
+        'message' => 'Data berhasil direset'
+    ];
+  }
+  echo json_encode($response);
+  exit; 
 }
 
 function bikintabelNRweek($id_node,$sUrl_nrw){ 
