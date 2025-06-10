@@ -13,13 +13,18 @@ switch ($flag) {
     break;
   
   default:
-    flag_status_node($flag);
+    def_flagNode($flag);
     break;
 }
 
+
 function storeJsonConfig($data){ //pause==== on testing
   global $cNode;
-  $arrRespons['f']=6;   
+  $arrRespons['f']=6;   //kode 6 = fail bila ada kesalahan
+  
+  $hasJson = isset($data->sConfig) && is_string($data->sConfig) && !empty($data->sConfig);
+  if (!$hasJson) $cNode->dieJsonOkTime($arrRespons);
+  
   $sJson = $data->sConfig;
   $iRecAff = $cNode->log_json_config($sJson); 
   if($iRecAff > 0){
@@ -29,35 +34,22 @@ function storeJsonConfig($data){ //pause==== on testing
   }
   $cNode->dieJsonOkTime($arrRespons);
 }
-
-function flag_status_node($flag){  //pause belum di evaluasi penggunaan nya
-  global $cNode;
-
-  // $arrRespons['f']=0; //flag respons ke ESP tidak ada yang perlu dilakukan 
-  $respons['f']="2"; //flag balik dr jawaban logging status flag
-  // 2=update sleep time
-  $id_node = $cNode->nodeID;
-  $rData= $cNode->ambil1Row("SELECT count(id) jum, COALESCE(max(hit),0) max ,COALESCE(min(hit),0) min 
-  FROM `node_status` WHERE id_node= $id_node " );
-  $jum=$rData['jum'];
-  $max=$rData['max'];
-  $min=$rData['min'];
-  if ($jum < 5) {  // batas Record yang disimpan di log node_status tiap id_node //berdasar id_node n flag..?
-    $sql = "insert into node_status(id_node,flag,hit) values($id_node ,";
-    $sql .= " $flag , " . ($max + 1) . ")" ; 
-  }else{
-    $sql = "update node_status set hit =".($max+1)." where id_node=$id_node and hit=$min and flag=$flag " ;  
-  }
-  $r = $cNode->eksekusi($sql);
-  $dataAmbil=$cNode->ambil1Data("SELECT sleeptime from node_role where id_node=$id_node order by waktu desc limit 1");
-  if($dataAmbil) $respons['sleep']=$dataAmbil ; 
-  $cNode->dieJsonOkTime($respons); 
-
-}
-
+ 
 function updateFlag1(){
   global $cNode;
   $cNode->dieJsonOkTime(array('f'=>0));
 }
 
+
+
+
+
+
+
+function def_flagNode($flag){
+  global $cNode;
+  $r=$cNode->flagStatusNode($flag);
+  if($r > 0) $cNode->dieJsonOkTime(array('f'=>9));
+  else $cNode->dieJsonOkTime(array('f'=>0));
+}
 ?>

@@ -250,9 +250,7 @@ class cNode extends cKoneksi{
       $param["id_node"] = $this->nodeID;
       $id_log = $this->ambil1Data($q,$param);  
       return $id_log;
-    }
-
- 
+    } 
   }
 
   /**
@@ -286,6 +284,26 @@ class cNode extends cKoneksi{
     $this->eksekusi($q,$param);   
     return $this->ambil_pdo_lastInsertID();
   }
+  function flagStatusNode($flag=0){
+    // $arrRespons['f']=0; //flag respons ke ESP tidak ada yang perlu dilakukan 
+    $respons['f']="1"; //flag balik dr jawaban logging status flag 
+    $id_node = $this->nodeID;
+    $rData= $this->ambil1Row("SELECT count(id) jum, COALESCE(max(hit),0) max ,COALESCE(min(hit),0) min 
+    FROM `node_status` WHERE id_node= $id_node and flag=$flag" );
+    $jum=$rData['jum'];
+    $max=$rData['max'];
+    $min=$rData['min'];
+    if ($jum < 10) {  // batas Record yang disimpan di log node_status tiap id_node //berdasar id_node n flag..?
+      $sql = "insert into node_status(id_node,flag,hit) values($id_node ,";
+      $sql .= " $flag , " . ($max + 1) . ")" ; 
+    }else{
+      $sql = "update node_status set hit =".($max+1)." where id_node=$id_node and hit=$min and flag=$flag " ;  
+    }
+    $r = $this->eksekusi($sql); 
+    return $r;
+  
+  }
+
 
   /**
    * update flag menjadi 9 atau sudah terlaksana dari tabel eksekutor berdasarkan ID

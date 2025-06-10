@@ -52,6 +52,7 @@ if(!isset($_GET['kode'])){  // dari htaccess folder ini: RewriteRule ^(.*)$ inde
 $sFilePHP = $sNamaFile . ".php";
 //periksa apakah ada file PHP $sFilePHP
 if(!file_exists($sFilePHP)){
+  echo '<script>history.replaceState({}, "", "'.$sNamaFile .'<on_Developing>");</script>';
   $sFilePHP = "dashboard.php";
   $sNamaFile = "dashboard";
 } 

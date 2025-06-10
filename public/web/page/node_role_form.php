@@ -351,6 +351,16 @@ $cTemp->loadHeader();
   }
 
   function submitForm() {
+    // Get the node_id value
+    const idNode_input = document.querySelector('input[name="id_node"]');
+    const idNode = idNode_input ? parseInt(idNode_input.value) : 0;
+    
+    // Check if node_id is missing or 0
+    if (!idNode || idNode === 0) {
+      alert('Error: one or more required fields is missing or invalid. Please check the form data.');
+      return false;
+    }
+
     document.getElementById('nr_form').submit();
   }
 

@@ -62,8 +62,63 @@ if (isset($_POST['login'])) {
 
         exit;
       }
-    } else {
-      echo "<h2>Username dan/atau password salah. <a href='login.php'> Login Ulang</a> <h2>"; 
+    } else { 
+        echo '<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Login Gagal</title>
+            <style>
+                .error-container {
+                    max-width: 500px;
+                    margin: 50px auto;
+                    padding: 30px;
+                    border-radius: 8px;
+                    background-color: #f8d7da;
+                    border: 1px solid #f5c6cb;
+                    color: #721c24;
+                    text-align: center;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                }
+                .error-container h2 {
+                    margin-bottom: 20px;
+                }
+                .error-container a {
+                    color: #721c24;
+                    font-weight: bold;
+                    text-decoration: none;
+                    border-bottom: 1px dotted #721c24;
+                }
+                .countdown {
+                    font-size: 0.9em;
+                    margin-top: 15px;
+                    color: #856404;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="error-container">
+                <h2>Username dan/atau password salah</h2>
+                <p>Anda akan diarahkan ke halaman login dalam <span id="countdown">5</span> detik</p>
+                <p>Atau <a href="login.php">klik di sini</a> untuk kembali sekarang</p>
+            </div>
+    
+            <script>
+                let seconds = 18;
+                const countdownElement = document.getElementById("countdown");                
+                const countdown = setInterval(function() {
+                    seconds--;
+                    countdownElement.textContent = seconds;                    
+                    if(seconds <= 0) {
+                        clearInterval(countdown);
+                        window.history.back(); 
+                    }
+                }, 1000);
+            </script>
+        </body>
+        </html>'; 
+      // echo "<h2>Username dan/atau password salah. <a href='login.php'> Login Ulang</a> <h2>"; 
       exit;
     }
 }

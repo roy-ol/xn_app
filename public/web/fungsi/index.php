@@ -177,6 +177,9 @@ function tabelNRweek($data){ //ambil tabel nr week
 function addNodeRole1($data){ //menambahkan NodeRole Standart field dari data Post  
   global $cUmum; 
   
+  if( intval($data->reff_node ?? 0) == 0){
+    splashTengah("Reff Node harus dipilih",1);
+  }
   $sMemo = $data->memo ?? "";
   $id_memo = 0;
   if(strlen($sMemo) >= 9 ){ 
