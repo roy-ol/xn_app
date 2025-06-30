@@ -15,21 +15,22 @@ function cek_json_jadwal(){
   $latestTime = $cNode->ambil1Data($queryLatestTime);
 
   // 2. Cek apakah ada perubahan lebih baru
-  $queryCheckChanges = "SELECT COUNT(*) AS count 
-      FROM node_status WHERE id_node = $cNode->nodeID AND waktu > '$latestTime'";
+  $queryCheckChanges = "SELECT COUNT(id) AS count 
+       FROM node_role_date WHERE id_node = $cNode->nodeID AND updated > '$latestTime'";   
   $hasNewChanges = $cNode->ambil1Data($queryCheckChanges);
 
   // 3. Jika ADA perubahan baru
-  if ($hasNewChanges > 0) return false;
+  if (!$hasNewChanges > 0) return false;
 
   // 3a. Ambil data node_role_date dengan tanggal >= hari ini
-  $queryJadwalLast = "SELECT * FROM node_role_date 
-      WHERE id_node = $cNode->nodeID AND tanggal < CURDATE() ORDER BY tanggal DESC LIMIT 1";
-  $queryJadwalNext = "SELECT * FROM node_role_date WHERE id_node = 40 AND tanggal >= CURDATE()" ;
+  $queryJadwalLast = "SELECT * FROM node_role_date WHERE id_node = $cNode->nodeID 
+      AND tanggal < CURDATE() ORDER BY tanggal DESC LIMIT 1";
+  $queryJadwalNext = "SELECT * FROM node_role_date WHERE id_node = $cNode->nodeID 
+      AND tanggal >= CURDATE()" ;
   $querJadwal = "($queryJadwalLast) UNION ($queryJadwalNext) ORDER BY tanggal ASC"; 
   $jadwal = $cNode->ambilDataRows($querJadwal, null, PDO::FETCH_ASSOC);
   if(empty($jadwal)) return false;
-// kirim dalam json
+  // kirim dalam json
   $output = [];
   foreach ($jadwal as $row) {      
       $tglKey = date('m-d', strtotime($row['tanggal'])); // Buat key format MM-DD dari tanggal
@@ -49,16 +50,59 @@ function cek_json_jadwal(){
   return $json;
 } 
 
+function cek_json_role(){
+  global $cNode;
+
+  //cek jadwal// 1. Ambil waktu terbaru dari node_status
+  $queryLatestTime = "SELECT MAX(waktu) AS latest_time 
+    FROM node_status WHERE id_node = $cNode->nodeID AND flag = 13 ";
+  $latestTime = $cNode->ambil1Data($queryLatestTime);
+
+  // 2. Cek apakah ada perubahan lebih baru
+  $queryCheckChanges = "SELECT COUNT(id) AS count 
+       FROM node_role WHERE reff_node = $cNode->nodeID AND updated > '$latestTime'";   
+  $hasNewChanges = $cNode->ambil1Data($queryCheckChanges);
+
+  // 3. Jika ADA perubahan baru
+  if (!$hasNewChanges > 0) return false;
+
+  // 3a. Ambil data node_role yang dipakai di jadwal  
+  $sql_tanggalBatas = "SELECT tanggal FROM node_role_date WHERE id_node = $cNode->nodeID 
+      AND tanggal < CURDATE() ORDER BY tanggal DESC LIMIT 1";
+  $tanggalBatas = $cNode->ambil1Data($sql_tanggalBatas);
+  
+  $sql_role = "SELECT id,exeval,exe_v1 FROM node_role WHERE id in(SELECT id_role FROM node_role_date 
+    WHERE id_node = $cNode->nodeID AND tanggal >= '$tanggalBatas' )";
+
+  $role = $cNode->ambilDataRows($sql_role, null, PDO::FETCH_ASSOC);
+  if(empty($role)) return false;
+  // kirim dalam json
+  $output = [];
+  foreach ($role as $row) {      
+      $output[$row['id']] = [$row['exeval'], $row['exe_v1']];
+  } 
+
+  // Konversi ke JSON untuk dikirim ke ESP32
+  $json = json_encode($output, JSON_UNESCAPED_SLASHES);
+  return $json;
+}
+
 function flag0_aktuator(){
   global $cNode;
   $param["id_node"] = $cNode->nodeID;
   $param["f"] = 0 ; // flag umum/general untuk status none/null/kosong selesai atau proses gagal
   $hasilJadwal = cek_json_jadwal();  
-  if(empty($hasilJadwal)) $cNode->dieJsonOKTime($param);
-
-  $param["f"] = 12 ; //flag jadwal json
-  $param["jadwal"] = $hasilJadwal;
-  $cNode->dieJsonOkTime($param);
+  if(!empty($hasilJadwal)){
+    $param["f"] = 12 ; //flag jadwal json
+    $param["jadwal"] = $hasilJadwal;
+  }else{
+    $hasil_role = cek_json_role();
+    if(!empty($hasil_role)){
+      $param["f"] = 13 ; //flag role json
+      $param["formula"] = $hasil_role;
+    }
+  }
+  $cNode->dieJsonOKTime($param);
 }
 
 /**

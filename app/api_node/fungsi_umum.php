@@ -24,8 +24,9 @@ if($kelompok == 2 || $kelompok == 3){ // kelompok aktuator
   //===========1 - test Aktuator *XT1* tabel node_xt==============
   cekReqExecutionTest($id_node);  
 }
-
-$flag=$data->f; //contoh data masuk request f1 {"c":"XN0123456","f":5}
+$flag = 0;
+//evaluasi jika ada kiriman flag data->fclose
+if(isset($data->f)) $flag = $data->f; //contoh data masuk request f1 {"c":"XN0123456","f":5}
 switch ($flag) {
   case 0:   // umum
     if($is_aktuator) flag0_aktuator();   
