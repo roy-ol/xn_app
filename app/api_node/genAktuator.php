@@ -78,8 +78,8 @@ function cek_json_role(){
   if(empty($role)) return false;
   // kirim dalam json
   $output = [];
-  foreach ($role as $row) {      
-      $output[$row['id']] = [$row['exeval'], $row['exe_v1']];
+  foreach ($role as $row) {   
+      $output[$row['id']] = [(int)$row['exeval'],(int)$row['exe_v1']];
   } 
 
   // Konversi ke JSON untuk dikirim ke ESP32
