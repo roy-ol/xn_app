@@ -233,7 +233,7 @@ $cTemp->loadHeader();
                 $nil_value=$barisData[$kolom]??null;
                 $echo_html= 
                 '<div class="form-row">  
-                  <label class="form-label-left" for="'.$kolom.'">('.$kolom.')' .$nama.'</label>
+                  <label class="form-label-left" for="'.$kolom.'">('.$kolom.') ' .$nama.'</label>
                   <div class="form-input">
                     <input type="'.$tipe_input.'" id="'.$kolom.'" name="'.$kolom.'" title="'.$s_memo
                       .'" value="'.$nil_value.'" required>

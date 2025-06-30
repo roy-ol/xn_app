@@ -32,11 +32,16 @@ class cKoneksi{
    * @param $sQuery sql nya dengan pdo :namavariabel
    * @param $parameters variabel sql pdo->prepare
    * @return PDOStatement
-   */
+   */ 
   function ambilData($sQuery,$parameters=null){  // bila ada parameters array untuk execute 
     $r = $this->pdo->prepare($sQuery);  
     ($parameters)?$r->execute($parameters):$r->execute();
     return $r;
+  }
+
+  function ambilDataRows($sQuery,$parameters=null,$fetch_method = PDO::FETCH_ASSOC){  // bila ada parameters array untuk execute 
+    $r = $this->ambilData($sQuery,$parameters);
+    return $r->fetchAll($fetch_method);
   }
   
   /**

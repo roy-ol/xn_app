@@ -40,10 +40,7 @@ function updateFlag1(){
   $cNode->dieJsonOkTime(array('f'=>0));
 }
 
-
-
-
-
+ 
 
 
 function def_flagNode($flag){

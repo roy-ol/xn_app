@@ -19,6 +19,7 @@ $jam_selesai = "";
 $KetNode = "Node Aktuator";
 $id_perusahaan = $_SESSION['id_perusahaan'];
 $error_messages = [];
+$class_card_detail= "card  collapsed-card";
 
 //periksa apakah ada post data
 if (isset($_POST['id_node'])) {
@@ -121,10 +122,14 @@ if($val1 == "nrd" && $val2 > 0){
   $jam_selesai = $r["selesai"];
   $val1="id";	
   $val2=$id_node;  
+  $class_card_detail= "card";
 }
 
-if($val1 == "id" && $val2 > 0){
-  $sSQL = "SELECT CONCAT_WS(' => ', nama, keterangan) AS ketNode FROM node WHERE id = :id"; 
+if(($val1 == "id" || $val1 == "idnd") && $val2 > 0){
+  if($val1 == "idnd") $class_card_detail= "card";
+  $val2 = $cUser->isMyNode(intval($val2));;
+  $sSQL = "SELECT CONCAT_WS(' => ', nama, keterangan) AS ketNode FROM node WHERE id = :id";
+  // $sSQL .= " AND id_perusahaan = $id_perusahaan"; 
   $KetNode = $cUmum->ambil1Data($sSQL, ['id' => $val2]);
   $id_node = $val2;
 }
@@ -194,7 +199,9 @@ if($val1 == "id" && $val2 > 0){
               </table>
               <br>
               <button class="btn btn-primary btn-sm float-right" 
-              onclick="window.location.href = '../page/nr_date$$id$$<?=$id_node?>'">
+              onclick="window.location.href = '../page/nr_date$$idnd$$<?=$id_node?>'"> 
+              <!-- onclick="bukaCardDetail()"> -->
+              <!-- onclick="document.getElementById('card_detail').classList.remove('collapsed-card')"> -->
               +Jadwal Baru
             </button> 
           </div>
@@ -203,13 +210,18 @@ if($val1 == "id" && $val2 > 0){
 
         <!-- Kolom Kanan untuk Form Entry -->
         <div class="col-md-6">
-          <div class="card">
+          <div  class="<?=$class_card_detail?>" id="card_detail">
             <div class="card-header">
-              <h3 class="card-title">Tambah Jadwal Baru</h3>
+              <h3 class="card-title">Detail Jadwal</h3>
+               <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                  <i class="fas"></i>
+                </button>
+              </div>
             </div>
             <div class="card-body">
               <!-- bikin form post ke file ini -->
-              <form action="" method="post">
+              <form action="" method="post" id="form_nrd">
                 <input type="hidden" name="id_node" value=<?=$id_node;?>>
                 <input type="hidden" name="id_nrd" value=<?=$id_nrd;?>> 
                 <div class="form-group">
@@ -263,7 +275,7 @@ if($val1 == "id" && $val2 > 0){
                 <div class="card-footer text-right">
                   <button type="submit" class="btn btn-primary"><?php 
                     if($id_nrd == 0){
-                      echo "Simpan";
+                      echo "Simpan / tambahkan";
                     }else{  
                       echo "Update";  
                     }                  
@@ -338,5 +350,14 @@ document.querySelector('form').addEventListener('submit', function(e) {
       return false;
   }
 });
+
+
+function bukaCardDetail() {
+  const card = document.getElementById('card_detail');
+  if (card.classList.contains('collapsed-card')) {
+    // Pastikan card ter-expand jika terlipat
+    $(card).CardWidget('expand'); 
+  }
+} 
 
 </script>

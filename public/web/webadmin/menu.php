@@ -21,7 +21,7 @@ echo $_SESSION['username'] . " lvl:" . $id_level;
   <label id="clock"></label>
   <label id="date"></label> + <label id="elapsed-time"></label>
   <a href="logout.php">Logout</a>
-  <br><br>
+  <br><br> <!--
   <a href="dashboard.php">Dashboard</a> &nbsp &nbsp &nbsp
   <a href="chip_log.php" title="flag chip / status chip / node">flag Chip</a> &nbsp &nbsp &nbsp
   <a href="binfirupd.php" title="binary firmware chip and flag update">binfirupd</a>&nbsp &nbsp &nbsp
@@ -31,7 +31,36 @@ echo $_SESSION['username'] . " lvl:" . $id_level;
   <a href="kebun.php">+Kebun</a> &nbsp &nbsp &nbsp
   <a href="user.php">+User</a> &nbsp &nbsp &nbsp
   <a href="perusahaan.php">+Perusahaan</a> &nbsp &nbsp &nbsp
-  <br><br><br>
+--> 
+  <br> 
+
+     <!-- Tombol untuk membuka menu -->
+     <button onclick="toggleMenu()" style="padding: 10px; font-size: 16px;">☰ Menu</button>
+ 
+<!-- Popup Menu -->
+<div id="popupMenu" style="display: none; position: absolute; background: white; border: 1px solid #aaa; 
+    padding: 15px; top: 50px; left: 50%; transform: translateX(-50%); 
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.2); font-size: 18px; line-height: 2;">
+    
+    <a href="dashboard.php" style="display: block; padding: 5px;">Dashboard</a>
+    <a href="pencarian.php" style="display: block; padding: 5px;">Searc/Pencarian</a>
+    <a href="chip_log.php" style="display: block; padding: 5px;">Flag Chip</a>
+    <a href="binfirupd.php" style="display: block; padding: 5px;">Binfirmware Update</a>
+    <a href="xt_aktuator.php" style="display: block; padding: 5px;">XT Aktuator</a>
+    <a href="node_baru.php" style="display: block; padding: 5px;">+Node+</a>
+    <a href="chip_baru.php" style="display: block; padding: 5px;">+Chip+</a>
+    <a href="kebun.php" style="display: block; padding: 5px;">+Kebun+</a>
+    <a href="user.php" style="display: block; padding: 5px;">+User+</a>
+    <a href="perusahaan.php" style="display: block; padding: 5px;">+Perusahaan+</a>
+    
+    <button onclick="toggleMenu()" style="margin-top: 15px; padding: 10px;">Tutup</button>
+</div>
+<script>
+    function toggleMenu() {
+        var menu = document.getElementById('popupMenu');
+        menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
+    }
+</script>
 
   <?php //================fungsi fungsi umum web php koneksi dll   
   if(1==0) $cUmum = new cUmum(); 

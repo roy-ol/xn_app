@@ -1,11 +1,65 @@
-<?php // fungsi umum berhubungan dengan aktuator
-
+<?php // fungsi - fungsi umum berhubungan dengan aktuator  
 
 if(1==0){ //dummy if syntact hanya agar editor mengenali variabel &/ $cNode sebagai class sebelumnya 
-  $cNode = new cNode();   
+  $cNode = new cNode(); //cNode sebelumnya sudah dikonstructor di app/class/cNode.php
   $data = json_decode($sDataDataPost); 
   $data = $data ; //contoh isi $data = "{"c":"XN000201"}
 }  
+
+function cek_json_jadwal(){
+  global $cNode;
+
+  //cek jadwal// 1. Ambil waktu terbaru dari node_status
+  $queryLatestTime = "SELECT MAX(waktu) AS latest_time 
+    FROM node_status WHERE id_node = $cNode->nodeID AND flag = 12 ";
+  $latestTime = $cNode->ambil1Data($queryLatestTime);
+
+  // 2. Cek apakah ada perubahan lebih baru
+  $queryCheckChanges = "SELECT COUNT(*) AS count 
+      FROM node_status WHERE id_node = $cNode->nodeID AND waktu > '$latestTime'";
+  $hasNewChanges = $cNode->ambil1Data($queryCheckChanges);
+
+  // 3. Jika ADA perubahan baru
+  if ($hasNewChanges > 0) return false;
+
+  // 3a. Ambil data node_role_date dengan tanggal >= hari ini
+  $queryJadwalLast = "SELECT * FROM node_role_date 
+      WHERE id_node = $cNode->nodeID AND tanggal < CURDATE() ORDER BY tanggal DESC LIMIT 1";
+  $queryJadwalNext = "SELECT * FROM node_role_date WHERE id_node = 40 AND tanggal >= CURDATE()" ;
+  $querJadwal = "($queryJadwalLast) UNION ($queryJadwalNext) ORDER BY tanggal ASC"; 
+  $jadwal = $cNode->ambilDataRows($querJadwal, null, PDO::FETCH_ASSOC);
+  if(empty($jadwal)) return false;
+// kirim dalam json
+  $output = [];
+  foreach ($jadwal as $row) {      
+      $tglKey = date('m-d', strtotime($row['tanggal'])); // Buat key format MM-DD dari tanggal
+
+      list($jam, $menit) = explode(':', $row['mulai']); // Ambil jam dan menit dari kolom 'mulai'
+      $jamMenit = (int)($jam . $menit); // Ubah jadi integer seperti 930, 1145, dst
+
+      if (!isset($output[$tglKey])) { // Tambahkan ke array output
+          $output[$tglKey] = [];
+      }
+
+      $output[$tglKey][] = [$jamMenit, (int)$row['id_role']];
+  }
+
+  // Konversi ke JSON untuk dikirim ke ESP32
+  $json = json_encode($output, JSON_UNESCAPED_SLASHES);
+  return $json;
+} 
+
+function flag0_aktuator(){
+  global $cNode;
+  $param["id_node"] = $cNode->nodeID;
+  $param["f"] = 0 ; // flag umum/general untuk status none/null/kosong selesai atau proses gagal
+  $hasilJadwal = cek_json_jadwal();  
+  if(empty($hasilJadwal)) $cNode->dieJsonOKTime($param);
+
+  $param["f"] = 12 ; //flag jadwal json
+  $param["jadwal"] = $hasilJadwal;
+  $cNode->dieJsonOkTime($param);
+}
 
 /**
  * @brief Cek apakah sudah ada log eksekutor untuk idNode dan noderole repeater 0 id tertentu

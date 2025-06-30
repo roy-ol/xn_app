@@ -122,6 +122,23 @@ class cUser extends cKoneksi{
 
   }
 
+  //==================== berhubungan dengan akses node =====================
+  
+  /**
+   * Cek apakah node dengan id_node termasuk node yang bisa diakses oleh user yang login
+   * @param int $id_node id node yang akan di cek
+   * @return int 0 jika tidak ada, id_node jika ada
+   */
+  function isMyNode($id_node){
+    $sql = "SELECT n.id FROM node n WHERE n.id = :id_node AND EXISTS (
+        SELECT 1 FROM chip c 
+        JOIN kebun k ON k.id = c.id_kebun
+        WHERE c.id = n.id_chip AND k.id_perusahaan = :id_perusahaan )";
+    $param = ["id_node" => $id_node, "id_perusahaan" => $this->id_perusahaan];
+    $hasilID = $this->ambil1Data($sql,$param);
+    if($hasilID) return $hasilID;
+    return 0;
+  }
   
 
 }
