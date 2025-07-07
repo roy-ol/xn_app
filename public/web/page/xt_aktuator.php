@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
     $checkSql = "SELECT COUNT(*) FROM `node_xt` WHERE `id_node` = :id_node AND `flag` = 0";
     $checkParams = array('id_node' => $idNode);
 
-    $result = $cUmum->ambil1Data($checkSql, $checkParams);
+    $result = $cUmum->ambil1Data($checkSql, $checkParams); 
 
     if ($result > 0) {
       // Record dengan id_node yang sama dan flag = 0 sudah ada, maka tidak perlu melakukan INSERT
@@ -42,7 +42,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
       // Jika tidak ada record dengan id_node yang sama dan flag = 0, lakukan INSERT
       $sql = "INSERT INTO `node_xt` (`id_node`, `relay`, `exeval`, `exe_v1`, `exe_v2`, `updater`, `flag`)
       VALUES (:id_node, :relay, :exeval, :exe_v1, :exe_v2, $userID, 0)";
-      $cUmum->eksekusi($sql, $paramInsert);
+      $rHasil = $cUmum->eksekusi($sql, $paramInsert);
+      echo " \n<br>" . $sql . " " . json_encode($paramInsert); 
+      if ($rHasil) {
+        $sPesan = "Insert Data "  . $rHasil;
+      }
     }
   } else {
       $sPesan = "Belum ada Node Aktuator dipilih";
@@ -74,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
       </div>
       <div class="card-body">
         <form action="?" method="post" class="two-column-form" id="form_xt">
-          
+          <input type="hidden" name="eksekusi" value="1">
           <!-- Input Group dengan Ikon -->
           <div class="form-group row align-items-center">
             <label class="col-3 col-form-label text-right">

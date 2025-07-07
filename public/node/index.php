@@ -42,7 +42,8 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
       include_once '../../app/api_node/fungsi_umum.php'; // onDev ======
       break;   
     case 'f1':    //flag Status node  OK : 11-03-2023, f=10 pengiriman json config chip 16-06-2024(onDev) 
-      include_once '../../app/api_node/apiFlagNode1.php';
+      // include_once '../../app/api_node/apiFlagNode1.php'; //rencana apiFlagNode1.php dibuang
+      include_once '../../app/api_node/fungsi_umum.php'; // onDev ====== f1 akan dipakai yang lain nantinya
       break;
     case 'f7':    //request url repo binary update OK : 2023-03-05
       include_once '../../app/api_node/apiRepoUpdate.php';

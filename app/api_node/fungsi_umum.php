@@ -35,8 +35,8 @@ switch ($flag) {
     storeJsonConfig($data);    
     break;
   
-  default:
-    def_flagNode($flag); // kiriman flag belum terakomodir di fungsi umum langsung di save
+  default: 
+    def_flagNode($flag); // ada kiriman flag, belum terakomodir di fungsi umum langsung di save
     break;
 }
 

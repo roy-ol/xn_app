@@ -22,12 +22,10 @@ function cek_json_jadwal(){
   // 3. Jika ADA perubahan baru
   if (!$hasNewChanges > 0) return false;
 
-  // 3a. Ambil data node_role_date dengan tanggal >= hari ini
-  $queryJadwalLast = "SELECT * FROM node_role_date WHERE id_node = $cNode->nodeID 
-      AND tanggal < CURDATE() ORDER BY tanggal DESC LIMIT 1";
-  $queryJadwalNext = "SELECT * FROM node_role_date WHERE id_node = $cNode->nodeID 
-      AND tanggal >= CURDATE()" ;
-  $querJadwal = "($queryJadwalLast) UNION ($queryJadwalNext) ORDER BY tanggal ASC"; 
+  // 3a. Ambil data node_role_date dengan tanggal >= hari ini + sebelumnya 
+  $querJadwal = "SELECT * FROM node_role_date WHERE id_node = $cNode->nodeID AND tanggal >= 
+       (SELECT tanggal FROM node_role_date WHERE id_node = $cNode->nodeID AND tanggal < CURDATE() 
+       ORDER BY tanggal DESC LIMIT 1 ) ORDER BY tanggal ASC, mulai ASC "; 
   $jadwal = $cNode->ambilDataRows($querJadwal, null, PDO::FETCH_ASSOC);
   if(empty($jadwal)) return false;
   // kirim dalam json
