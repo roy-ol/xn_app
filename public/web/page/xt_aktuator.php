@@ -42,8 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["eksekusi"])) {
       // Jika tidak ada record dengan id_node yang sama dan flag = 0, lakukan INSERT
       $sql = "INSERT INTO `node_xt` (`id_node`, `relay`, `exeval`, `exe_v1`, `exe_v2`, `updater`, `flag`)
       VALUES (:id_node, :relay, :exeval, :exe_v1, :exe_v2, $userID, 0)";
-      $rHasil = $cUmum->eksekusi($sql, $paramInsert);
-      echo " \n<br>" . $sql . " " . json_encode($paramInsert); 
+      $rHasil = $cUmum->eksekusi($sql, $paramInsert); 
       if ($rHasil) {
         $sPesan = "Insert Data "  . $rHasil;
       }

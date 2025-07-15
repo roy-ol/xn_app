@@ -118,7 +118,7 @@ if (isset($_POST['login'])) {
             </script>
         </body>
         </html>'; 
-      // echo "<h2>Username dan/atau password salah. <a href='login.php'> Login Ulang</a> <h2>"; 
+      // echo "<h2>Username(email) dan/atau password salah. <a href='login.php'> Login Ulang</a> <h2>"; 
       exit;
     }
 }

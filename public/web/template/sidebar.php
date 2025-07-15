@@ -185,6 +185,9 @@
   <div class="p-3">
     <a href="../logout.php" class="nav-link">
       <i class="fas fa-sign-out-alt"> Logout</i>
+    </a> 
+    <a href="../reset_password" class="nav-link">
+      <i class="fas fa-key"> reset password</i>
     </a>
   </div>
 </aside>

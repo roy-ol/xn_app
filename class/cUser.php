@@ -61,7 +61,7 @@ class cUser extends cKoneksi{
    */
   function loadUserHash($userName,$pass){ 
     $hasilID=0;
-    $sql = "SELECT id,pwd FROM users WHERE username=:username ;"; 
+    $sql = "SELECT id,pwd FROM users WHERE (username=:username OR email=:username) ;"; 
     $param = ["username" => $userName]; 
     $rowHasil = $this->ambil1Row($sql,$param,PDO::FETCH_OBJ) ;  //ambil id dan pwd
     if($rowHasil){
@@ -108,10 +108,11 @@ class cUser extends cKoneksi{
 
   function updatePassword($sPass){  //password menggunakan cara aes n md5
     $hashedPassword = password_hash($sPass, PASSWORD_BCRYPT);
-    $sql = "UPDATE users SET pwd= MD5(AES_ENCRYPT(':pass','crypt9')) WHERE id= :userID";    
-    $param = ["pass"=>$hashedPassword,"userID" => $this->userID];
-    return $this->eksekusi($sql,$param);
+    $sql = "UPDATE users SET pwd= :pass WHERE id= :userID";    
+    $param = ["pass"=>$hashedPassword,"userID" => $this->userID]; 
+    return $this->eksekusi($sql,$param);     
   }
+  
   // function updatePassword($sPass){ //metode AES_ENCRYPT
   //   $sql = "UPDATE users SET pwd=MD5(AES_ENCRYPT(':pass','crypt9')) WHERE id= :userID";    
   //   $param = ["pass"=>$sPass,"userID" => $this->userID];

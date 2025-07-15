@@ -10,7 +10,7 @@ require_once __DIR__ . '/menu.php';
 <body>
 <?php 
 
-$sURL_Action = "../web/fungsi/pwdUpdate"; // Sesuaikan dengan URL pengolahan data form
+$sURL_Action = "../web/fungsi/pwdUpdate";  
 ?>
 <form action="<?=$sURL_Action;?>" method="post">
   <table>
@@ -32,6 +32,7 @@ $sURL_Action = "../web/fungsi/pwdUpdate"; // Sesuaikan dengan URL pengolahan dat
   </table>
 </form>
 <label id="msg" style="color:red;"> *)</label>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.querySelector("form");

@@ -79,7 +79,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 <div class="login-container">
     <img src="../images/xnlogo1.png" alt="Logo" />
     <form class="login-form" action="index.php" method="post">
-        <input type="text" name="username" placeholder="Username" required>
+        <input type="text" name="username" placeholder="Username/Email" required>
         <div class="show-password">
             <input type="password" name="password" id="password" placeholder="Password" required>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16" onclick="togglePasswordVisibility()">
@@ -87,7 +87,9 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             </svg>
         </div>
         <input type="submit" name="login" value="Login">
-    </form>
+    </form>    
+    <br>
+    <p style="font-size: smaller; font-style: italic;"><a href="passsword_reset.php">Reset / Lupa Password?</a></p>
 </div>
 
 <script>
