@@ -33,6 +33,7 @@ class cNode extends cKoneksi{
   function dieJsonNoneTime(){ // XNtime + 0 =  flag umum/general untuk status none/null/kosong selesai atau proses gagal
     $respons["f"] = 0;  
     $respons["t"] = date('Y-m-d H:i:s');   
+    $respons["ts"] = time();
     $this->dieJsonOK($respons); 
   }
 
@@ -41,6 +42,7 @@ class cNode extends cKoneksi{
    */
   function dieJsonOkTime($param=[]){ // XNtime + $arResp = array_merge($respons,$param);  
     $respons["t"] = date('Y-m-d H:i:s');  
+    $respons["ts"] = time();
     $arResp = array_merge($respons,$param); 
     $this->dieJsonOK($arResp); 
   }

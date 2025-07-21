@@ -93,6 +93,9 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
     case 'addUser':    //menambahkan   User 
       addUser($data);
       break; 
+    case 'updateUser':    //update User 
+      updateUser($data);
+      break;  
     case 'pwdUpdate':    //update password
       pwdUpdate($data,$userID);
       break; 
@@ -551,6 +554,23 @@ function addUser($data){
   $iRecAff = $cUmum->eksekusi($sSQL,$param);
   if($iRecAff > 0) splashTengah("$iRecAff record baru, Berhasil ditambahkan",1);
   splashTengah("ada kesalahan tambah data");  
+}
+
+function updateUser($data){
+  global $cUmum;     
+  $sSQL = "UPDATE users set id_level = :id_level, id_perusahaan = :id_perusahaan, fullname = :fullname, username = :username, email = :email, flag_active = :flag_active where id = :id_user ";
+  $param["id_user"] = intval($data->id_user);
+  $param["id_level"] = intval($data->id_level);
+  $param["id_perusahaan"] = intval($data->id_perusahaan);
+  $param["username"] = $data->username;
+  $param["email"] = $data->email;
+  $param["fullname"] = $data->fullname;
+  $param["flag_active"] = intval($data->flag_active); 
+
+  $iRecAff = 0 ;
+  $iRecAff = $cUmum->eksekusi($sSQL,$param);
+  if($iRecAff > 0) splashTengah("$iRecAff record baru, Berhasil di update",1);
+  splashTengah("ada kesalahan update data");
 }
 
 function addPerusahaan($data){ //menambahkan NodeRole Standart field dari data Post minimalis
