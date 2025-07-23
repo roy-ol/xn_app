@@ -71,8 +71,13 @@ class cUser extends cKoneksi{
       "message" => $message,
       "metadata" => json_encode($geo_info, JSON_UNESCAPED_UNICODE) 
     ];
-    $iHasil = $this->eksekusi($sSQL,$param);
+    try{ 
+      $iHasil = $this->eksekusi($sSQL,$param);
+    }catch(Exception $e){
+      echo $e->getMessage();
+    }
     echo "log user= " . $userID . " == " . $log_type . " == " . $ip . " == " . $success . " == " . $message . " == " . $geo_info;
+    echo " <br> " . $iHasil; 
     exit;
   }
   
