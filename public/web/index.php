@@ -47,25 +47,14 @@ if (isset($_POST['login'])) {
         $_SESSION['id_level'] = $myUser->id_level();
         $_SESSION['id_perusahaan'] = $myUser->id_perusahaan();
         $_SESSION['userID'] = $userID;
-        $_SESSION['username'] =$myUser->fullname();
-        //log user
+        $_SESSION['username'] =$myUser->fullname(); 
         $ip = $_SERVER['REMOTE_ADDR'];
-        $response = getIpInfo($ip);
-        // echo $response;
+        $response = getIpInfo($ip); 
 
         $sCookie = isset($_COOKIE['geo_info']) ? $_COOKIE['geo_info'] : '{}';
         $sCookieJson = urldecode($sCookie);
         $geoArray = json_decode($sCookieJson, true);        
-        $geo_json = json_encode($geoArray, JSON_UNESCAPED_UNICODE);
-        //cek data
-        // echo "<pre>";
-        // print_r([
-        //   'metadata' => $geo_json,
-        //   'lokasi' => $geoArray['city'] . ', ' . $geoArray['country'] ?? ''
-        // ]);
-        // echo "</pre>"; 
-        // exit;
-        //=========================================
+        $geo_json = json_encode($geoArray, JSON_UNESCAPED_UNICODE); 
         $myUser->logUser($userID,"login",$ip,1, $response,$geo_json);
 
         

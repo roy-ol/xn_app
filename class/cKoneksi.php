@@ -26,9 +26,7 @@ class cKoneksi{
       ($parameters)?$r->execute($parameters):$r->execute();
     } catch (PDOException $e) {
       echo "PDO Error: " . $e->getMessage();
-    }
-    // $r = $this->pdo->prepare($sQuery);    // parameters array bila diperlukan 
-    // ($parameters)?$r->execute($parameters):$r->execute();
+    } 
     return $r->rowCount(); 
   }
  
