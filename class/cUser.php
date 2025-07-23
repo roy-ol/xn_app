@@ -72,6 +72,8 @@ class cUser extends cKoneksi{
       "metadata" => $geo_info
     ];
     $this->eksekusi($sSQL,$param);
+    echo "log user " . $userID . " " . $log_type . " " . $ip . " " . $success . " " . $message . " " . $geo_info;
+    exit;
   }
   
   /**

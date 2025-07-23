@@ -51,20 +51,20 @@ if (isset($_POST['login'])) {
         //log user
         $ip = $_SERVER['REMOTE_ADDR'];
         $response = getIpInfo($ip);
-        echo $response;
+        // echo $response;
 
         $sCookie = isset($_COOKIE['geo_info']) ? $_COOKIE['geo_info'] : '{}';
         $sCookieJson = urldecode($sCookie);
         $geoArray = json_decode($sCookieJson, true);        
         $geo_json = json_encode($geoArray, JSON_UNESCAPED_UNICODE);
         //cek data
-        echo "<pre>";
-        print_r([
-          'metadata' => $geo_json,
-          'lokasi' => $geoArray['city'] . ', ' . $geoArray['country'] ?? ''
-        ]);
-        echo "</pre>"; 
-        exit;
+        // echo "<pre>";
+        // print_r([
+        //   'metadata' => $geo_json,
+        //   'lokasi' => $geoArray['city'] . ', ' . $geoArray['country'] ?? ''
+        // ]);
+        // echo "</pre>"; 
+        // exit;
         //=========================================
         $myUser->logUser($userID,"login",$ip,1,$geo_json, $response);
 
