@@ -66,7 +66,7 @@ if (isset($_POST['login'])) {
         // echo "</pre>"; 
         // exit;
         //=========================================
-        $myUser->logUser($userID,"login",$ip,1,$geo_json, $response);
+        $myUser->logUser($userID,"login",$ip,1, $response,$geo_json);
 
         
         // Periksa apakah ada URL halaman yang disimpan
