@@ -105,6 +105,11 @@ echo "<br>List user";
 $sSql = "select id,users.* from users order by id desc";
 $sUrl = $_SERVER['PHP_SELF'];
 echo bikinTabelSQL2($sSql,$sUrl);
+
+echo "<br>login History";
+$sSql = "SELECT id,user_logs.* FROM user_logs ORDER by id desc limit 12; ";
+$sUrl = $_SERVER['PHP_SELF'];
+echo bikinTabelSQL2($sSql,$sUrl);
 ?>
 
 </body>

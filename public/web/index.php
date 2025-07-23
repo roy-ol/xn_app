@@ -39,9 +39,10 @@ if (isset($_POST['login'])) {
       if($myUser->id_level() == 13){  //sementara disini tidak dibatasi akses level
         $error_message = "maaf hak akses anda tidak diperbolehkan menggunakan fitur ini"; 
       }else{ 
+        session_destroy();
         $umur_session = 60 * 60 * 5; // detik x 60 x 5 = 5 jam 
         session_set_cookie_params($umur_session);
-        // session_start();
+        session_start();
         $_SESSION['logged_in'] = true;
         $_SESSION['id_level'] = $myUser->id_level();
         $_SESSION['id_perusahaan'] = $myUser->id_perusahaan();
@@ -49,11 +50,14 @@ if (isset($_POST['login'])) {
         $_SESSION['username'] =$myUser->fullname();
         //log user
         $ip = $_SERVER['REMOTE_ADDR'];
-        $response = file_get_contents("https://ipinfo.io/{$ip}?token=e669fbb04a257a");
-        $data = json_decode($response);
-        $geo_info = $data;
-        $geo_info = json_encode($geo_info);
-        $myUser->logUser($userID,"login",$ip,1,"", $geo_info);
+        // $response = file_get_contents("https://ipinfo.io/{$ip}?token=e669fbb04a257a");
+        $response = file_get_contents("https://ipinfo.io/{$ip}/json");
+
+        $sCookie = isset($_COOKIE['geo_info']) ? $_COOKIE['geo_info'] : '{}';
+        $sCookieJson = urldecode($sCookie);
+        $geoArray = json_decode($sCookieJson, true);        
+        $geo_json = json_encode($geoArray, JSON_UNESCAPED_UNICODE);
+        $myUser->logUser($userID,"login",$ip,1,$geo_json, $response);
         
         // Periksa apakah ada URL halaman yang disimpan
         if(isset($_SESSION['last_page'])) {

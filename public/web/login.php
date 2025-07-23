@@ -106,23 +106,12 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     }
 
  
-fetch('https://ipinfo.io/json')
+fetch('http://ip-api.com/json/')
   .then(res => res.json())
   .then(data => {
-    // Kirim ke PHP via form hidden atau AJAX
-    document.cookie =  data;
-    // document.cookie = "geo_info=" + JSON.stringify({
-    //   ip: data.ip,
-    //   city: data.city,
-    //   region: data.region,
-    //   postal: data.postal,
-    //   org: data.org,
-    //   timezone: data.timezone,
-    //   hostname: data.hostname,
-    //   country_code: data.country_code,
-    //   country: data.country,
-    //   lat: data.loc
-    });  
+    document.cookie = "geo_info=" + encodeURIComponent(JSON.stringify(data));
+  });
+
  
 </script>
 
