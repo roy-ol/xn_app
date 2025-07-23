@@ -47,6 +47,13 @@ if (isset($_POST['login'])) {
         $_SESSION['id_perusahaan'] = $myUser->id_perusahaan();
         $_SESSION['userID'] = $userID;
         $_SESSION['username'] =$myUser->fullname();
+        //log user
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $response = file_get_contents("https://ipinfo.io/{$ip}?token=e669fbb04a257a");
+        $data = json_decode($response);
+        $geo_info = $data;
+        $geo_info = json_encode($geo_info);
+        $myUser->logUser($userID,"login",$ip,1,"", $geo_info);
         
         // Periksa apakah ada URL halaman yang disimpan
         if(isset($_SESSION['last_page'])) {

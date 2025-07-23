@@ -55,6 +55,22 @@ class cUser extends cKoneksi{
     return $this->loadUserHash($userName,$pass) ; 
   }
 
+  function logUser($userID,$log_type="login",$ip,$success=1,$message="", $geo_info=""){ 
+    if($userID == 0) return false;
+    $sSQL = "INSERT INTO user_logs(user_id,log_type,ip_address,user_agent,success,message,metadata) 
+      VALUES(:user_id,:log_type,:ip_address,:user_agent, 
+      :success,:message,:metadata)";
+    $param = [
+      "user_id" => $userID,
+      "log_type" => $log_type,
+      "ip_address" => $ip,
+      "user_agent" => $_SERVER['HTTP_USER_AGENT'], 
+      "metadata" => $geo_info,
+      "success" => $success,
+      "message" => $message
+    ];
+    $this->eksekusi($sSQL,$param);
+  }
   
   /**
    * @param fungsi load user metode password hash bcrypt seperti laravel 8
@@ -72,6 +88,11 @@ class cUser extends cKoneksi{
     return $this->userID(); 
   }
   
+  /**
+   * load user berdasar token key droid
+   * @param string $kunci token key droid
+   * @return boolean
+   */
   function loadUserByKey($kunci){
     $sql = "SELECT user_id FROM idroid WHERE token_key= :kunci ;"; 
     $hasilID = $this->ambil1Data($sql,["kunci" => $kunci]); 
@@ -86,7 +107,7 @@ class cUser extends cKoneksi{
     return $namaPerusahaan;
   }
 
-
+ 
   function isAktif(){
     if($this->flag_active == 0)   return false; // "diactivated";
     return true;

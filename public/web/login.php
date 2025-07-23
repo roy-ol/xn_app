@@ -92,17 +92,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     <p style="font-size: x-small; font-style: italic;">
     <a href="passsword_reset.php" title="Reset / Lupa Password?">
         🔐 lupa password</a></p>
-
-    <!-- <p style="font-size: x-small; font-style: italic;">
-        <a href="passsword_reset.php" title="Reset / Lupa Password?">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
-                <path d="M3 9a5 5 0 1 0 4-1.528V4H6.5a.5.5 0 0 0 0 1H7v1.472A5 5 0 0 0 3 9zm-1 0a6 6 0 1 1 11.94-.5h.06a.5.5 0 1 1 0 1h-.06A6 6 0 0 1 2 9z"/>
-                <path d="M7 8a4 4 0 1 1 7.928 1h1.37a.5.5 0 0 1 0 1h-1.37A4 4 0 0 1 7 8z"/>
-                <path d="M3.5 10a.5.5 0 0 1 .5.5V11a.5.5 0 0 1-1 0v-.5a.5.5 0 0 1 .5-.5zM6 11.5a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 1 0 1H6.5a.5.5 0 0 1-.5-.5z"/>
-            </svg>
-        </a>
-    </p> -->
-    <!-- <p style="font-size: x-small; font-style: italic;"><a href="passsword_reset.php">Reset / Lupa Password?</a></p> -->
+ 
 </div>
 
 <script>
@@ -114,6 +104,27 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
             passwordInput.type = "password";
         }
     }
+
+ 
+fetch('https://ipinfo.io/json')
+  .then(res => res.json())
+  .then(data => {
+    // Kirim ke PHP via form hidden atau AJAX
+    document.cookie =  data;
+    // document.cookie = "geo_info=" + JSON.stringify({
+    //   ip: data.ip,
+    //   city: data.city,
+    //   region: data.region,
+    //   postal: data.postal,
+    //   org: data.org,
+    //   timezone: data.timezone,
+    //   hostname: data.hostname,
+    //   country_code: data.country_code,
+    //   country: data.country,
+    //   lat: data.loc
+    });  
+ 
 </script>
+
 </body>
 </html>
