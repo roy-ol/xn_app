@@ -50,8 +50,8 @@ if (isset($_POST['login'])) {
         $_SESSION['username'] =$myUser->fullname();
         //log user
         $ip = $_SERVER['REMOTE_ADDR'];
-        // $response = file_get_contents("https://ipinfo.io/{$ip}?token=e669fbb04a257a");
-        $response = file_get_contents("https://ipinfo.io/{$ip}/json");
+        $response = file_get_contents("https://ipinfo.io/{$ip}?token=e669fbb04a257a");
+        // $response = file_get_contents("https://ipinfo.io/{$ip}/json");
 
         $sCookie = isset($_COOKIE['geo_info']) ? $_COOKIE['geo_info'] : '{}';
         $sCookieJson = urldecode($sCookie);

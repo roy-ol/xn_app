@@ -106,7 +106,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     }
 
  
-fetch('https://ipinfo.io/json') 
+fetch('https://ipinfo.io/json?token=e669fbb04a257a') 
   .then(res => res.json())
   .then(data => {
     console.log("Geolocation data:", data);
