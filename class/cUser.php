@@ -69,10 +69,10 @@ class cUser extends cKoneksi{
       "user_agent" => $_SERVER['HTTP_USER_AGENT'], 
       "success" => $success,
       "message" => $message,
-      "metadata" => $geo_info
+      "metadata" => json_encode($geo_info, JSON_UNESCAPED_UNICODE) 
     ];
-    $this->eksekusi($sSQL,$param);
-    echo "log user " . $userID . " " . $log_type . " " . $ip . " " . $success . " " . $message . " " . $geo_info;
+    $iHasil = $this->eksekusi($sSQL,$param);
+    echo "log user= " . $userID . " == " . $log_type . " == " . $ip . " == " . $success . " == " . $message . " == " . $geo_info;
     exit;
   }
   
