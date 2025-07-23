@@ -20,9 +20,15 @@ class cKoneksi{
    * @param $sQuery sql nya dengan pdo :namavariabel
    * @param $parameters variabel sql pdo->prepare
    */
-  function eksekusi($sQuery,$parameters=null){ //mengembalikan row affected
-    $r = $this->pdo->prepare($sQuery);    // parameters array bila diperlukan 
-    ($parameters)?$r->execute($parameters):$r->execute();
+  function eksekusi($sQuery,$parameters=null){ //mengembalikan row affected 
+    try{
+      $r = $this->pdo->prepare($sQuery);    // parameters array bila diperlukan 
+      ($parameters)?$r->execute($parameters):$r->execute();
+    } catch (PDOException $e) {
+      echo "PDO Error: " . $e->getMessage();
+    }
+    // $r = $this->pdo->prepare($sQuery);    // parameters array bila diperlukan 
+    // ($parameters)?$r->execute($parameters):$r->execute();
     return $r->rowCount(); 
   }
  
