@@ -52,12 +52,22 @@ if (isset($_POST['login'])) {
         $ip = $_SERVER['REMOTE_ADDR'];
         $response = file_get_contents("https://ipinfo.io/{$ip}?token=e669fbb04a257a");
         // $response = file_get_contents("https://ipinfo.io/{$ip}/json");
+        echo $response;
 
         $sCookie = isset($_COOKIE['geo_info']) ? $_COOKIE['geo_info'] : '{}';
         $sCookieJson = urldecode($sCookie);
         $geoArray = json_decode($sCookieJson, true);        
         $geo_json = json_encode($geoArray, JSON_UNESCAPED_UNICODE);
+        //cek data
+        echo "<pre>";
+        print_r([
+          'metadata' => $geo_json,
+          'lokasi' => $geoArray['city'] . ', ' . $geoArray['country'] ?? ''
+        ]);
+        echo "</pre>";
+        //=========================================
         $myUser->logUser($userID,"login",$ip,1,$geo_json, $response);
+
         
         // Periksa apakah ada URL halaman yang disimpan
         if(isset($_SESSION['last_page'])) {
