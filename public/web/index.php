@@ -50,8 +50,7 @@ if (isset($_POST['login'])) {
         $_SESSION['username'] =$myUser->fullname();
         //log user
         $ip = $_SERVER['REMOTE_ADDR'];
-        $response = file_get_contents("https://ipinfo.io/{$ip}?token=e669fbb04a257a");
-        // $response = file_get_contents("https://ipinfo.io/{$ip}/json");
+        $response = getIpInfo($ip);
         echo $response;
 
         $sCookie = isset($_COOKIE['geo_info']) ? $_COOKIE['geo_info'] : '{}';
@@ -64,8 +63,7 @@ if (isset($_POST['login'])) {
           'metadata' => $geo_json,
           'lokasi' => $geoArray['city'] . ', ' . $geoArray['country'] ?? ''
         ]);
-        echo "</pre>";
-        exit;
+        echo "</pre>"; 
         //=========================================
         $myUser->logUser($userID,"login",$ip,1,$geo_json, $response);
 
@@ -146,5 +144,18 @@ if (isset($_POST['login'])) {
 }
 
 header("Location: login.php"); // Redirect ke halaman  login 
+
+function getIpInfo($ip) {
+    $token = 'e669fbb04a257a';
+    $url = "https://ipinfo.io/{$ip}?token={$token}";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($ch);
+    curl_close($ch);
+
+    return $output;
+}
 
 ?>
