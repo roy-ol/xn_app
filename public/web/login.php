@@ -106,12 +106,12 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
     }
 
  
-fetch('http://ip-api.com/json/')
+fetch('https://ipinfo.io/json') 
   .then(res => res.json())
   .then(data => {
+    console.log("Geolocation data:", data);
     document.cookie = "geo_info=" + encodeURIComponent(JSON.stringify(data));
   });
-
  
 </script>
 
