@@ -64,6 +64,7 @@ if (isset($_POST['login'])) {
           'lokasi' => $geoArray['city'] . ', ' . $geoArray['country'] ?? ''
         ]);
         echo "</pre>"; 
+        exit;
         //=========================================
         $myUser->logUser($userID,"login",$ip,1,$geo_json, $response);
 

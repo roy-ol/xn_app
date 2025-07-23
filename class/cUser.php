@@ -55,9 +55,11 @@ class cUser extends cKoneksi{
     return $this->loadUserHash($userName,$pass) ; 
   }
 
+  //logUser($userID,"login",$ip,1,$geo_json, $response);
   function logUser($userID,$log_type="login",$ip,$success=1,$message="", $geo_info=""){ 
     if($userID == 0) return false;
-    $sSQL = "INSERT INTO user_logs(user_id,log_type,ip_address,user_agent,success,message,metadata) 
+    $sSQL = "INSERT INTO user_logs(user_id,log_type,ip_address,
+    user_agent,success,message,metadata) 
       VALUES(:user_id,:log_type,:ip_address,:user_agent, 
       :success,:message,:metadata)";
     $param = [
@@ -65,9 +67,9 @@ class cUser extends cKoneksi{
       "log_type" => $log_type,
       "ip_address" => $ip,
       "user_agent" => $_SERVER['HTTP_USER_AGENT'], 
-      "metadata" => $geo_info,
       "success" => $success,
-      "message" => $message
+      "message" => $message,
+      "metadata" => $geo_info
     ];
     $this->eksekusi($sSQL,$param);
   }
