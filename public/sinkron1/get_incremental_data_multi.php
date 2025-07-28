@@ -24,7 +24,7 @@ if ($input['token'] !== $token) {
 
 // Daftar tabel dan timestamp
 $tables = $input['tables'] ?? [];
-$limit_per_table = 1000; // 💡 Batas default per tabel
+$limit_per_table = 9999; // 💡 Batas default per tabel
 
 $response = ['status' => 'success', 'tables' => []];
 
