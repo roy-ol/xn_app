@@ -7,6 +7,7 @@
 <?php  
 require_once __DIR__ . '/menu.php'; 
 $sPencarian="";
+$sTabel="";
 if(isset($_POST['kataKunci'])) {
     $kataKunci = $_POST['kataKunci'];
     $keyID = 0;

@@ -48,6 +48,8 @@ $sSqlNode="SELECT sl.id_node,DATE_FORMAT(COALESCE(sl.waktu_node,sl.created),'%d%
 $sDataNode=$cUmum->ambilData($sSqlNode,["idKebun"=>$id_Kebun])->fetchAll(PDO::FETCH_ASSOC); 
 $sDiv='';
 $sDrawChart='';
+$id_node_awal=0;
+$nama_node_awal='';
 $iKol=1;
 // <p id="ket2_'.$value['id_node'].'" class="text-center" >'.$value['nama'].'</p>
 foreach($sDataNode as $key => $value){
@@ -61,6 +63,10 @@ foreach($sDataNode as $key => $value){
   <p id="ket_'.$value['id_node'].'" class="text-center" >'.$value['waktu'].'</p>
   <!-- <p id="ket2_'.$value['id_node'].'" class="text-center" >'.$value['waktu'].'</p> -->
   </div>';
+  if($iKol == 1){
+    $id_node_awal = $value['id_node'];
+    $nama_node_awal = $value['nama'];
+  }
   $iKol++;
 
   $sDrawChart .="var data".$value['id_node']." = google.visualization.arrayToDataTable([
@@ -76,6 +82,12 @@ foreach($sDataNode as $key => $value){
    }; 
    var chart".$value['id_node']." = new google.visualization.Gauge(document.getElementById('chart_div_".$value['id_node']."'));
    chart".$value['id_node'].".draw(data".$value['id_node'].", options".$value['id_node'].");
+   
+   document.getElementById('chart_div_".$value['id_node']."').onclick = function () {
+  bukaGrafik(".$value['id_node'].", '".$value['nama']."');
+};
+   
+
   ";
 }
    
@@ -94,7 +106,11 @@ $cTemp->loadHeader();
 ?>
 
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> 
+<script>
+  google.charts.load('current', {'packages':['corechart']});
+</script>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <!-- Main content -->
@@ -108,7 +124,15 @@ $cTemp->loadHeader();
       <div class="row" id="div_gauge">
         <?=$sDiv?> 
       </div>
-       
+      <div id="grafik_container" style="width:100%; height:400px; border:1px dashed #ccc;">
+        <div id="placeholder_chart" style="text-align:center; padding:50px; color:#777;">
+          <i class="fas fa-chart-line" style="font-size:48px;"></i>
+          <p>Menunggu data grafik...</p>
+        </div>
+      </div>
+
+
+
     </div><!-- /.container-fluid -->
     <div class="col-md-12" id="content_dashboard">
       <!-- card primary -->
@@ -200,27 +224,69 @@ $cTemp->loadHeader();
  
 <script>
   google.charts.load('current', {'packages':['gauge']});
-  google.charts.setOnLoadCallback(drawChart);
+  google.charts.setOnLoadCallback(function() {
+    drawChart(); 
+    <?php if ($id_node_awal): ?>
+      bukaGrafik(<?= $id_node_awal ?>, "<?= addslashes($nama_node_awal) ?>");
+    <?php endif; ?>
+  });
+
 
   function drawChart() {
-    <?php echo $sDrawChart; ?> 
-
- 
-    // setInterval(function() {
-    //   data.setValue(0, 0, 'Nama' + Math.round(15 * Math.random()));
-    //   chart.draw(data, options);
-    // }, 1000);
-    // setInterval(function() {
-    //   data.setValue(0, 1, 40 + Math.round(45 * Math.random()));
-    //   chart.draw(data, options);
-    // }, 3600);
-    // setInterval(function() {
-    //   data2.setValue(0, 1, 40 + (54 * Math.random()));
-    //   chart2.draw(data2, options2);
-    // }, 1260); 
-
+    <?php echo $sDrawChart; ?>   
   }
 
+  function bukaGrafik(id_node, nama_node) {
+    $.ajax({
+      url: '../fungsi/getGrafik1',
+      method: 'POST',
+      data: JSON.stringify({ idNode: id_node }),
+      contentType: 'application/json; charset=utf-8',
+      success: function(response) {
+        if (!response || response.length === 0) {
+          alert("Data kosong");
+          return;
+        }
+
+        // Format ulang data untuk Google Chart
+        const chartData = [['Waktu', nama_node]]; 
+
+        response.forEach(item => {
+          chartData.push([new Date(item.waktu), parseFloat(item.nilai)]);
+        });
+
+        // Buat dataTable dari array
+        const data = google.visualization.arrayToDataTable(chartData);
+
+        const options = {
+          title: 'Grafik Node: ' + nama_node,
+          height: 400,
+          legend: { position: 'bottom' },
+          hAxis: {
+            title: 'Waktu',
+            format: 'HH:mm',  // ⬅️ hanya jam:menit
+            gridlines: { count: -1 }
+          },
+          vAxis: {
+            title: 'Nilai'
+          },
+          explorer: { actions: ['dragToZoom', 'rightClickToReset'] },
+          curveType: 'function'
+        };
+
+
+        // Gambar chart ke container
+        const chart = new google.visualization.LineChart(document.getElementById('grafik_container'));
+        chart.draw(data, options);
+        document.getElementById("placeholder_chart").style.display = "none";
+      },
+      error: function(xhr) {
+        console.error("Gagal ambil data:", xhr.responseText);
+        alert("Gagal memuat grafik");
+      }
+    });
+  }
+ 
   
   function pilihKebun() {
     //menampilkan modal-tampil

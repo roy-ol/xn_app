@@ -42,6 +42,10 @@ if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder
   if(!$kodeApiFile) die("noCode"); 
 
   switch ($kodeApiFile) { //========== pelayanan API umum Web ===========
+    case 'getGrafik1':   //fungsi ambil data grafik
+      $idNode = $data->idNode; 
+      getGrafik1($idNode);
+      break;
     case 'ketPola':   //fungsi ambil data keterangan pola
       $idPola = $data->idPola; 
       getInfoPola($idPola);
@@ -130,6 +134,16 @@ function test($data){
   die($data);
 }
 
+function getGrafik1($idNode){ 
+  global $cUmum;
+  $sSql="SELECT waktu_node waktu,DATE_FORMAT(waktu_node,'%H:%i:%s') waktu_node, nilai FROM sensor_logger 
+      WHERE id_node = :id_node ORDER BY waktu DESC LIMIT 999";
+  $sData=$cUmum->ambilData($sSql,["id_node"=>$idNode])->fetchAll(PDO::FETCH_ASSOC); 
+  header('Content-Type: application/json'); // Penting!
+  $sData = array_reverse($sData);  // sebelum `json_encode($data)`
+  echo json_encode($sData);
+  exit;
+}
 
 function reset_log_eksekutor($data){
   global $cUmum;    
