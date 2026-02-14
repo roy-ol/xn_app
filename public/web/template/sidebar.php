@@ -65,6 +65,7 @@
             </li>
           </ul>
         </li>
+        <li style="border-top: 1px solid rgba(255,255,255,.1); margin: 10px 0;"></li> 
         <li class="nav-item menu-open">
           <a href="#" class="nav-link">
             <!-- <i class="nav-icon far fa-circle"></i> -->
@@ -97,7 +98,8 @@
               </a>
             </li>
           </ul>
-        </li>
+        </li> 
+        <li style="border-top: 1px solid rgba(255,255,255,.1); margin: 10px 0;"></li> 
         <li class="nav-item">
           <!-- menu untuk XT Execution Test -->
           <a href="xt_aktuator" class="nav-link">
@@ -117,51 +119,68 @@
               <span class="right badge badge-success">ND</span>
             </p>
           </a>
+
           <ul class="nav nav-treeview">
-            <!-- Bahan Nutrisi -->
+
+            <!-- MASTER DATA -->
+            <li class="nav-header">MASTER DATA</li>
+
             <li class="nav-item">
-              <a href="../bahan_nutrisi" class="nav-link">
+              <a href="../nd_bahan_nutrisi" class="nav-link">
                 <i class="fas fa-vial nav-icon"></i>
                 <p>Bahan Nutrisi</p>
               </a>
             </li>
-            <!-- Resep Nutrisi -->
+
             <li class="nav-item">
-              <a href="../resep_nutrisi" class="nav-link">
+              <a href="../nd_formula_nutrisi" class="nav-link">
                 <i class="fas fa-cocktail nav-icon"></i>
-                <p>Resep Nutrisi</p>
+                <p>Formula Nutrisi</p>
               </a>
             </li>
-            <!-- Kalibrasi Doser -->
             <li class="nav-item">
-              <a href="../kalibrasi_doser" class="nav-link">
+              <a href="../nd_target_ion" class="nav-link">
+                <i class="fas fa-atom nav-icon"></i>
+                <p>Target Ion (PPM)</p>
+              </a>
+            </li>
+
+
+            <li class="nav-item">
+              <a href="../nd_kalibrasi_doser" class="nav-link">
                 <i class="fas fa-tachometer-alt nav-icon"></i>
                 <p>Kalibrasi Doser</p>
               </a>
             </li>
-            <!-- Proses Dosing -->
+
+            <!-- OPERASIONAL -->
+            <li class="nav-header">OPERASIONAL</li>
+
             <li class="nav-item">
-              <a href="../proses_dosing" class="nav-link">
-                <i class="fas fa-cogs nav-icon"></i>
-                <p>Proses Dosing</p>
+              <a href="../nd_proses_dosing" class="nav-link">
+                <i class="fas fa-play-circle nav-icon"></i>
+                <p>Buat Dosing</p>
               </a>
             </li>
-            <!-- Log Dosing -->
+
             <li class="nav-item">
-              <a href="../log_dosing" class="nav-link">
-                <i class="fas fa-clipboard-list nav-icon"></i>
-                <p>Log Dosing</p>
+              <a href="../nd_log_dosing" class="nav-link">
+                <i class="fas fa-history nav-icon"></i>
+                <p>Riwayat Dosing</p>
               </a>
             </li>
-            <!-- Monitoring Stok -->
+
             <li class="nav-item">
               <a href="../monitoring_stok" class="nav-link">
                 <i class="fas fa-boxes nav-icon"></i>
                 <p>Monitoring Stok</p>
               </a>
             </li>
+
           </ul>
         </li>
+
+        <li style="border-top: 1px solid rgba(255,255,255,.1); margin: 10px 0;"></li> 
         <li class="nav-item">
           <!-- menu untuk Query Bank -->
           <a href="q_bank" class="nav-link">
