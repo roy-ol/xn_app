@@ -131,7 +131,7 @@ if($edit_id > 0){
 
           <div class="row">
             <div class="col-md-4">
-              <div class="form-group">
+              <div class="form-group" title="max gr dalam 1 liter">
                 <label>Kelarutan</label>
                 <input type="number" step="any" name="kelarutan" class="form-control" value="<?=htmlspecialchars($kelarutan_val)?>">
               </div>

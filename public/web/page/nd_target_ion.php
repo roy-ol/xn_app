@@ -177,7 +177,7 @@ if($edit_id > 0){
 <script> 
   function ion_terpilih(id) {  
     // const kode = 'id'; // Ganti dengan kode yang sesuai
-    alert("Ion terpilih: " + id);
+    // alert("Ion terpilih: " + id);
   }
  
   $(function () {

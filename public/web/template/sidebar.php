@@ -130,25 +130,22 @@
                 <i class="fas fa-vial nav-icon"></i>
                 <p>Bahan Nutrisi</p>
               </a>
-            </li>
-
+            </li> 
             <li class="nav-item">
               <a href="../nd_formula_nutrisi" class="nav-link">
                 <i class="fas fa-cocktail nav-icon"></i>
                 <p>Formula Nutrisi</p>
               </a>
-            </li>
+            </li> 
             <li class="nav-item">
-              <a href="../nd_target_ion" class="nav-link">
-                <i class="fas fa-atom nav-icon"></i>
-                <p>Target Ion (PPM)</p>
+              <a href="../nd_tangki" class="nav-link">
+                <i class="fas fa-fill-drip nav-icon"></i>
+                <p>Tangki Stok</p>
               </a>
-            </li>
-
-
+            </li>   
             <li class="nav-item">
               <a href="../nd_kalibrasi_doser" class="nav-link">
-                <i class="fas fa-tachometer-alt nav-icon"></i>
+                <i class="fas fa-sliders-h nav-icon"></i>
                 <p>Kalibrasi Doser</p>
               </a>
             </li>
