@@ -115,7 +115,7 @@ if(isset($_GET['id_node'])) {
 <?php
 $sSQL = "SELECT node.id AS id_node,node.*,s.display
   FROM node LEFT JOIN satuan s ON s.id = node.id_satuan  
-  ORDER BY id DESC LIMIT 36";
+  ORDER BY id DESC LIMIT 45";
 $tabel = bikinTabelSQL2($sSQL,"");
 echo "<br>ListNode";
 echo $tabel; 

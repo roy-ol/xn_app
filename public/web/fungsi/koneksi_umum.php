@@ -163,7 +163,7 @@ function isiTabelSQL($sqlQuery, $sLink = null,$params = null) {
         $tableHTML .= '<th>'.$columnName.'</th>';
         $iKolom++; 
     }
-    $tableHTML .= '</thead></tr>'; 
+    $tableHTML .= '</tr></thead>';
     
     // Membuat baris tabel dari hasil query
     foreach($result as $row) {

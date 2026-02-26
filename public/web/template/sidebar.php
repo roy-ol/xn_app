@@ -110,6 +110,7 @@
             </p>
           </a>
         </li>
+        <li style="border-top: 1px solid rgba(255,255,255,.1); margin: 10px 0;"></li> 
         <li class="nav-item menu-open">
           <a href="#" class="nav-link">
             <i class="nav-icon fas fa-flask"></i>
@@ -143,20 +144,16 @@
                 <p>Tangki Stok</p>
               </a>
             </li>   
-            <li class="nav-item">
-              <a href="../nd_kalibrasi_doser" class="nav-link">
-                <i class="fas fa-sliders-h nav-icon"></i>
-                <p>Kalibrasi Doser</p>
-              </a>
-            </li>
 
             <!-- OPERASIONAL -->
             <li class="nav-header">OPERASIONAL</li>
 
             <li class="nav-item">
-              <a href="../nd_proses_dosing" class="nav-link">
+              <a href="../nd_dosing_rasio" 
+                class="nav-link"
+                title="Membuat batch dosing dan untuk persiapan eksekusi alat sesuai formula">
                 <i class="fas fa-play-circle nav-icon"></i>
-                <p>Buat Dosing</p>
+                <p>Dosing Rasio</p>
               </a>
             </li>
 

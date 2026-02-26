@@ -9,6 +9,11 @@ if(empty($val1)){$val1 = "";}
 if(empty($val2)){$val2 = "";} 
 if(empty($val3)){$val3 = 0;} 
 $formula_id = $val1 ? intval($val1) : 0;
+if($formula_id <= 0){
+  echo "ID formula tidak valid.";
+  header("Location: nd_formula_nutrisi");
+  exit;
+}
 $sql_formula = "SELECT * FROM nut_formula WHERE id = :id LIMIT 1";
 $data_formula = $cUmum->ambil1Row($sql_formula, [':id' => $formula_id]);
 $keterangan_val = $data_formula ? $data_formula['keterangan'] : ''; 
