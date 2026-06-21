@@ -165,7 +165,7 @@
             </li>
 
             <li class="nav-item">
-              <a href="../monitoring_stok" class="nav-link">
+              <a href="../nd_tangki" class="nav-link">
                 <i class="fas fa-boxes nav-icon"></i>
                 <p>Monitoring Stok</p>
               </a>

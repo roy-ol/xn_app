@@ -71,7 +71,12 @@ class cNode extends cKoneksi{
     return 0;
   } 
 
-  
+  /**
+   * @brief   ambil/load konstruk data node dari kode chip dan subNode (noSensor)
+   * 
+   * @param $chip = String kode chip XN*****
+   * @param $subNode = nomer sub node/sensor/relay
+   */
   private function konstrukNode($hasil){
     $this->nodeID =$hasil['id'];
     $this->flag =$hasil['flag'];
@@ -88,7 +93,7 @@ class cNode extends cKoneksi{
  
   /**
    * ambil/load konstruk data node dari nodeID
-   * @param nodeID dari node 
+   * @param $nodeID dari node 
    */
   function nodeByID($nodeID){ 
     $this->statusNode=false; // awal check dari chip status default $this->getstatusNode
@@ -215,19 +220,31 @@ class cNode extends cKoneksi{
     $hasil = $this->eksekusi($q,$param);  
     return $hasil;
   }
-   
+
+    
+  /**
+   * Menambahkan memo baru ke dalam table memo.
+   *
+   * @param string $sMemo isi memo yang akan ditambahkan
+   * @return int id dari memo yang baru dibuat
+   */
+  function addMemo($sMemo){ 
+    if(!$this->statusNode){ return false; } //keluar bila status false
+    $sql = "INSERT INTO memo(memo) values (:memo) ";
+    // $paramMemo['memo']=$sMemo;
+    $paramMemo = ['memo' => $sMemo];
+    parent::eksekusi($sql,$paramMemo); 
+    return parent::ambil_pdo_lastInsertID(); 
+  } 
+
   /**
    * logging status config json dari schip
    * @param string $sJsonConfig isi json config dari schip
    * @return int jumlah record terpengaruh
    */
-  function log_json_config($sJsonConfig){   
+  function log_json_config($sJsonConfig){        
     if(!$this->statusNode){ return false; } //keluar bila status false
-    $q = "INSERT INTO memo(memo) VALUES(:sJsonConfig)";
-    $param = ["sJsonConfig"=>$sJsonConfig];
-
-    $iRecAff = $this->eksekusi($q,$param);
-    $id_memo = $this->ambil1Data("SELECT LAST_INSERT_ID();"); 
+    $id_memo = $this->addMemo($sJsonConfig);
 
     $q ="INSERT INTO chip_log(id_chip,keterangan,id_memo) VALUES(:chipID,:keterangan,:id_memo);  ";
     $param = ["id_memo"=>$id_memo];   
