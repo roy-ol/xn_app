@@ -1,28 +1,32 @@
-<?php
-// // Set umur sesi menjadi 30 menit
-// $umur_session = 60 * 60 * 5; // detik x 60 x 5== 5 jam
-// // $umur_session = 1800; // 30 * 60 (30 menit dalam detik)
-// session_set_cookie_params($umur_session);
+<?php 
 session_start();
+ //=========== pause disini untuk simpan $_GET['kode'] ke session agar bisa diakses di halaman setelah login.php
+$urlRedirect = "dashboard"; // default redirect ke dashboard bila tidak ada kode
+
+if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder ini RewriteRule ^(.*)$ index.php?kode=$1 [L]
+  // $urlRedirect = "/page/dashboard_home.php";
+  $kodeApiFile = $_GET['kode'];    
+  if(strlen($kodeApiFile) > 999){
+    $kodeApiFile = substr($kodeApiFile, 0, 999);
+  }
+  $urlRedirect ="page/$kodeApiFile";       
+}else{
+  if(isset($_SESSION['last_page'])) {
+    $urlRedirect = $_SESSION['last_page'];
+    }
+} 
+unset($_SESSION['last_page']); // Hapus URL halaman terakhir dari session 
+
 
 // Cek apakah pengguna sudah login atau belum
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) { // cek login dan lanjut disini bila sudah login
-  
-  if(isset($_GET['kode'])){  // didapatkan dari setingan htaccess bareng di folder ini RewriteRule ^(.*)$ index.php?kode=$1 [L]
-    // $urlRedirect = "/page/dashboard_home.php";
-    $kodeApiFile = $_GET['kode'];    
-    if(strlen($kodeApiFile) > 999){
-      $kodeApiFile = substr($kodeApiFile, 0, 999);
-    }
-    $urlRedirect ="page/$kodeApiFile";      
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) { // cek login dan lanjut disini bila sudah login   
     header("Location: $urlRedirect"); // Redirect ke halaman tujuan jika sudah login 
-    exit;
-  }
-
-  header("Location: dashboard"); // Redirect ke halaman web/ dashboard jika sudah login 
-  exit;
+    exit; 
+}else { 
+  // Simpan URL halaman permintaan saat ini
+  $_SESSION['last_page'] = $urlRedirect;    
 }
-
+ 
 // Cek apakah form login telah disubmit
 if (isset($_POST['login'])) { 
     // dari sini ada data post untuk diolah:
@@ -40,9 +44,10 @@ if (isset($_POST['login'])) {
         $error_message = "maaf hak akses anda tidak diperbolehkan menggunakan fitur ini"; 
       }else{ 
         session_destroy();
-        $umur_session = 60 * 60 * 5; // detik x 60 x 5 = 5 jam 
+        $umur_session = 60 * 60 * 3; // detik x 60 x 3 = 3 jam 
         session_set_cookie_params($umur_session);
         session_start();
+        $_SESSION['last_page'] = $urlRedirect; // simpan halaman terakhir yang diakses sebelum login
         $_SESSION['logged_in'] = true;
         $_SESSION['id_level'] = $myUser->id_level();
         $_SESSION['id_perusahaan'] = $myUser->id_perusahaan();
@@ -55,22 +60,11 @@ if (isset($_POST['login'])) {
         $sCookieJson = urldecode($sCookie);
         $geoArray = json_decode($sCookieJson, true);        
         $geo_json = json_encode($geoArray, JSON_UNESCAPED_UNICODE); 
-        $myUser->logUser($userID,"login",$ip,1, $response,$geo_json);
+        $myUser->logUser($userID,"login",$ip,1, $response,$geo_json); 
 
-        
-        // Periksa apakah ada URL halaman yang disimpan
-        if(isset($_SESSION['last_page'])) {
-          $lastPage = $_SESSION['last_page'];
-          unset($_SESSION['last_page']); // Hapus URL halaman terakhir dari session
-          header('Location: ' . $lastPage); // Arahkan pengguna ke URL halaman terakhir
-          exit;
-        } else {
-          // Jika tidak ada URL halaman yang disimpan, arahkan ke halaman default
-          header("Location: dashboard"); // Redirect ke halaman dashboard setelah login berhasil
-          exit;
-        }
-
+        header("Location: $urlRedirect"); // Redirect ke halaman tujuan setelah login berhasil
         exit;
+
       }
     } else { 
         echo '<!DOCTYPE html>
@@ -115,7 +109,7 @@ if (isset($_POST['login'])) {
             </div>
     
             <script>
-                let seconds = 18;
+                let seconds = 11;
                 const countdownElement = document.getElementById("countdown");                
                 const countdown = setInterval(function() {
                     seconds--;
@@ -131,9 +125,11 @@ if (isset($_POST['login'])) {
       // echo "<h2>Username(email) dan/atau password salah. <a href='login.php'> Login Ulang</a> <h2>"; 
       exit;
     }
+}else {  
+  header("Location: login.php"); // Redirect ke halaman  login 
+  exit;
 }
 
-header("Location: login.php"); // Redirect ke halaman  login 
 
 function getIpInfo($ip) {
     $token = 'e669fbb04a257a';

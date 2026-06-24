@@ -43,7 +43,7 @@ echo $_SESSION['username'] . " lvl:" . $id_level;
     box-shadow: 2px 2px 8px rgba(0,0,0,0.2); font-size: 18px; line-height: 2;">
     
     <a href="dashboard.php" style="display: block; padding: 5px;">Dashboard</a>
-    <a href="pencarian.php" style="display: block; padding: 5px;">Searc/Pencarian</a>
+    <a href="pencarian.php" style="display: block; padding: 5px;">Search/Pencarian</a>
     <a href="chip_log.php" style="display: block; padding: 5px;">Flag Chip</a>
     <a href="binfirupd.php" style="display: block; padding: 5px;">Binfirmware Update</a>
     <a href="xt_aktuator.php" style="display: block; padding: 5px;">XT Aktuator</a>

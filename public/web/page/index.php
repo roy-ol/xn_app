@@ -27,7 +27,12 @@ if(!isset($_GET['kode'])){  // dari htaccess folder ini: RewriteRule ^(.*)$ inde
   // include_once "dashboard.php";      
   // include_once "../template/footer.php"; 
   // exit;    
-  $sNamaFile = "dashboard";
+  $sNamaFile = "dashboard";  
+        
+  // $url = $_SESSION['redirect_after_login'] ?? '/dashboard.php';
+  // $sNamaFile = $_SESSION['last_page'] ?? '/dashboard';
+  // unset($_SESSION['last_page']); // Hapus variabel sesi setelah digunakan  
+  
 }else{  
   $sKode = $_GET['kode'];
   if(strlen($sKode) > 999){
@@ -35,7 +40,7 @@ if(!isset($_GET['kode'])){  // dari htaccess folder ini: RewriteRule ^(.*)$ inde
   }  
   $arrKode = explode("$$", $sKode);
   $iJumData=count($arrKode);
-  if($iJumData>0) $sNamaFile = $arrKode[0]; 
+  if($iJumData>0) $sNamaFile = $arrKode[0]; // nama file PHP yang akan di-include default meskipun tanpa $$
   if($iJumData>1) $val1 = $arrKode[1]; 
   if($iJumData>2) $val2 = $arrKode[2]; 
   if($iJumData>3) $val3 = $arrKode[3]; 

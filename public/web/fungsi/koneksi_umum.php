@@ -7,7 +7,7 @@ session_start();
 
 // Cek apakah pengguna sudah login atau belum
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    // Simpan URL halaman permintaan saat ini
+    // // Simpan URL halaman permintaan saat ini
     $_SESSION['last_page'] = $_SERVER['REQUEST_URI']; 
     $sDir = 'login.php';
     if(!file_exists($sDir)) $sDir = '../login.php';

@@ -31,8 +31,12 @@ if (isset($_POST['login'])) {
         $_SESSION['userID'] = $userID;
         $_SESSION['username'] =$myUser->fullname();
         $_SESSION['id_perusahaan'] =$myUser->id_perusahaan();
-        header("Location: dashboard.php"); // Redirect ke halaman dashboard setelah login berhasil
-        exit;
+
+        // $url = $_SESSION['redirect_after_login'] ?? '/dashboard.php';
+        $url = $_SESSION['last_page'] ?? '/dashboard.php';
+        unset($_SESSION['last_page']); // Hapus variabel sesi setelah digunakan
+        header("Location: $url");
+        exit; 
       }
     } else {
       $error_message = "Username atau password salah";

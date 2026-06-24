@@ -104,6 +104,7 @@ class cUser extends cKoneksi{
     return $rsp ; 
   }
 
+
   function getNamaPerusahaan(){
     $sql = "SELECT nama FROM perusahaan WHERE id = :idperus ";
     $namaPerusahaan = $this->ambil1Data($sql , ["idperus" => $this->id_perusahaan]);

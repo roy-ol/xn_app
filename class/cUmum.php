@@ -8,6 +8,18 @@ class cUmum extends cKoneksi{
   }
   
   
+  public static function requireLogin(){
+    if (!isset($_SESSION['userID'])) {
+        // Simpan halaman yang sedang diakses
+        echo '<pre>';
+        print_r($_SERVER);
+        echo '</pre>';
+        exit;
+        $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
+        header('Location: /login.php'); 
+    }
+  }
+
   /**
    * Menambahkan memo baru ke dalam table memo.
    *
