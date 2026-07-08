@@ -102,7 +102,10 @@ if(isset($_GET['id'])) {
 <?php
 
 echo "<br>List user";
-$sSql = "select id,users.* from users order by id desc";
+$sSql = "SELECT u.id,u.username,u.id_level lvl, u.email,u.fullname,u.flag_active flag
+,u.tgl_update ,p.nama perusahaan,p.kota FROM users u
+INNER JOIN perusahaan p ON p.id=u.id_perusahaan
+ORDER by u.id DESC;";
 $sUrl = $_SERVER['PHP_SELF'];
 echo bikinTabelSQL2($sSql,$sUrl);
 

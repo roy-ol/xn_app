@@ -136,7 +136,9 @@ if(isset($_GET['id_chip'])) {
 <?php 
 // echo bikinTabelSQL("select * from chip order by id desc limit 36");
 
-$sSQL = "SELECT id as id_chip, chip.* FROM chip ORDER BY id DESC LIMIT 36";
+$sSQL ="SELECT c.id as id_chip, c.chip, k.nama as kebun, c.* 
+FROM chip c JOIN kebun k ON k.id = c.id_kebun
+ORDER BY id DESC LIMIT 54" ;
 $tabel = bikinTabelSQL2($sSQL,"");
 echo "<br>Chip";
 echo $tabel; 
