@@ -12,7 +12,7 @@ if(isset($_POST['kataKunci'])) {
     $kataKunci = $_POST['kataKunci'];
     $keyID = 0;
     if(is_numeric($kataKunci))$keyID = $kataKunci;  
-    $sSQL="SELECT n.id,n.id NodeID,n.nama Node,c.id ChipID, chip,c.keterangan Ket_Chip
+    $sSQL="SELECT n.id id_node,n.id NodeID,n.nama Node,c.id ChipID, chip,c.keterangan Ket_Chip
     ,c.id_kebun, k.nama kebun,p.nama perusahaan
     FROM chip c 
     LEFT JOIN node n ON n.id_chip = c.id
@@ -20,7 +20,8 @@ if(isset($_POST['kataKunci'])) {
     LEFT JOIN perusahaan p ON p.id=k.id_perusahaan
     WHERE c.chip LIKE '%$kataKunci%' OR n.id=$keyID
     OR c.keterangan like '&$kataKunci&' OR n.nama like '%$kataKunci%' ";
-    $sTabel = bikinTabelSQL2($sSQL, "#");
+    ///webadmin/node_baru.php?id_node=
+    $sTabel = bikinTabelSQL2($sSQL, "../webadmin/node_baru.php");
     // echo $sSQL . "<br>";
     $sPencarian = "Hasil pencarian untuk: " . htmlspecialchars($kataKunci);
 }
@@ -30,7 +31,7 @@ if(isset($_POST['kataKunci'])) {
 
 <body style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
 
-    <h2>Search / Pencarian</h2>
+    <h2>Search / Pencarian Node / Chip</h2>
 
     <form method="post" action="#">
         <input type="text" name="kataKunci" placeholder="Masukkan kata kunci..." required style="padding: 8px;">

@@ -102,7 +102,7 @@ if(isset($_GET['id'])) {
 <?php
 
 echo "<br>List user";
-$sSql = "SELECT u.id,u.username,u.id_level lvl, u.email,u.fullname,u.flag_active flag
+$sSql = "SELECT u.id,u.id as id_user, u.username,u.id_level lvl, u.email,u.fullname,u.flag_active flag
 ,u.tgl_update ,p.nama perusahaan,p.kota FROM users u
 INNER JOIN perusahaan p ON p.id=u.id_perusahaan
 ORDER by u.id DESC;";
@@ -110,7 +110,10 @@ $sUrl = $_SERVER['PHP_SELF'];
 echo bikinTabelSQL2($sSql,$sUrl);
 
 echo "<br>login History";
-$sSql = "SELECT id,user_logs.* FROM user_logs ORDER by id desc limit 20; ";
+$sSql = "SELECT l.id, u.username as username, p.nama as perusahaan, l.* FROM user_logs l
+INNER JOIN users u ON l.user_id = u.id 
+INNER JOIN perusahaan p ON p.id=u.id_perusahaan
+ORDER by l.id desc limit 27; ";
 $sUrl = $_SERVER['PHP_SELF'];
 echo bikinTabelSQL2($sSql,$sUrl);
 ?>
