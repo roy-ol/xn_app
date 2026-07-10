@@ -139,33 +139,32 @@ function generateEC(DateTime $now): float
         $trend = ($selisih / 210) * 90;
 
         // gergaji kecil
-        $gergaji = rand(-20,20);
+        $gergaji = rand(-15,15);
 
         $ec = 2250 + $trend + $gergaji;
     }
 
 
-    // ===== 11:00 - 13:00 turun perlahan =====
+    // ===== 11:00 - 13:00 naik perlahan dimulai 2196 =====
     else if ($menitHari >= 11*60 && $menitHari < 13*60) {
 
         $selisih = $menitHari - (11*60);
 
-        // turun dari 2340 ke 2280
-        $trend = ($selisih / 120) * (-60);
+        // naik dari 2196 ke 2286 dalam 120 menit
+        $trend = ($selisih / 120) * 90; 
 
-        $ec = 2340 + $trend + rand(-15,15);
+        $ec = 2169 + $trend + rand(-20,20);
     }
 
 
-    // ===== 13:00 - 15:00 koreksi drastis =====
+    // ===== 13:00 - 15:00 koreksi  =====
     else if ($menitHari >= 13*60 && $menitHari < 15*60) {
 
         $selisih = $menitHari - (13*60);
 
-        // turun cepat 2280 -> 2220
-        $trend = ($selisih / 120) * (-60);
+        $trend = ($selisih / 120) * 36;
 
-        $ec = 2280 + $trend + rand(-20,20);
+        $ec = 2196 + $trend + rand(-12,12);
     }
 
 
@@ -173,7 +172,7 @@ function generateEC(DateTime $now): float
     else {
 
         // baseline malam
-        $ec = 2220 + rand(-10,10);
+        $ec = 2223 + rand(-10,10);
     }
 
 
